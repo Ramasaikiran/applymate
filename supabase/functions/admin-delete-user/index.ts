@@ -19,8 +19,8 @@ serve(async (req) => {
 
   try {
     const { user_id, deletion_request_id } = await req.json()
-    if (!user_id) {
-      return new Response(JSON.stringify({ error: 'user_id required' }), { status: 400, headers: corsHeaders })
+    if (!user_id || !deletion_request_id) {
+      return new Response(JSON.stringify({ error: 'user_id and deletion_request_id are required' }), { status: 400, headers: corsHeaders })
     }
 
     const supabase = createClient(
@@ -39,15 +39,13 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: corsHeaders })
     }
 
-    // Sanity check: only proceed if there's an approved deletion request for
-    // this user, so this endpoint can't be used to delete arbitrary accounts.
-    if (deletion_request_id) {
-      const { data: reqRow } = await supabase.from('profile_deletion_requests')
-        .select('user_id,status').eq('id', deletion_request_id).single()
-      if (!reqRow || reqRow.user_id !== user_id || reqRow.status !== 'approved') {
-        return new Response(JSON.stringify({ error: 'No approved deletion request found for this user' }),
-          { status: 400, headers: corsHeaders })
-      }
+    // Only proceed if there's an approved deletion request for this user,
+    // so this endpoint can't be used to delete arbitrary accounts.
+    const { data: reqRow } = await supabase.from('profile_deletion_requests')
+      .select('user_id,status').eq('id', deletion_request_id).single()
+    if (!reqRow || reqRow.user_id !== user_id || reqRow.status !== 'approved') {
+      return new Response(JSON.stringify({ error: 'No approved deletion request found for this user' }),
+        { status: 400, headers: corsHeaders })
     }
 
     const { error: delErr } = await supabase.auth.admin.deleteUser(user_id)

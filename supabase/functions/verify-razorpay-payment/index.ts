@@ -52,6 +52,12 @@ serve(async (req) => {
       .select('*').eq('razorpay_order_id', razorpay_order_id).single()
     if (!sub) return new Response(JSON.stringify({ error: 'Order not found' }), { status: 404, headers: corsHeaders })
     if (sub.user_id !== user.id) return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: corsHeaders })
+    if (sub.status === 'active') {
+      // Already processed — don't let a replayed call extend the subscription again.
+      return new Response(JSON.stringify({ success: true, ends_at: sub.ends_at }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      })
+    }
 
     const now = new Date()
     const ends = new Date(now)
