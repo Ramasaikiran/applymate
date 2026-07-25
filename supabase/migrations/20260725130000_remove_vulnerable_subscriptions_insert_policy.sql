@@ -1,0 +1,11 @@
+-- CRITICAL: "Users insert own subscriptions" allowed any authenticated
+-- user to POST directly to /rest/v1/subscriptions with status='active'
+-- and amount_paise=0, granting themselves a full paid plan with zero
+-- payment and no Razorpay verification. Confirmed exploitable via a
+-- live test (rolled back, no real subscription created).
+--
+-- No client code in the app ever inserts into `subscriptions` — every
+-- legitimate insert happens server-side in create-razorpay-order and
+-- verify-razorpay-payment, both using the service role key, which
+-- bypasses RLS entirely and is unaffected by removing this policy.
+drop policy if exists "Users insert own subscriptions" on public.subscriptions;
