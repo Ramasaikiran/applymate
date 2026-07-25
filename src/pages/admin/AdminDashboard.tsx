@@ -47,8 +47,8 @@ export default function AdminDashboard() {
 
  setFeed((logs as ActivityLogEntry[]).map(l => ({
  ...l,
- admin_name: l.admin_id ? nameMap.get(l.admin_id) ?? 'Admin' : 'System',
- target_name: l.target_user_id ? nameMap.get(l.target_user_id) ?? 'a user' : '',
+ admin_name: l.admin_name ?? (l.admin_id ? nameMap.get(l.admin_id) ?? 'Admin' : 'System'),
+ target_name: l.target_name ?? (l.target_user_id ? nameMap.get(l.target_user_id) ?? 'a user' : 'a deleted user'),
  })))
  setLoadingFeed(false)
  }

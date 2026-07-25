@@ -205,6 +205,8 @@ export interface ActivityLogEntry {
   target_user_id: string | null
   details: string | null
   created_at: string
+  admin_name: string | null
+  target_name: string | null
 }
 
 export interface Notification {
