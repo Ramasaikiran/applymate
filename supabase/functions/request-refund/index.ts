@@ -67,6 +67,7 @@ serve(async (req) => {
     const { data: earlyOffer } = await supabase.from('job_applications')
       .select('id').eq('user_id', user.id)
       .in('status', ['offer', 'joined', 'hired'])
+      .gte('applied_at', startsAt.toISOString())
       .lte('applied_at', fifteenDaysIn.toISOString())
       .limit(1).maybeSingle()
 
@@ -82,6 +83,21 @@ serve(async (req) => {
     // Razorpay's 2% gateway fee on the total paid amount is never refunded
     const feePaise = Math.round(totalPaise * RAZORPAY_FEE_PCT)
     const netPaise = Math.max(0, grossPaise - feePaise)
+
+    // ── Atomic claim ────────────────────────────────────────────────
+    // Flip active → refund_processing only if it's still 'active' right
+    // now. If two requests race, only one of these conditional updates
+    // can succeed — the loser gets 0 rows back and is rejected here,
+    // before either one calls Razorpay. Prevents a double-refund from
+    // a double-click or a retried request.
+    const { data: claimed } = await supabase.from('subscriptions')
+      .update({ status: 'refund_processing' })
+      .eq('id', sub.id).eq('status', 'active')
+      .select('id')
+    if (!claimed || claimed.length === 0) {
+      return new Response(JSON.stringify({ error: 'A refund is already being processed for this subscription' }),
+        { status: 409, headers: corsHeaders })
+    }
 
     // ── Issue refund via Razorpay ──────────────────────────────────
     const keyId = Deno.env.get('RAZORPAY_KEY_ID')!
@@ -104,6 +120,7 @@ serve(async (req) => {
 
     if (!rpRes.ok) {
       await supabase.from('subscriptions').update({
+        status: 'active', // release the claim so the user can retry
         refund_requested_at: now.toISOString(),
         refund_reason: reason,
         refund_days_used: daysUsed,
