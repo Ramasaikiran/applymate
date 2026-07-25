@@ -3,10 +3,7 @@ import { Link } from 'react-router-dom'
 import { supabase, type ActivityLogEntry, type Profile } from '../../lib/supabase'
 import AdminNav from './AdminNav'
 
-interface FeedItem extends ActivityLogEntry {
- admin_name?: string
- target_name?: string
-}
+type FeedItem = ActivityLogEntry
 
 const ACTION_LABEL: Record<string, string> = {
  applied_job: 'applied for',
