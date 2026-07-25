@@ -50,6 +50,23 @@ serve(async (req) => {
     if (!sub.razorpay_payment_id || !sub.starts_at) {
       return new Response(JSON.stringify({ error: 'No completed payment on this subscription' }), { status: 400, headers: corsHeaders })
     }
+    if (sub.plan === 'free' || !sub.amount_paise) {
+      return new Response(JSON.stringify({ error: 'The free plan is not eligible for refunds' }), { status: 400, headers: corsHeaders })
+    }
+
+    // ── One refund per plan, ever ──────────────────────────────────
+    // A user can only claim a refund once for a given plan tier
+    // (Basic/Pro/Max Pro) across their lifetime — even if they later
+    // resubscribe to the same plan. Prevents buy → refund → rebuy
+    // → refund cycling.
+    const { data: priorRefund } = await supabase.from('subscriptions')
+      .select('id').eq('user_id', user.id).eq('plan', sub.plan).eq('status', 'refunded')
+      .limit(1).maybeSingle()
+    if (priorRefund) {
+      return new Response(JSON.stringify({
+        error: `You've already used your one-time refund for the ${sub.plan} plan.`,
+      }), { status: 400, headers: corsHeaders })
+    }
 
     // ── Days used, capped to plan length ──────────────────────────
     const startsAt = new Date(sub.starts_at)
