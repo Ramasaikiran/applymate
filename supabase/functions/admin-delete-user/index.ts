@@ -1,9 +1,13 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://applymate.in',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const ALLOWED_ORIGINS = new Set(['https://www.applymate.in', 'https://applymate.in'])
+function corsFor(req: Request) {
+  const origin = req.headers.get('origin') ?? ''
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : 'https://www.applymate.in',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  }
 }
 
 // Deletes a user's auth.users row (service-role only — cannot be done from
@@ -15,6 +19,7 @@ const corsHeaders = {
 // this function finishes the job by removing the login/email record itself
 // so the person's email is free to sign up again).
 serve(async (req) => {
+  const corsHeaders = corsFor(req)
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {

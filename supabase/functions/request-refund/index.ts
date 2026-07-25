@@ -4,12 +4,17 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const RAZORPAY_FEE_PCT = 0.02
 const PLAN_DAYS = 30
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': 'https://applymate.in',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+const ALLOWED_ORIGINS = new Set(['https://www.applymate.in', 'https://applymate.in'])
+function corsFor(req: Request) {
+  const origin = req.headers.get('origin') ?? ''
+  return {
+    'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : 'https://www.applymate.in',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  }
 }
 
 serve(async (req) => {
+  const corsHeaders = corsFor(req)
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
   try {
