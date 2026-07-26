@@ -431,6 +431,92 @@ export default function Landing() {
  </div>
  </section>
 
+ {/* ── WHY APPLYMATE (comparison table) ─────────────────── */}
+ <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '88px 0' }}>
+ <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px' }}>
+ <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+ COMPARE
+ </p>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 34, fontWeight: 400,
+ color: '#0f0f0f', letterSpacing: '-0.02em', marginBottom: 8 }}>
+ Why ApplyMate?
+ </h2>
+ <p style={{ fontSize: 14, color: '#9b9b9b' }} className="why-swipe-hint">
+ Swipe to compare →
+ </p>
+ </div>
+
+ <div style={{ overflowX: 'auto', padding: '28px 24px 8px', WebkitOverflowScrolling: 'touch' }}>
+ <div style={{ display: 'grid', gridTemplateColumns: '150px 240px 200px 200px',
+ gap: 0, minWidth: 790, maxWidth: 1000, margin: '0 auto' }}>
+
+ {/* header row */}
+ <div />
+ <div style={{ background: '#0f0f0f', borderRadius: '14px 14px 0 0', padding: '18px 20px', textAlign: 'center' }}>
+ <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, color: '#0f0f0f',
+ background: '#fff', padding: '3px 10px', borderRadius: 99, marginBottom: 10 }}>
+ ★ MOST EFFECTIVE
+ </span>
+ <p style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>ApplyMate</p>
+ <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Done for you</p>
+ </div>
+ <div style={{ padding: '18px 16px', textAlign: 'center' }}>
+ <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Applying solo</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>DIY, manual</p>
+ </div>
+ <div style={{ padding: '18px 16px', textAlign: 'center' }}>
+ <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Staffing agencies</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>Agencies & consultancies</p>
+ </div>
+
+ {[
+ { label: 'Your salary', us: 'Keep 100% of your salary', them1: 'Keep 100% (but wastes your time)', them2: '20–30% salary commission' },
+ { label: 'Job selection', us: 'Matched to your skills daily', them1: 'You scroll and guess', them2: 'Manual, slow selection' },
+ { label: 'Resume', us: 'Same strong resume, every job', them1: 'Same resume for most jobs', them2: 'Same resume for most jobs' },
+ { label: 'Volume', us: '10–15 tailored applications/day', them1: '3–5/day before burnout', them2: 'Limited applications' },
+ { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
+ { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
+ { label: 'Where we apply', us: 'Official career pages. No Easy Apply.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
+ { label: 'Pricing', us: 'From ₹399/month, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
+ ].map((row, i) => (
+ <>
+ <div key={row.label + 'l'} style={{ padding: '16px 12px', display: 'flex', alignItems: 'center',
+ borderTop: '1px solid #f0f0f0', fontSize: 12, fontWeight: 700, color: '#0f0f0f',
+ letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+ {row.label}
+ </div>
+ <div key={row.label + 'us'} style={{ padding: '16px 20px', background: '#f7f9ff',
+ borderTop: '1px solid #e8edff', display: 'flex', alignItems: 'flex-start', gap: 10,
+ borderLeft: '1px solid #e8edff', borderRight: '1px solid #e8edff',
+ borderBottom: i === 7 ? '1px solid #e8edff' : 'none',
+ borderRadius: i === 7 ? '0 0 14px 14px' : 0 }}>
+ <TICK /><span style={{ fontSize: 13.5, fontWeight: 600, color: '#0f0f0f', lineHeight: 1.4 }}>{row.us}</span>
+ </div>
+ <div key={row.label + 't1'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
+ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+ <CROSS /><span style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them1}</span>
+ </div>
+ <div key={row.label + 't2'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
+ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+ <CROSS /><span style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them2}</span>
+ </div>
+ </>
+ ))}
+ </div>
+ </div>
+
+ <div style={{ textAlign: 'center', marginTop: 8 }}>
+ <button onClick={goSignUp} style={{
+ background: '#0f0f0f', color: '#fff', border: 'none',
+ padding: '14px 32px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+ cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ }}>
+ Start now — 4 min setup →
+ </button>
+ </div>
+ </section>
+
  {/* ── PRICING ───────────────────────────────────────────── */}
  <section id="pricing" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
  <div style={{ maxWidth: 960, margin: '0 auto' }}>
@@ -607,7 +693,10 @@ export default function Landing() {
  <div style={{ maxWidth: 900, margin: '0 auto',
  display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
- <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 26, height: 26, objectFit: 'contain' }} />
+ <div style={{ width: 30, height: 30, borderRadius: 8, background: 'rgba(255,255,255,0.08)',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+ </div>
  <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>
  ApplyMate
  </span>
