@@ -42,7 +42,7 @@ export default function RefundPolicy() {
       <P>Refunds go to your original payment method via Razorpay. Takes 5–7 business days.</P>
 
       <H2>5. How to Request a Refund</H2>
-      <P>Email support@applymate.in or call +91 63037 28397 with your registered email and reason. Requests must be within 30 days of charge.</P>
+      <P>Email support@applymate.in with your registered email and reason. Requests must be within 30 days of charge.</P>
 
       <H2>6. Cancellation</H2>
       <P>Cancel anytime from your dashboard. No lock-in period. Access continues until cycle ends.</P>

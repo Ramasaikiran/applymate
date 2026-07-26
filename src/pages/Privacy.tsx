@@ -36,20 +36,17 @@ export default function Privacy() {
       <Ul>
         <li>Request a copy of your data anytime.</li>
         <li>Request correction of inaccurate data.</li>
-        <li>Request account and data deletion. We process this within 30 days.</li>
+        <li>Request account and data deletion. We process this within 2 days.</li>
       </Ul>
 
-      <H2>6. Cookies</H2>
-      <P>We use cookies for login sessions and basic analytics. No third-party ad tracking.</P>
-
-      <H2>7. Children's Privacy</H2>
+      <H2>6. Children's Privacy</H2>
       <P>Our Service is for users 18 and older. We don't knowingly collect data from minors.</P>
 
-      <H2>8. Changes to This Policy</H2>
+      <H2>7. Changes to This Policy</H2>
       <P>We may update this Policy. Material changes will be notified to you.</P>
 
-      <H2>9. Contact</H2>
-      <P>Rama Sai Kiran Medam<br />Hyderabad, India<br />support@applymate.in<br />+91 63037 28397</P>
+      <H2>8. Contact</H2>
+      <P>Rama Sai Kiran Medam<br />support@applymate.in</P>
     </LegalPage>
   )
 }

@@ -48,7 +48,7 @@ export default function Terms() {
       <P>Your data is stored securely with encryption. No system is 100% secure.</P>
 
       <H2>9. User Content and Ownership</H2>
-      <P>You own your resume and profile data. Request deletion anytime by calling us.</P>
+      <P>You own your resume and profile data. Request deletion anytime by emailing us.</P>
 
       <H2>10. Acceptable Use</H2>
       <Ul>
