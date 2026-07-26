@@ -44,7 +44,7 @@ function ActivityFeed() {
     return () => clearInterval(t)
   }, [items.length])
 
-  // Real activity only — no data yet means nothing renders, ever.
+  // Real activity only, no data yet means nothing renders, ever.
   if (!items.length) return null
   const item = items[idx]
 
@@ -58,7 +58,7 @@ function ActivityFeed() {
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
         <span>
           <strong>{item.first_name}</strong> {STATUS_LABEL[item.status] ?? 'made progress at'} <strong>{item.company}</strong>
-          <span style={{ color: '#4b7c58' }}> · {timeAgo(item.days_ago)}</span>
+          <span style={{ color: '#4b7c58' }}> ({timeAgo(item.days_ago)})</span>
         </span>
       </div>
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }`}</style>
@@ -215,7 +215,7 @@ export default function Landing() {
  letterSpacing: '-0.02em',
  boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
  }}>
- Get started — free
+ Get started for free
  </button>
  <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', fontSize: 13.5, color: '#9b9b9b',
@@ -227,7 +227,6 @@ export default function Landing() {
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
  {['Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
  <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5, color: '#9b9b9b' }}>
- {i > 0 && <span style={{ color: '#e5e5e5' }}>·</span>}
  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
  {t}
  </span>
@@ -341,7 +340,7 @@ export default function Landing() {
  padding: '14px 32px', borderRadius: 12, fontSize: 15, fontWeight: 700,
  cursor: 'pointer', fontFamily: "'Inter',sans-serif",
  }}>
- Start now — 4 min setup →
+ Start now, 4 min setup →
  </button>
  </div>
  </section>
@@ -531,7 +530,7 @@ export default function Landing() {
  </div>
 
  <p style={{ textAlign: 'center', fontSize: 13, color: '#b5b5b5', marginTop: 28 }}>
- Secured by Razorpay · UPI · Cards · Net banking · No auto-renewal
+ Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
  </p>
  </div>
  </section>
@@ -614,10 +613,10 @@ export default function Landing() {
  cursor: 'pointer', fontFamily: "'Inter',sans-serif", letterSpacing: '-0.02em',
  boxShadow: '0 8px 40px rgba(255,255,255,0.15)',
  }}>
- Start now — 4 min setup →
+ Start now, 4 min setup →
  </button>
  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 18 }}>
- Setup in 4 min · Free to start · No auto-renewal · Cancel anytime
+ Setup in 4 min, Free to start, No auto-renewal, Cancel anytime
  </p>
  </section>
 
@@ -639,7 +638,7 @@ export default function Landing() {
  <a href="/privacy" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
  <a href="/refund-policy" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
  <a href="mailto:support@applymate.in" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
- <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 · All rights reserved</p>
+ <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 All rights reserved</p>
  </div>
  </div>
  </footer>

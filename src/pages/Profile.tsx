@@ -202,7 +202,7 @@ export default function Profile() {
                 <input style={inp} type="number" value={passoutYear}
                   onChange={e => setPassoutYear(e.target.value)} placeholder="2026" />
                 <p style={{ fontSize: 11, color: '#b5b5b5', marginTop: 4 }}>
-                  Still in an earlier year? Update this any time — it controls which batch-specific jobs you see.
+                  Still in an earlier year? Update this any time, it controls which batch-specific jobs you see.
                 </p>
               </div>
             </div>
@@ -219,7 +219,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Danger zone — delete profile, admin-approved */}
+        {/* Danger zone: delete profile, admin-approved */}
         <div style={{ padding: '16px 20px', background: '#fff',
           border: '1px solid #fecaca', borderRadius: 12, display: 'flex',
           alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
@@ -227,7 +227,7 @@ export default function Profile() {
             <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f', marginBottom: 2 }}>Delete profile</p>
             <p style={{ fontSize: 12, color: '#9b9b9b' }}>
               {deletionStatus === 'pending'
-                ? 'Request sent. An admin will review it — your profile stays active until then.'
+                ? 'Request sent. An admin will review it, your profile stays active until then.'
                 : deletionStatus === 'rejected'
                 ? 'Your last request was declined. You can send another.'
                 : 'Permanently removes your profile and application history. Requires admin approval.'}

@@ -89,7 +89,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, footer 
  </div>
  </aside>
 
- {/* ── RIGHT PANEL — FORM ──────────────────────────────────── */}
+ {/* RIGHT PANEL: FORM */}
  <main style={{ flex: 1, display: 'flex', flexDirection: 'column',
  alignItems: 'center', justifyContent: 'center',
  padding: '40px 24px', background: '#fff', overflowY: 'auto' }}>

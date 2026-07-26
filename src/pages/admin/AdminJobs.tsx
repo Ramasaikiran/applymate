@@ -205,7 +205,7 @@ export default function AdminJobs() {
                   <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#6b6b6b', marginBottom: 5 }}>
                     Eligible graduation year
                   </label>
-                  <input style={inp} type="number" placeholder="e.g. 2026 — leave blank for all years"
+                  <input style={inp} type="number" placeholder="e.g. 2026, leave blank for all years"
                     value={form.required_passout_year ?? ''}
                     onChange={e => setForm(p => ({ ...p, required_passout_year: e.target.value ? parseInt(e.target.value) : null }))} />
                   <p style={{ fontSize: 11, color: '#b5b5b5', marginTop: 4 }}>
@@ -272,7 +272,7 @@ export default function AdminJobs() {
 
                 <div>
                   <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#6b6b6b', marginBottom: 8 }}>
-                    Plan visibility — which plans see this job
+                    Plan visibility: which plans see this job
                   </label>
                   <div style={{ display: 'flex', gap: 8 }}>
                     {(['free', 'basic', 'pro', 'maxpro'] as SubscriptionPlan[]).map(plan => {
@@ -423,8 +423,8 @@ export default function AdminJobs() {
                       )}
                     </p>
                     <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 6 }}>
-                      {job.company} · {job.job_type} · {job.location || 'Remote'}
-                      {job.required_experience_min > 0 && ` · ${job.required_experience_min}${job.required_experience_max ? `–${job.required_experience_max}` : '+'}y exp`}
+                      {job.company}, {job.job_type}, {job.location || 'Remote'}
+                      {job.required_experience_min > 0 && `, ${job.required_experience_min}${job.required_experience_max ? `-${job.required_experience_max}` : '+'}y exp`}
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 6 }}>
                       {(job.required_skills ?? []).slice(0, 6).map(s => (

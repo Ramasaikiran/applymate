@@ -121,7 +121,7 @@ export default function Dashboard() {
 
  async function handleResumeUpload(file: File) {
  console.log('[resume] handleResumeUpload called, file:', file?.name, file?.size, file?.type)
- // profile can still be loading right after a mobile file-picker remount —
+ // profile can still be loading right after a mobile file-picker remount,
  // poll briefly instead of silently doing nothing.
  let p = profileRef.current
  for (let attempt = 0; attempt < 15 && !p; attempt++) {
@@ -130,7 +130,7 @@ export default function Dashboard() {
  }
  if (!p) {
  console.error('Resume upload aborted: profile still not loaded after 6s')
- setResumeError('Still loading your profile — please try again in a moment.')
+ setResumeError('Still loading your profile, please try again in a moment.')
  return
  }
  const nameIsPdf = file.name.toLowerCase().endsWith('.pdf')
@@ -333,7 +333,7 @@ export default function Dashboard() {
  </div>
  )}
 
- {/* Resume — update directly, no full onboarding flow needed */}
+ {/* Resume: update directly, no full onboarding flow needed */}
  <div style={{ marginBottom: 24, padding: '16px 20px', background: '#fff',
  border: '1px solid #f0f0f0', borderRadius: 12, display: 'flex',
  alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
@@ -384,7 +384,7 @@ export default function Dashboard() {
  : `${usage.used}/${usage.limit} applications used this month (Free plan)`}
  </div>
  )}
- {/* Available Jobs — Basic plan self-serve job feed */}
+ {/* Available Jobs: Basic plan self-serve job feed */}
  {(subscription?.plan === 'basic' || subscription?.plan === 'free' || !subscription) && (
  <div style={{ marginBottom: 24 }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
@@ -423,7 +423,7 @@ export default function Dashboard() {
  <div style={{ flex: 1, minWidth: 0 }}>
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>{job.title}</p>
  <p style={{ fontSize: 12, color: '#9b9b9b', marginBottom: 6 }}>
- {job.company} · {job.location || 'Remote'} · {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+ {job.company}, {job.location || 'Remote'}, {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
  </p>
  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
  {job.required_skills.slice(0, 4).map(s => (
@@ -455,7 +455,7 @@ export default function Dashboard() {
  </div>
  )}
 
- {/* Stats — period dropdown */}
+ {/* Stats: period dropdown */}
  <div style={{ marginBottom: 20 }}>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
  <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f' }}>Applications sent</p>
@@ -556,7 +556,7 @@ export default function Dashboard() {
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>
  {app.job_title || 'Role'}
  </p>
- <p style={{ fontSize: 12, color: '#9b9b9b' }}>{app.company || '—'}</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>{app.company || 'N/A'}</p>
  </div>
  <p style={{ fontSize: 13, color: '#6b6b6b' }}>
  {new Date(app.applied_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
@@ -591,7 +591,7 @@ export default function Dashboard() {
  <div key={row.id} style={{ padding: '12px 16px', background: '#fff',
  border: '1px solid #f0f0f0', borderLeft: '3px solid #d97706', borderRadius: 10 }}>
  <p style={{ fontSize: 13.5, fontWeight: 500, color: '#0f0f0f' }}>
- {row.jobs?.title || 'Role'} <span style={{ color: '#9b9b9b', fontWeight: 400 }}>· {row.jobs?.company}</span>
+ {row.jobs?.title || 'Role'} <span style={{ color: '#9b9b9b', fontWeight: 400 }}>({row.jobs?.company})</span>
  </p>
  <p style={{ fontSize: 12, color: '#d97706', marginTop: 4 }}>
  {(row.missing_metrics ?? []).map((m: string) =>

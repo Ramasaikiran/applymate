@@ -132,7 +132,7 @@ export default function AdminDashboard() {
  <p style={{ fontSize: 14, color: '#0f0f0f', flex: 1 }}>
  <strong>{item.admin_name}</strong> {ACTION_LABEL[item.action] ?? item.action}{' '}
  {item.target_user_id && <Link to={`/admin/users/${item.target_user_id}`} style={{ color: '#2563eb', textDecoration: 'none' }}>{item.target_name}</Link>}
- {item.details && <span style={{ color: '#9b9b9b' }}> · {item.details}</span>}
+ {item.details && <span style={{ color: '#9b9b9b' }}> ({item.details})</span>}
  </p>
  <span style={{ fontSize: 12, color: '#b5b5b5', flexShrink: 0 }}>
  {new Date(item.created_at).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}

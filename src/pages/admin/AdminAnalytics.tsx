@@ -134,9 +134,9 @@ export default function AdminAnalytics() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16, marginBottom: 16 }}>
-          <Card title="Applications · last 14 days"><Bar data={days} max={maxDay} /></Card>
-          <Card title="Applications · last 8 weeks"><Bar data={weeks} max={maxWeek} /></Card>
-          <Card title="Applications · last 6 months"><Bar data={months} max={maxMonth} /></Card>
+          <Card title="Applications, last 14 days"><Bar data={days} max={maxDay} /></Card>
+          <Card title="Applications, last 8 weeks"><Bar data={weeks} max={maxWeek} /></Card>
+          <Card title="Applications, last 6 months"><Bar data={months} max={maxMonth} /></Card>
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>

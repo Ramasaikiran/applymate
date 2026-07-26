@@ -31,7 +31,7 @@ export default function PasswordStrength({ password }: { password: string }) {
         ))}
       </div>
       <p style={{ marginTop: 7, fontSize: 12, color: '#b5b5b5' }}>
-        {LABELS[score]} · 8+ chars, uppercase letter, number
+        {LABELS[score]} (8+ chars, uppercase letter, number)
       </p>
     </div>
   )

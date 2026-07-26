@@ -424,7 +424,7 @@ export default function Subscription() {
  </div>
 
  <p style={{ textAlign: 'center', fontSize: 12, color: '#b5b5b5', marginTop: 6 }}>
- Secured by Razorpay · UPI · Cards · Net banking · No auto-renewal
+ Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
  </p>
  </div>
  <style>{`
