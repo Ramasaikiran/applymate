@@ -253,6 +253,10 @@ export default function Landing() {
  background: '#fff', borderRadius: 999, padding: '14px 22px',
  display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
  boxShadow: '0 8px 24px rgba(0,0,0,0.12)', maxWidth: 420, margin: '0 auto',
+ opacity: showSticky ? 0 : 1,
+ pointerEvents: showSticky ? 'none' : 'auto',
+ transform: showSticky ? 'translateY(20px)' : 'translateY(0)',
+ transition: 'opacity 0.25s ease, transform 0.25s ease',
  }}>
  <span style={{ width: 40, height: 40, borderRadius: '50%', background: '#0ea5e9',
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -485,7 +489,7 @@ export default function Landing() {
  {[
  { label: 'Your salary', us: 'Keep 100% of your salary', them1: 'Keep 100% (but wastes your time)', them2: '20–30% salary commission' },
  { label: 'Job selection', us: 'Matched to your skills daily', them1: 'You scroll and guess', them2: 'Manual, slow selection' },
- { label: 'Resume', us: 'Same strong resume, every job', them1: 'Same resume for most jobs', them2: 'Same resume for most jobs' },
+ { label: 'Resume', us: 'Resume rewritten to match each JD', them1: 'Same resume for most jobs', them2: 'Same resume for most jobs' },
  { label: 'Volume', us: '10–15 tailored applications/day', them1: '3–5/day before burnout', them2: 'Limited applications' },
  { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
  { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
