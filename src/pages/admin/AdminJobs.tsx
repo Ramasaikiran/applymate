@@ -6,7 +6,7 @@ import AdminNav from './AdminNav'
 const BLANK: Omit<Job,'id'|'posted_at'|'updated_at'> = {
   title: '', company: '', description: '', required_skills: [],
   required_experience_min: 0, required_experience_max: null,
-  job_type: 'full-time', work_mode: null, role_category: '', location: '', country: 'India',
+  job_type: 'full-time', work_mode: null, role_category: '', required_passout_year: null, location: '', country: 'India',
   salary_min: null, salary_max: null, apply_url: '', last_date: null,
   plan_visibility: ['free', 'basic', 'pro', 'maxpro'], status: 'draft', is_active: true,
 }
@@ -67,7 +67,8 @@ export default function AdminJobs() {
       title: job.title, company: job.company, description: job.description ?? '',
       required_skills: job.required_skills, required_experience_min: job.required_experience_min,
       required_experience_max: job.required_experience_max, job_type: job.job_type,
-      work_mode: job.work_mode, role_category: job.role_category ?? '', location: job.location ?? '',
+      work_mode: job.work_mode, role_category: job.role_category ?? '',
+      required_passout_year: job.required_passout_year ?? null, location: job.location ?? '',
       country: job.country ?? 'India', salary_min: job.salary_min, salary_max: job.salary_max,
       apply_url: job.apply_url ?? '', last_date: job.last_date,
       plan_visibility: job.plan_visibility?.length ? job.plan_visibility : ['free', 'basic', 'pro', 'maxpro'],
@@ -198,6 +199,18 @@ export default function AdminJobs() {
                       value={form.required_experience_max ?? ''}
                       onChange={e => setForm(p => ({ ...p, required_experience_max: e.target.value ? parseFloat(e.target.value) : null }))} />
                   </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#6b6b6b', marginBottom: 5 }}>
+                    Eligible graduation year
+                  </label>
+                  <input style={inp} type="number" placeholder="e.g. 2026 — leave blank for all years"
+                    value={form.required_passout_year ?? ''}
+                    onChange={e => setForm(p => ({ ...p, required_passout_year: e.target.value ? parseInt(e.target.value) : null }))} />
+                  <p style={{ fontSize: 11, color: '#b5b5b5', marginTop: 4 }}>
+                    Only students who selected this graduation year will see the job. Leave blank to show it to everyone.
+                  </p>
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -400,6 +413,12 @@ export default function AdminJobs() {
                         <span style={{ fontSize: 10, fontWeight: 700, color: '#b45309',
                           background: '#fef3c7', padding: '2px 8px', borderRadius: 99 }}>
                           DUPLICATE URL
+                        </span>
+                      )}
+                      {job.required_passout_year && (
+                        <span style={{ fontSize: 10, fontWeight: 700, color: '#2563eb',
+                          background: '#eff6ff', padding: '2px 8px', borderRadius: 99 }}>
+                          {job.required_passout_year} BATCH ONLY
                         </span>
                       )}
                     </p>

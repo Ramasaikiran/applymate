@@ -164,6 +164,7 @@ export interface Job {
   job_type: string | null
   work_mode: WorkMode | null
   role_category: string | null
+  required_passout_year: number | null
   location: string | null
   country: string | null
   salary_min: number | null
