@@ -179,15 +179,12 @@ export default function Landing() {
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
 
  {/* Big logo */}
- <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 28 }}>
+ <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 28 }}>
  <div style={{ width: 72, height: 72, borderRadius: 18, background: '#fff',
  border: '1px solid #ececec', boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
  <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 48, height: 48, objectFit: 'contain' }} />
  </div>
- <span style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f0f0f' }}>
- ApplyMate
- </span>
  </div>
 
  {/* Early access pill */}
@@ -271,77 +268,6 @@ export default function Landing() {
  </a>
 
  <ActivityFeed />
-
- {/* ── PAIN vs GAIN ──────────────────────────────────────── */}
- <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0' }}>
- <div style={{ maxWidth: 1000, margin: '0 auto', padding: '88px 24px',
- display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60 }}>
- <div>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#ef4444',
- letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>
- WITHOUT APPLYMATE
- </p>
- {[
- 'Spend 3 hours daily copy-pasting the same application',
- 'Apply to 5 jobs/day. Get 0 replies in 2 weeks.',
- 'Give up and settle for a role you didn\'t want',
- ].map((t, i) => (
- <div key={t} style={{ display: 'flex', gap: 10, marginBottom: 14, alignItems: 'flex-start',
- opacity: 0, animation: `fadeInUp 0.5s ease ${0.1 + i * 0.12}s forwards` }}>
- <CROSS /><p style={{ fontSize: 14, color: '#6b6b6b', lineHeight: 1.6 }}>{t}</p>
- </div>
- ))}
-
- <div style={{ marginTop: 24, padding: '16px 18px', background: '#fef2f2',
- border: '1px solid #fecaca', borderRadius: 12 }}>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#dc2626', marginBottom: 4 }}>
- The real cost of waiting
- </p>
- <p style={{ fontSize: 13, color: '#7f1d1d', lineHeight: 1.6 }}>
- Every month unemployed = ₹30,000–50,000 in lost salary.
- ₹399/month to fix it isn't a cost. It's the best ROI of your life.
- </p>
- </div>
-
- <div style={{ marginTop: 16, padding: '16px 18px', background: '#f0fdf4',
- border: '1px solid #bbf7d0', borderRadius: 12 }}>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#15803d', marginBottom: 4 }}>
- Less than ₹14 a day
- </p>
- <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
- ₹399 ÷ 30 days = ₹13/day. Cheaper than a cup of chai.
- </p>
- </div>
- </div>
-
- <div>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#22c55e',
- letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>
- WITH APPLYMATE
- </p>
- {[
- 'Fill your profile once. Get matched to 10–15 jobs every single day',
- '300–450 relevant openings/month — apply yourself, or let our team do it',
- 'Dashboard shows every job matched, status, and what you applied to',
- ].map((t, i) => (
- <div key={t} style={{ display: 'flex', gap: 10, marginBottom: 14, alignItems: 'flex-start',
- opacity: 0, animation: `fadeInUp 0.5s ease ${0.1 + i * 0.12}s forwards` }}>
- <TICK /><p style={{ fontSize: 14, color: '#0f0f0f', lineHeight: 1.6 }}>{t}</p>
- </div>
- ))}
-
- <div style={{ marginTop: 24, padding: '16px 18px', background: '#f0fdf4',
- border: '1px solid #bbf7d0', borderRadius: 12 }}>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#15803d', marginBottom: 4 }}>
- Founding member advantage
- </p>
- <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
- Join the first batch and lock in early pricing before it moves to standard rates.
- </p>
- </div>
- </div>
- </div>
- </section>
 
  {/* ── HOW IT WORKS ──────────────────────────────────────── */}
  <section style={{ maxWidth: 900, margin: '0 auto', padding: '96px 24px' }}>
