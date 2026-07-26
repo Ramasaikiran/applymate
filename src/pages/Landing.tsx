@@ -178,6 +178,18 @@ export default function Landing() {
  {/* ── HERO ──────────────────────────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
 
+ {/* Big logo */}
+ <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, marginBottom: 28 }}>
+ <div style={{ width: 72, height: 72, borderRadius: 18, background: '#fff',
+ border: '1px solid #ececec', boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 48, height: 48, objectFit: 'contain' }} />
+ </div>
+ <span style={{ fontSize: 32, fontWeight: 800, letterSpacing: '-0.03em', color: '#0f0f0f' }}>
+ ApplyMate
+ </span>
+ </div>
+
  {/* Early access pill */}
  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
  background: '#fff7ed', border: '1px solid #fed7aa',
