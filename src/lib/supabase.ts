@@ -161,6 +161,7 @@ export interface Job {
   required_skills: string[]
   required_experience_min: number
   required_experience_max: number | null
+  graduation_years: number[]
   job_type: string | null
   work_mode: WorkMode | null
   role_category: string | null

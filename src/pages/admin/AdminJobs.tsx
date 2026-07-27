@@ -5,7 +5,7 @@ import AdminNav from './AdminNav'
 
 const BLANK: Omit<Job,'id'|'posted_at'|'updated_at'> = {
   title: '', company: '', description: '', required_skills: [],
-  required_experience_min: 0, required_experience_max: null,
+  required_experience_min: 0, required_experience_max: null, graduation_years: [],
   job_type: 'full-time', work_mode: null, role_category: '', location: '', country: 'India',
   salary_min: null, salary_max: null, apply_url: '', last_date: null,
   plan_visibility: ['free', 'basic', 'pro', 'maxpro'], status: 'draft', is_active: true,
@@ -27,6 +27,7 @@ export default function AdminJobs() {
   const [loading, setLoading] = useState(true)
   const [form,    setForm]    = useState<typeof BLANK>(BLANK)
   const [skillsInput, setSkillsInput] = useState('')
+  const [gradYearsInput, setGradYearsInput] = useState('')
   const [saving,  setSaving]  = useState(false)
   const [showForm,setShowForm]= useState(false)
   const [editId,  setEditId]  = useState<string | null>(null)
@@ -59,14 +60,14 @@ export default function AdminJobs() {
   }, {})
 
   function openNew() {
-    setForm(BLANK); setSkillsInput(''); setEditId(null); setError(null); setShowForm(true)
+    setForm(BLANK); setSkillsInput(''); setGradYearsInput(''); setEditId(null); setError(null); setShowForm(true)
   }
 
   function openEdit(job: Job) {
     setForm({
       title: job.title, company: job.company, description: job.description ?? '',
       required_skills: job.required_skills, required_experience_min: job.required_experience_min,
-      required_experience_max: job.required_experience_max, job_type: job.job_type,
+      required_experience_max: job.required_experience_max, graduation_years: job.graduation_years ?? [], job_type: job.job_type,
       work_mode: job.work_mode, role_category: job.role_category ?? '', location: job.location ?? '',
       country: job.country ?? 'India', salary_min: job.salary_min, salary_max: job.salary_max,
       apply_url: job.apply_url ?? '', last_date: job.last_date,
@@ -74,6 +75,7 @@ export default function AdminJobs() {
       status: job.status, is_active: job.is_active,
     })
     setSkillsInput(job.required_skills.join(', '))
+    setGradYearsInput((job.graduation_years ?? []).join(', '))
     setEditId(job.id); setError(null); setShowForm(true)
   }
 
@@ -84,6 +86,7 @@ export default function AdminJobs() {
       ...form,
       status: publishNow ? 'published' : form.status,
       required_skills: skillsInput.split(',').map(s => s.trim()).filter(Boolean),
+      graduation_years: gradYearsInput.split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n)),
       created_by: profile?.id,
     }
     const { error: dbErr } = editId
@@ -179,6 +182,15 @@ export default function AdminJobs() {
                   <input style={inp} value={skillsInput}
                     onChange={e => setSkillsInput(e.target.value)}
                     placeholder="Java, Spring Boot, React, SQL" />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#6b6b6b', marginBottom: 5 }}>
+                    Eligible graduation years (comma-separated)
+                  </label>
+                  <input style={inp} value={gradYearsInput}
+                    onChange={e => setGradYearsInput(e.target.value)}
+                    placeholder="2024, 2025, 2026" />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
