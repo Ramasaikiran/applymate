@@ -61,10 +61,6 @@ export default function Dashboard() {
  const [usage, setUsage] = useState<{ plan: string; used: number; limit: number | null } | null>(null)
  const [applying, setApplying] = useState<string | null>(null)
  const [applyError, setApplyError] = useState<string | null>(null)
- const [deletionStatus, setDeletionStatus] = useState<'none' | 'pending' | 'rejected'>('none')
- const [deletionRequesting, setDeletionRequesting] = useState(false)
- const [deletionError, setDeletionError] = useState<string | null>(null)
- const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
  useEffect(() => { if (profile) load() }, [profile])
  useEffect(() => {
@@ -91,7 +87,6 @@ export default function Dashboard() {
    }
  }
  useEffect(() => { if (profile) loadResume() }, [profile])
- useEffect(() => { if (profile) loadDeletionStatus() }, [profile])
  useEffect(() => { if (profile && (subscription?.plan === 'basic' || subscription?.plan === 'free' || !subscription)) loadJobs() }, [profile, subscription])
 
  async function loadJobs() {
@@ -126,7 +121,7 @@ export default function Dashboard() {
 
  async function handleResumeUpload(file: File) {
  console.log('[resume] handleResumeUpload called, file:', file?.name, file?.size, file?.type)
- // profile can still be loading right after a mobile file-picker remount —
+ // profile can still be loading right after a mobile file-picker remount,
  // poll briefly instead of silently doing nothing.
  let p = profileRef.current
  for (let attempt = 0; attempt < 15 && !p; attempt++) {
@@ -135,7 +130,7 @@ export default function Dashboard() {
  }
  if (!p) {
  console.error('Resume upload aborted: profile still not loaded after 6s')
- setResumeError('Still loading your profile — please try again in a moment.')
+ setResumeError('Still loading your profile, please try again in a moment.')
  return
  }
  const nameIsPdf = file.name.toLowerCase().endsWith('.pdf')
@@ -158,32 +153,6 @@ export default function Dashboard() {
  setResumeError((err as Error).message)
  } finally {
  setResumeUploading(false)
- }
- }
-
- async function loadDeletionStatus() {
- if (!profile) return
- const { data } = await supabase
- .from('profile_deletion_requests')
- .select('status')
- .eq('user_id', profile.id)
- .order('requested_at', { ascending: false })
- .limit(1)
- .maybeSingle()
- setDeletionStatus(data?.status === 'pending' ? 'pending' : data?.status === 'rejected' ? 'rejected' : 'none')
- }
-
- async function requestDeletion() {
- setDeletionRequesting(true); setDeletionError(null)
- try {
- const { error } = await supabase.rpc('request_profile_deletion', { p_reason: null })
- if (error) throw error
- setDeletionStatus('pending')
- setShowDeleteConfirm(false)
- } catch (err) {
- setDeletionError((err as Error).message)
- } finally {
- setDeletionRequesting(false)
  }
  }
 
@@ -267,6 +236,10 @@ export default function Dashboard() {
  Admin
  </Link>
  )}
+ <Link to="/profile" style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f',
+ background: '#f5f5f5', padding: '6px 12px', borderRadius: 7, textDecoration: 'none' }}>
+ My Profile
+ </Link>
  <button onClick={signOut} style={{ background: 'none', border: 'none',
  fontSize: 13, color: '#9b9b9b', cursor: 'pointer', fontFamily: "'Inter',sans-serif",
  padding: '6px 10px' }}>Sign out</button>
@@ -360,7 +333,7 @@ export default function Dashboard() {
  </div>
  )}
 
- {/* Resume — update directly, no full onboarding flow needed */}
+ {/* Resume: update directly, no full onboarding flow needed */}
  <div style={{ marginBottom: 24, padding: '16px 20px', background: '#fff',
  border: '1px solid #f0f0f0', borderRadius: 12, display: 'flex',
  alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
@@ -394,63 +367,6 @@ export default function Dashboard() {
  </div>
  </div>
 
- {/* Danger zone — delete profile, admin-approved */}
- <div style={{ marginBottom: 24, padding: '16px 20px', background: '#fff',
- border: '1px solid #fecaca', borderRadius: 12, display: 'flex',
- alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
- <div>
- <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f', marginBottom: 2 }}>Delete profile</p>
- <p style={{ fontSize: 12, color: '#9b9b9b' }}>
- {deletionStatus === 'pending'
- ? 'Request sent. An admin will review it — your profile stays active until then.'
- : deletionStatus === 'rejected'
- ? 'Your last request was declined. You can send another.'
- : 'Permanently removes your profile and application history. Requires admin approval.'}
- </p>
- {deletionError && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 4 }}> {deletionError}</p>}
- </div>
- {deletionStatus === 'pending' ? (
- <span style={{ fontSize: 12, fontWeight: 600, color: '#b45309', background: '#fffbeb',
- border: '1px solid #fde68a', borderRadius: 8, padding: '9px 16px', flexShrink: 0 }}>
- Pending review
- </span>
- ) : (
- <button onClick={() => setShowDeleteConfirm(true)} style={{
- background: '#fff', color: '#dc2626', border: '1px solid #fecaca',
- padding: '9px 16px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer',
- fontFamily: "'Inter',sans-serif", flexShrink: 0,
- }}>
- Request deletion
- </button>
- )}
- </div>
-
- {showDeleteConfirm && (
- <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 300,
- display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
- <div style={{ background: '#fff', borderRadius: 16, padding: 28, maxWidth: 380, width: '100%' }}>
- <p style={{ fontSize: 17, fontWeight: 700, color: '#0f0f0f', marginBottom: 8,
- fontFamily: "'Inter',sans-serif" }}>Delete your profile?</p>
- <p style={{ fontSize: 13.5, color: '#6b6b6b', lineHeight: 1.6, marginBottom: 22 }}>
- This sends a deletion request to our team. Once an admin approves it,
- your profile, resume, and application history are permanently removed. This can't be undone.
- </p>
- <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
- <button onClick={() => setShowDeleteConfirm(false)} disabled={deletionRequesting} style={{
- background: '#f5f5f5', color: '#0f0f0f', border: 'none', padding: '10px 18px',
- borderRadius: 8, fontSize: 13.5, fontWeight: 600, cursor: 'pointer',
- fontFamily: "'Inter',sans-serif",
- }}>Cancel</button>
- <button onClick={requestDeletion} disabled={deletionRequesting} style={{
- background: '#dc2626', color: '#fff', border: 'none', padding: '10px 18px',
- borderRadius: 8, fontSize: 13.5, fontWeight: 600,
- cursor: deletionRequesting ? 'not-allowed' : 'pointer', opacity: deletionRequesting ? 0.7 : 1,
- fontFamily: "'Inter',sans-serif",
- }}>{deletionRequesting ? 'Sending…' : 'Yes, request deletion'}</button>
- </div>
- </div>
- </div>
- )}
  {applyError && (
  <div style={{ marginBottom: 16, padding: '12px 16px', background: '#fef2f2',
  border: '1px solid #fecaca', borderRadius: 10, fontSize: 13, color: '#dc2626',
@@ -468,7 +384,7 @@ export default function Dashboard() {
  : `${usage.used}/${usage.limit} applications used this month (Free plan)`}
  </div>
  )}
- {/* Available Jobs — Basic plan self-serve job feed */}
+ {/* Available Jobs: Basic plan self-serve job feed */}
  {(subscription?.plan === 'basic' || subscription?.plan === 'free' || !subscription) && (
  <div style={{ marginBottom: 24 }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
@@ -507,7 +423,7 @@ export default function Dashboard() {
  <div style={{ flex: 1, minWidth: 0 }}>
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>{job.title}</p>
  <p style={{ fontSize: 12, color: '#9b9b9b', marginBottom: 6 }}>
- {job.company} · {job.location || 'Remote'} · {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+ {job.company}, {job.location || 'Remote'}, {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
  </p>
  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
  {job.required_skills.slice(0, 4).map(s => (
@@ -539,7 +455,7 @@ export default function Dashboard() {
  </div>
  )}
 
- {/* Stats — period dropdown */}
+ {/* Stats: period dropdown */}
  <div style={{ marginBottom: 20 }}>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
  <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f' }}>Applications sent</p>
@@ -640,7 +556,7 @@ export default function Dashboard() {
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>
  {app.job_title || 'Role'}
  </p>
- <p style={{ fontSize: 12, color: '#9b9b9b' }}>{app.company || '—'}</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>{app.company || 'N/A'}</p>
  </div>
  <p style={{ fontSize: 13, color: '#6b6b6b' }}>
  {new Date(app.applied_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
@@ -675,7 +591,7 @@ export default function Dashboard() {
  <div key={row.id} style={{ padding: '12px 16px', background: '#fff',
  border: '1px solid #f0f0f0', borderLeft: '3px solid #d97706', borderRadius: 10 }}>
  <p style={{ fontSize: 13.5, fontWeight: 500, color: '#0f0f0f' }}>
- {row.jobs?.title || 'Role'} <span style={{ color: '#9b9b9b', fontWeight: 400 }}>· {row.jobs?.company}</span>
+ {row.jobs?.title || 'Role'} <span style={{ color: '#9b9b9b', fontWeight: 400 }}>({row.jobs?.company})</span>
  </p>
  <p style={{ fontSize: 12, color: '#d97706', marginTop: 4 }}>
  {(row.missing_metrics ?? []).map((m: string) =>

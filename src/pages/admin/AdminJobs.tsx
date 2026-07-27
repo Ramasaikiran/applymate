@@ -271,7 +271,7 @@ export default function AdminJobs() {
 
                 <div>
                   <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#6b6b6b', marginBottom: 8 }}>
-                    Plan visibility — which plans see this job
+                    Plan visibility: which plans see this job
                   </label>
                   <div style={{ display: 'flex', gap: 8 }}>
                     {(['free', 'basic', 'pro', 'maxpro'] as SubscriptionPlan[]).map(plan => {
@@ -414,10 +414,16 @@ export default function AdminJobs() {
                           DUPLICATE URL
                         </span>
                       )}
+                      {job.graduation_years?.length > 0 && (
+                        <span style={{ fontSize: 10, fontWeight: 700, color: '#2563eb',
+                          background: '#eff6ff', padding: '2px 8px', borderRadius: 99 }}>
+                          {job.graduation_years.join('/')} BATCH ONLY
+                        </span>
+                      )}
                     </p>
                     <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 6 }}>
-                      {job.company} · {job.job_type} · {job.location || 'Remote'}
-                      {job.required_experience_min > 0 && ` · ${job.required_experience_min}${job.required_experience_max ? `–${job.required_experience_max}` : '+'}y exp`}
+                      {job.company}, {job.job_type}, {job.location || 'Remote'}
+                      {job.required_experience_min > 0 && `, ${job.required_experience_min}${job.required_experience_max ? `-${job.required_experience_max}` : '+'}y exp`}
                     </p>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5, marginBottom: 6 }}>
                       {(job.required_skills ?? []).slice(0, 6).map(s => (

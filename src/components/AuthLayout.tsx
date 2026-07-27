@@ -22,8 +22,8 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, footer 
  }}>
  {/* Logo */}
  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 72 }}>
- <div style={{ width: 42, height: 42, borderRadius: 11, background: 'rgba(255,255,255,0.08)',
- border: '1px solid rgba(255,255,255,0.14)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <div style={{ width: 42, height: 42, borderRadius: 11, background: '#fff',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
  <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 28, height: 28, objectFit: 'contain' }} />
  </div>
  <span style={{ fontSize: 14, fontWeight: 600, color: '#fff', letterSpacing: '-0.02em' }}>ApplyMate</span>
@@ -89,7 +89,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, footer 
  </div>
  </aside>
 
- {/* ── RIGHT PANEL — FORM ──────────────────────────────────── */}
+ {/* RIGHT PANEL: FORM */}
  <main style={{ flex: 1, display: 'flex', flexDirection: 'column',
  alignItems: 'center', justifyContent: 'center',
  padding: '40px 24px', background: '#fff', overflowY: 'auto' }}>

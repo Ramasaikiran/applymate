@@ -16,7 +16,7 @@ export default function SignIn() {
  const [gLoading, setGLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
 
- // Smart routing after login — admin / onboarding / subscription / dashboard.
+ // Smart routing after login: admin / onboarding / subscription / dashboard.
  // Shared with AuthCallback so email+password sign-in can't skip the paywall
  // that magic-link sign-in enforces.
  async function routeAfterLogin() {

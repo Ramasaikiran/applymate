@@ -55,7 +55,7 @@ export default function AuthCallback() {
  } catch {
  if (cancelled) return
  setState('error')
- setMessage('Something went wrong finishing sign in. Please try again — if it keeps happening, contact support@applymate.in.')
+ setMessage('Something went wrong finishing sign in. Please try again, if it keeps happening, contact support@applymate.in.')
  }
  }
 
@@ -74,7 +74,7 @@ export default function AuthCallback() {
  animation: 'spin 0.8s linear infinite', margin: '0 auto 24px' }} />
  <h1 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 24,
  fontWeight: 400, color: '#0f0f0f', marginBottom: 8 }}>Verifying your account</h1>
- <p style={{ fontSize: 14, color: '#9b9b9b' }}>One moment — almost in.</p>
+ <p style={{ fontSize: 14, color: '#9b9b9b' }}>One moment, almost in.</p>
  </>
  ) : (
  <>

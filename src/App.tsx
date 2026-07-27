@@ -7,6 +7,7 @@ import Landing        from './pages/Landing'
 const AuthCallback   = lazy(() => import('./pages/AuthCallback'))
 const CheckInbox     = lazy(() => import('./pages/CheckInbox'))
 const Dashboard      = lazy(() => import('./pages/Dashboard'))
+const Profile        = lazy(() => import('./pages/Profile'))
 const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
 const Onboarding     = lazy(() => import('./pages/Onboarding'))
 const ResetPassword  = lazy(() => import('./pages/ResetPassword'))
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/subscription"    element={<ProtectedRoute><Subscription /></ProtectedRoute>} />
         <Route path="/onboarding"      element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
         <Route path="/dashboard"       element={<ProtectedRoute requireSub><Dashboard /></ProtectedRoute>} />
+        <Route path="/profile"         element={<ProtectedRoute requireSub><Profile /></ProtectedRoute>} />
         <Route path="/admin/login"     element={<AdminLogin />} />
         <Route path="/admin"           element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/users"     element={<AdminRoute><AdminUsers /></AdminRoute>} />

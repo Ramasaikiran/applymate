@@ -14,7 +14,7 @@ function TrustStrip() {
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 16 }}>
       {['Plans from ₹399/mo', 'Cancel anytime', 'Secure payment'].map((t, i) => (
         <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#b5b5b5' }}>
-          {i > 0 && <span style={{ color: '#e5e5e5' }}>·</span>}
+          
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           {t}
         </span>
@@ -101,7 +101,7 @@ export default function SignUp() {
     if (blocked || secsLeft > 0) return
     setLoading(true)
 
-    // Server-side IP check — blocks bots/DDoS even if localStorage cleared
+    // Server-side IP check, blocks bots/DDoS even if localStorage cleared
     try {
       const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/check-signup-rate-limit`, {
         method: 'POST',
@@ -126,9 +126,9 @@ export default function SignUp() {
     fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/record-signup-attempt`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY },
-    }).catch(() => { /* best-effort — never block the user on this */ })
+    }).catch(() => { /* best-effort, never block the user on this */ })
 
-    // signUp() succeeding doesn't mean the user is actually signed in —
+    // signUp() succeeding doesn't mean the user is actually signed in,
     // with "Confirm email" required, Supabase creates the account but
     // withholds the session until the code is verified. This previously
     // navigated to /onboarding unconditionally, which either silently
@@ -164,7 +164,7 @@ export default function SignUp() {
         </>
       }
     >
-      {/* Google — Primary CTA */}
+      {/* Google: Primary CTA */}
       <button type="button" onClick={handleGoogle} disabled={gLoading} className="oc-btn-primary" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
         opacity: gLoading ? 0.6 : 1,
@@ -186,7 +186,7 @@ export default function SignUp() {
 
       {formError && <div className="oc-error">{formError}</div>}
 
-      {/* Step 1 — full name + email */}
+      {/* Step 1: full name + email */}
       {step === 'email' && (
         <form onSubmit={handleEmailStep} style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div>
@@ -211,7 +211,7 @@ export default function SignUp() {
         </form>
       )}
 
-      {/* Step 2 — password only (name+email confirmed above) */}
+      {/* Step 2: password only (name+email confirmed above) */}
       {step === 'details' && (
         <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           {/* Confirmed identity */}

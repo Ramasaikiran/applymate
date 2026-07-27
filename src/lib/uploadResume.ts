@@ -80,7 +80,7 @@ function uploadToSignedUrlWithStallTimeout(
       clearTimeout(stallTimer)
       stallTimer = setTimeout(() => {
         xhr.abort()
-        reject(new Error('Connection stalled — no data sent for 20s.'))
+        reject(new Error('Connection stalled, no data sent for 20s.'))
       }, stallTimeoutMs)
     }
 

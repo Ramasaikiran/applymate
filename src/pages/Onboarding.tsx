@@ -59,7 +59,7 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
     <div style={{ marginBottom: 40 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 10 }}>
         <span style={{ fontSize: 12, fontWeight: 600, color: '#b5b5b5', letterSpacing: '0.06em' }}>
-          STEP {step} OF {total} — {STEP_LABELS[step - 1]?.toUpperCase()}
+          STEP {step} OF {total}: {STEP_LABELS[step - 1]?.toUpperCase()}
         </span>
         <span style={{ fontSize: 12, color: '#b5b5b5' }}>{Math.round((step / total) * 100)}% complete</span>
       </div>
@@ -106,7 +106,7 @@ function calcPassoutYear(currentYear: string, degree: string): number | null {
  if (!currentYear || !degree) return null
  const rem = YEAR_REMAINING[currentYear]
  if (rem === undefined) return null
- if (rem === -1) return null // Graduated — user enters manually
+ if (rem === -1) return null // Graduated, user enters manually
  const dur = DEGREE_DURATION[degree] || 4
  const yrIndex = dur - rem // which year number they're in
  const yearsLeft = dur - yrIndex
@@ -174,7 +174,7 @@ export default function Onboarding() {
  const [loading, setLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
 
- // Resume-edit mode loads straight to step 4, bypassing role selection —
+ // Resume-edit mode loads straight to step 4, bypassing role selection,
  // backfill role from the existing profile once it's fetched.
  useEffect(() => {
    if (editMode && !role && profile?.user_type) setRole(profile.user_type as UserType)
@@ -219,7 +219,7 @@ export default function Onboarding() {
 
  // ── Step 4: Resume ─────────────────────────────────────────
  // Uploaded immediately on selection (not deferred to final submit) so the
- // file itself survives even if the tab fully reloads afterward — only the
+ // file itself survives even if the tab fully reloads afterward, only the
  // resulting storage path (a string) needs to be remembered, and strings
  // persist fine in sessionStorage.
  const [resumePath, setResumePath] = useState<string | null>(draft.resumePath ?? null)
@@ -232,7 +232,7 @@ export default function Onboarding() {
  try {
  if (sessionStorage.getItem(RESUME_INFLIGHT_KEY)) {
  sessionStorage.removeItem(RESUME_INFLIGHT_KEY)
- return 'Your last upload didn\'t finish — likely a slow or dropped connection. Try again on a stronger connection, or switch to Wi-Fi if possible.'
+ return 'Your last upload didn\'t finish, likely a slow or dropped connection. Try again on a stronger connection, or switch to Wi-Fi if possible.'
  }
  } catch { /* noop */ }
  return null
@@ -348,7 +348,7 @@ export default function Onboarding() {
  e.preventDefault()
  if (!user || !role) {
  setError(!user
- ? 'Your session expired — please refresh the page and log in again.'
+ ? 'Your session expired, please refresh the page and log in again.'
  : 'Something went wrong loading your role. Please refresh and try again.')
  window.scrollTo({ top: 0, behavior: 'smooth' })
  return
@@ -395,10 +395,10 @@ export default function Onboarding() {
  photo_url: photoUrl,
  })
  if (profErr) { console.error('Profile save error:', profErr); profileSaveFailed = true
- setError(`Couldn't save your profile: ${profErr.message}. Please try again — your details weren't lost.`) }
+ setError(`Couldn't save your profile: ${profErr.message}. Please try again, your details weren't lost.`) }
  } catch (e) {
  console.error('Profile upsert error:', e); profileSaveFailed = true
- setError(`Couldn't save your profile: ${(e as Error).message}. Please try again — your details weren't lost.`)
+ setError(`Couldn't save your profile: ${(e as Error).message}. Please try again, your details weren't lost.`)
  }
 
  if (profileSaveFailed) { setLoading(false); window.scrollTo({ top: 0, behavior: 'smooth' }); return }
@@ -535,7 +535,7 @@ export default function Onboarding() {
  <p style={sectionLabel}>YOUR PROFILE</p>
  <h2 style={serif}>Tell us about yourself</h2>
 
- {/* Email — pre-filled from signup, read-only */}
+ {/* Email: pre-filled from signup, read-only */}
  <Field label="Email">
  <div style={{
  ...inp(), display: 'flex', alignItems: 'center',
@@ -612,7 +612,7 @@ export default function Onboarding() {
  {roleInts.includes('Other') && (
  <input style={{ ...inp(), marginTop: 10 }} value={otherRole}
  onChange={e => setOtherRole(e.target.value)}
- placeholder="Tell us which role — e.g. Solutions Architect" />
+ placeholder="Tell us which role, e.g. Solutions Architect" />
  )}
  {errors.roleInts && <p style={{ marginTop: 5, fontSize: 12, color: '#ef4444' }}>{errors.roleInts}</p>}
  </Field>
@@ -812,11 +812,11 @@ export default function Onboarding() {
  </>
  )}
 
- {/* Skills — common to both */}
+ {/* Skills: common to both */}
  <Field label="Technical skills" error={errors.skills}>
  <input style={inp(errors.skills)} value={skills}
  onChange={e => { setSkills(e.target.value); setErrors(p=>({...p,skills:''})) }}
- placeholder="Java, React, Python, SQL — comma separated" />
+ placeholder="Java, React, Python, SQL, comma separated" />
  </Field>
 
  {role === 'student' && (
@@ -870,7 +870,7 @@ export default function Onboarding() {
  animation: 'spin 0.8s linear infinite' }} />
  <p style={{ fontSize: 14, color: '#6b6b6b' }}>
  {resumeUploadAttempt > 1
- ? `Connection dropped — retrying (attempt ${resumeUploadAttempt})… ${resumeUploadPct}%`
+ ? `Connection dropped, retrying (attempt ${resumeUploadAttempt}) ${resumeUploadPct}%`
  : `Uploading… ${resumeUploadPct}%`}
  </p>
  <div style={{ width: '80%', maxWidth: 240, height: 4, background: '#e5e5e5', borderRadius: 2, overflow: 'hidden' }}>
@@ -883,7 +883,7 @@ export default function Onboarding() {
  <polyline points="20 6 9 17 4 12"/>
  </svg>
  <p style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{resumeName}</p>
- <p style={{ fontSize: 13, color: '#9b9b9b' }}>Uploaded · click to replace</p>
+ <p style={{ fontSize: 13, color: '#9b9b9b' }}>Uploaded, click to replace</p>
  </>
  ) : (
  <>
@@ -897,7 +897,7 @@ export default function Onboarding() {
  </div>
  <div style={{ textAlign: 'center' }}>
  <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>Upload resume</p>
- <p style={{ fontSize: 13, color: '#b5b5b5', marginTop: 4 }}>PDF only · Max 5MB</p>
+ <p style={{ fontSize: 13, color: '#b5b5b5', marginTop: 4 }}>PDF only, Max 5MB</p>
  </div>
  </>
  )}
@@ -907,14 +907,14 @@ export default function Onboarding() {
  )}
  {!resumePath && !resumeUploading && (
  <p style={{ fontSize: 13, color: '#9b9b9b', marginTop: -10 }}>
- Optional — you can add it later from your dashboard if your connection is giving you trouble.
+ Optional, you can add it later from your dashboard if your connection is giving you trouble.
  </p>
  )}
 
  <button type="submit" disabled={loading || resumeUploading}
  style={{ ...btn, opacity: (loading || resumeUploading) ? 0.5 : 1,
  cursor: (loading || resumeUploading) ? 'not-allowed' : 'pointer' }}>
- {loading ? 'Setting up your account…' : "I'm ready — start applying "}
+ {loading ? 'Setting up your account...' : "I'm ready, start applying "}
  </button>
  </form>
  )}

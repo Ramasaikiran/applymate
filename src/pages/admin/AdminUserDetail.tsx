@@ -96,7 +96,7 @@ export default function AdminUserDetail() {
  if (error) throw error
  if (approve) {
  // The RPC above only removes the `profiles` row (and cascaded app
- // data). The actual auth.users record — and the email address —
+ // data). The actual auth.users record, and the email address,
  // still exists until this second step, which needs the service
  // role and can't run in the browser.
  const { data: { session } } = await supabase.auth.getSession()
@@ -111,7 +111,7 @@ export default function AdminUserDetail() {
  })
  if (!res.ok) {
  const data = await res.json().catch(() => ({}))
- throw new Error(data.error || 'Profile data was deleted, but the login/email could not be freed up. It may still block re-registration — contact support.')
+ throw new Error(data.error || 'Profile data was deleted, but the login/email could not be freed up. It may still block re-registration, contact support.')
  }
  window.location.href = '/admin/users'
  } else {
@@ -243,7 +243,7 @@ export default function AdminUserDetail() {
  <p style={{ fontSize: 11, fontWeight: 600, color: '#b5b5b5', letterSpacing: '0.08em', marginBottom: 6 }}>
  {label.toUpperCase()}
  </p>
- <p style={{ fontSize: 14, color: value ? '#0f0f0f' : '#b5b5b5' }}>{value || '—'}</p>
+ <p style={{ fontSize: 14, color: value ? '#0f0f0f' : '#b5b5b5' }}>{value || 'N/A'}</p>
  </div>
  )
 
@@ -283,7 +283,7 @@ export default function AdminUserDetail() {
  <div>
  <h1 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 26, fontWeight: 400,
  color: '#0f0f0f', marginBottom: 4 }}>{profile.full_name}</h1>
- <p style={{ fontSize: 14, color: '#9b9b9b' }}>{profile.email} · {profile.user_type || 'not set'}</p>
+ <p style={{ fontSize: 14, color: '#9b9b9b' }}>{profile.email} ({profile.user_type || 'not set'})</p>
  </div>
  <div style={{ marginLeft: 'auto' }}>
  <span style={{ fontSize: 12, padding: '5px 12px', borderRadius: 99,
@@ -305,7 +305,7 @@ export default function AdminUserDetail() {
  </p>
  <p style={{ fontSize: 12, color: '#b45309' }}>
  Requested {new Date(deletionReq.requested_at).toLocaleString()}
- {deletionReq.reason ? ` — "${deletionReq.reason}"` : ''}
+ {deletionReq.reason ? ` ("${deletionReq.reason}")` : ''}
  </p>
  {deletionResolveErr && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 4 }}>{deletionResolveErr}</p>}
  </div>
@@ -369,7 +369,7 @@ export default function AdminUserDetail() {
  <Field label="Email" value={profile.email} />
  <Field label="Phone" value={profile.mobile_number} />
  <Field label="Experience" value={pd?.years_experience ? `${pd.years_experience} yrs` : sd ? 'Student' : null} />
- <Field label="Education" value={sd ? [sd.degree, sd.branch, sd.college_name].filter(Boolean).join(' · ') : null} />
+ <Field label="Education" value={sd ? [sd.degree, sd.branch, sd.college_name].filter(Boolean).join(', ') : null} />
  <Field label="LinkedIn" value={profile.linkedin_url} />
  <Field label="GitHub" value={profile.github_url} />
  <Field label="Portfolio" value={profile.portfolio_url} />
@@ -456,7 +456,7 @@ export default function AdminUserDetail() {
  <div style={{ flex: 1 }}>
  <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f', marginBottom: 3 }}>{job.title}</p>
  <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 8 }}>
- {job.company} · {job.job_type || 'full-time'} · {job.location || 'Remote'}
+ {job.company}, {job.job_type || 'full-time'}, {job.location || 'Remote'}
  </p>
  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
  {overlap.map(s => (
@@ -517,8 +517,8 @@ export default function AdminUserDetail() {
  {app.job_title || 'Role'}
  </p>
  <p style={{ fontSize: 13, color: '#9b9b9b' }}>
- {app.company || '—'} · {new Date(app.applied_at).toLocaleDateString('en-IN')}
- {app.job_url && <> · <a href={app.job_url} target="_blank" rel="noreferrer" style={{ color: '#2563eb' }}>job link</a></>}
+ {app.company || 'N/A'}, {new Date(app.applied_at).toLocaleDateString('en-IN')}
+ {app.job_url && <>, <a href={app.job_url} target="_blank" rel="noreferrer" style={{ color: '#2563eb' }}>job link</a></>}
  </p>
  {app.notes && <p style={{ fontSize: 12, color: '#b5b5b5', marginTop: 4 }}>{app.notes}</p>}
  </div>

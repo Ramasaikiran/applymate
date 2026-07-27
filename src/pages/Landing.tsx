@@ -44,7 +44,7 @@ function ActivityFeed() {
     return () => clearInterval(t)
   }, [items.length])
 
-  // Real activity only — no data yet means nothing renders, ever.
+  // Real activity only, no data yet means nothing renders, ever.
   if (!items.length) return null
   const item = items[idx]
 
@@ -58,7 +58,7 @@ function ActivityFeed() {
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
         <span>
           <strong>{item.first_name}</strong> {STATUS_LABEL[item.status] ?? 'made progress at'} <strong>{item.company}</strong>
-          <span style={{ color: '#4b7c58' }}> · {timeAgo(item.days_ago)}</span>
+          <span style={{ color: '#4b7c58' }}> ({timeAgo(item.days_ago)})</span>
         </span>
       </div>
       <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }`}</style>
@@ -215,7 +215,7 @@ export default function Landing() {
  letterSpacing: '-0.02em',
  boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
  }}>
- Get started — free
+ Get started for free
  </button>
  <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', fontSize: 13.5, color: '#9b9b9b',
@@ -227,7 +227,6 @@ export default function Landing() {
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
  {['Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
  <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5, color: '#9b9b9b' }}>
- {i > 0 && <span style={{ color: '#e5e5e5' }}>·</span>}
  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
  {t}
  </span>
@@ -241,6 +240,10 @@ export default function Landing() {
  background: '#fff', borderRadius: 999, padding: '14px 22px',
  display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none',
  boxShadow: '0 8px 24px rgba(0,0,0,0.12)', maxWidth: 420, margin: '0 auto',
+ opacity: showSticky ? 0 : 1,
+ pointerEvents: showSticky ? 'none' : 'auto',
+ transform: showSticky ? 'translateY(20px)' : 'translateY(0)',
+ transition: 'opacity 0.25s ease, transform 0.25s ease',
  }}>
  <span style={{ width: 40, height: 40, borderRadius: '50%', background: '#0ea5e9',
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -256,74 +259,89 @@ export default function Landing() {
 
  <ActivityFeed />
 
- {/* ── PAIN vs GAIN ──────────────────────────────────────── */}
- <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0' }}>
- <div style={{ maxWidth: 1000, margin: '0 auto', padding: '88px 24px',
- display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60 }}>
- <div>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#ef4444',
- letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>
- WITHOUT APPLYMATE
+ {/* ── WHY APPLYMATE (comparison table) ─────────────────── */}
+ <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '88px 0' }}>
+ <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px' }}>
+ <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+ COMPARE
  </p>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 34, fontWeight: 400,
+ color: '#0f0f0f', letterSpacing: '-0.02em', marginBottom: 8 }}>
+ Why ApplyMate?
+ </h2>
+ <p style={{ fontSize: 14, color: '#9b9b9b' }} className="why-swipe-hint">
+ Swipe to compare →
+ </p>
+ </div>
+
+ <div style={{ overflowX: 'auto', padding: '28px 24px 8px', WebkitOverflowScrolling: 'touch' }}>
+ <div style={{ display: 'grid', gridTemplateColumns: '150px 240px 200px 200px',
+ gap: 0, minWidth: 790, maxWidth: 1000, margin: '0 auto' }}>
+
+ {/* header row */}
+ <div />
+ <div style={{ background: '#0f0f0f', borderRadius: '14px 14px 0 0', padding: '18px 20px', textAlign: 'center' }}>
+ <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, color: '#0f0f0f',
+ background: '#fff', padding: '3px 10px', borderRadius: 99, marginBottom: 10 }}>
+ ★ MOST EFFECTIVE
+ </span>
+ <p style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>ApplyMate</p>
+ <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Done for you</p>
+ </div>
+ <div style={{ padding: '18px 16px', textAlign: 'center' }}>
+ <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Applying solo</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>DIY, manual</p>
+ </div>
+ <div style={{ padding: '18px 16px', textAlign: 'center' }}>
+ <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Staffing agencies</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>Agencies & consultancies</p>
+ </div>
+
  {[
- 'Spend 3 hours daily copy-pasting the same application',
- 'Apply to 5 jobs/day. Get 0 replies in 2 weeks.',
- 'Give up and settle for a role you didn\'t want',
- ].map((t, i) => (
- <div key={t} style={{ display: 'flex', gap: 10, marginBottom: 14, alignItems: 'flex-start',
- opacity: 0, animation: `fadeInUp 0.5s ease ${0.1 + i * 0.12}s forwards` }}>
- <CROSS /><p style={{ fontSize: 14, color: '#6b6b6b', lineHeight: 1.6 }}>{t}</p>
+ { label: 'Your salary', us: 'Keep 100% of your salary', them1: 'Keep 100% (but wastes your time)', them2: '20–30% salary commission' },
+ { label: 'Job selection', us: 'Matched to your skills daily', them1: 'You scroll and guess', them2: 'Manual, slow selection' },
+ { label: 'Resume', us: 'Resume rewritten to match each JD', them1: 'Same resume for most jobs', them2: 'Same resume for most jobs' },
+ { label: 'Volume', us: '10–15 tailored applications/day', them1: '3–5/day before burnout', them2: 'Limited applications' },
+ { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
+ { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
+ { label: 'Where we apply', us: 'Official career pages. No Easy Apply.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
+ { label: 'Pricing', us: 'From ₹399/month, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
+ ].map((row, i) => (
+ <>
+ <div key={row.label + 'l'} style={{ padding: '16px 12px', display: 'flex', alignItems: 'center',
+ borderTop: '1px solid #f0f0f0', fontSize: 12, fontWeight: 700, color: '#0f0f0f',
+ letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+ {row.label}
  </div>
+ <div key={row.label + 'us'} style={{ padding: '16px 20px', background: '#f7f9ff',
+ borderTop: '1px solid #e8edff', display: 'flex', alignItems: 'flex-start', gap: 10,
+ borderLeft: '1px solid #e8edff', borderRight: '1px solid #e8edff',
+ borderBottom: i === 7 ? '1px solid #e8edff' : 'none',
+ borderRadius: i === 7 ? '0 0 14px 14px' : 0 }}>
+ <TICK /><span style={{ fontSize: 13.5, fontWeight: 600, color: '#0f0f0f', lineHeight: 1.4 }}>{row.us}</span>
+ </div>
+ <div key={row.label + 't1'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
+ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+ <CROSS /><span style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them1}</span>
+ </div>
+ <div key={row.label + 't2'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
+ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+ <CROSS /><span style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them2}</span>
+ </div>
+ </>
  ))}
-
- <div style={{ marginTop: 24, padding: '16px 18px', background: '#fef2f2',
- border: '1px solid #fecaca', borderRadius: 12 }}>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#dc2626', marginBottom: 4 }}>
- The real cost of waiting
- </p>
- <p style={{ fontSize: 13, color: '#7f1d1d', lineHeight: 1.6 }}>
- Every month unemployed = ₹30,000–50,000 in lost salary.
- ₹399/month to fix it isn't a cost. It's the best ROI of your life.
- </p>
- </div>
-
- <div style={{ marginTop: 16, padding: '16px 18px', background: '#f0fdf4',
- border: '1px solid #bbf7d0', borderRadius: 12 }}>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#15803d', marginBottom: 4 }}>
- Less than ₹14 a day
- </p>
- <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
- ₹399 ÷ 30 days = ₹13/day. Cheaper than a cup of chai.
- </p>
  </div>
  </div>
 
- <div>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#22c55e',
- letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 20 }}>
- WITH APPLYMATE
- </p>
- {[
- 'Fill your profile once. Get matched to 10–15 jobs every single day',
- '300–450 relevant openings/month — apply yourself, or let our team do it',
- 'Dashboard shows every job matched, status, and what you applied to',
- ].map((t, i) => (
- <div key={t} style={{ display: 'flex', gap: 10, marginBottom: 14, alignItems: 'flex-start',
- opacity: 0, animation: `fadeInUp 0.5s ease ${0.1 + i * 0.12}s forwards` }}>
- <TICK /><p style={{ fontSize: 14, color: '#0f0f0f', lineHeight: 1.6 }}>{t}</p>
- </div>
- ))}
-
- <div style={{ marginTop: 24, padding: '16px 18px', background: '#f0fdf4',
- border: '1px solid #bbf7d0', borderRadius: 12 }}>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#15803d', marginBottom: 4 }}>
- Founding member advantage
- </p>
- <p style={{ fontSize: 13, color: '#166534', lineHeight: 1.6 }}>
- Join the first batch and lock in early pricing before it moves to standard rates.
- </p>
- </div>
- </div>
+ <div style={{ textAlign: 'center', marginTop: 8 }}>
+ <button onClick={goSignUp} style={{
+ background: '#0f0f0f', color: '#fff', border: 'none',
+ padding: '14px 32px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+ cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ }}>
+ Start now, 4 min setup →
+ </button>
  </div>
  </section>
 
@@ -512,7 +530,7 @@ export default function Landing() {
  </div>
 
  <p style={{ textAlign: 'center', fontSize: 13, color: '#b5b5b5', marginTop: 28 }}>
- Secured by Razorpay · UPI · Cards · Net banking · No auto-renewal
+ Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
  </p>
  </div>
  </section>
@@ -595,10 +613,10 @@ export default function Landing() {
  cursor: 'pointer', fontFamily: "'Inter',sans-serif", letterSpacing: '-0.02em',
  boxShadow: '0 8px 40px rgba(255,255,255,0.15)',
  }}>
- Start now — 4 min setup →
+ Start now, 4 min setup →
  </button>
  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 18 }}>
- Setup in 4 min · Free to start · No auto-renewal · Cancel anytime
+ Setup in 4 min, Free to start, No auto-renewal, Cancel anytime
  </p>
  </section>
 
@@ -607,7 +625,10 @@ export default function Landing() {
  <div style={{ maxWidth: 900, margin: '0 auto',
  display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
- <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 26, height: 26, objectFit: 'contain' }} />
+ <div style={{ width: 30, height: 30, borderRadius: 8, background: 'rgba(255,255,255,0.08)',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+ <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+ </div>
  <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>
  ApplyMate
  </span>
@@ -617,7 +638,7 @@ export default function Landing() {
  <a href="/privacy" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
  <a href="/refund-policy" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
  <a href="mailto:support@applymate.in" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
- <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 · All rights reserved</p>
+ <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 All rights reserved</p>
  </div>
  </div>
  </footer>
