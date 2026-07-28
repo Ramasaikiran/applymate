@@ -14,6 +14,8 @@ const ResetPassword  = lazy(() => import('./pages/ResetPassword'))
 const SignIn         = lazy(() => import('./pages/SignIn'))
 const SignUp         = lazy(() => import('./pages/SignUp'))
 const Subscription   = lazy(() => import('./pages/Subscription'))
+const About          = lazy(() => import('./pages/About'))
+const Contact        = lazy(() => import('./pages/Contact'))
 const Terms          = lazy(() => import('./pages/Terms'))
 const Privacy        = lazy(() => import('./pages/Privacy'))
 const RefundPolicy   = lazy(() => import('./pages/RefundPolicy'))
@@ -31,6 +33,8 @@ export default function App() {
     <Suspense fallback={null}>
       <Routes>
         <Route path="/"                element={<Landing />} />
+        <Route path="/about"           element={<About />} />
+        <Route path="/contact"         element={<Contact />} />
         <Route path="/terms"           element={<Terms />} />
         <Route path="/privacy"         element={<Privacy />} />
         <Route path="/refund-policy"   element={<RefundPolicy />} />
