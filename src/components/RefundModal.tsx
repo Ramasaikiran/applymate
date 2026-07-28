@@ -39,7 +39,7 @@ export default function RefundModal({ subscriptionId, onClose, onDone }: Props) 
             <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>Request refund</h3>
             <p style={{ fontSize: 13, color: '#6b6b6b', marginBottom: 16, lineHeight: 1.5 }}>
               Job in 15 days? We apply the next 15 for a better offer, no refund.
-              Want out? We refund unused days, minus Razorpay's 2% fee.
+              Want out? We refund unused days, minus PayU's 2% fee.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
@@ -76,7 +76,7 @@ export default function RefundModal({ subscriptionId, onClose, onDone }: Props) 
               <p>Days used: <strong>{result.days_used}</strong></p>
               <p>Days refunded: <strong>{result.days_remaining}</strong></p>
               <p>Refund amount: <strong>₹{result.refund_gross_rupees}</strong></p>
-              <p>Razorpay fee (non-refundable): <strong>₹{result.razorpay_fee_rupees}</strong></p>
+              <p>PayU fee (non-refundable): <strong>₹{result.payu_fee_rupees}</strong></p>
               <p style={{ marginTop: 6, fontSize: 15, fontWeight: 700, color: '#15803d' }}>
                 You get: ₹{result.refund_net_rupees}
               </p>

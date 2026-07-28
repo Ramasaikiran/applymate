@@ -131,7 +131,7 @@ export default function Landing() {
  },
  {
  q: 'What if I get a job early, or want out?',
- a: 'Job in 15 days? We keep applying the next 15, for a better offer. No refund there. Want out mid-plan? We refund unused days, minus days used and Razorpay\'s 2% fee.',
+ a: 'Job in 15 days? We keep applying the next 15, for a better offer. No refund there. Want out mid-plan? We refund unused days, minus days used and PayU\'s 2% fee.',
  },
  ]
 
@@ -225,7 +225,7 @@ export default function Landing() {
  or see founding member plans where we apply for you →
  </button>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
- {['Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
+ {['Official career portals only', 'Cancel anytime', 'Secured by PayU'].map((t, i) => (
  <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5, color: '#9b9b9b' }}>
  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
  {t}
@@ -530,7 +530,7 @@ export default function Landing() {
  </div>
 
  <p style={{ textAlign: 'center', fontSize: 13, color: '#b5b5b5', marginTop: 28 }}>
- Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
+ Secured by PayU, UPI, Cards, Net banking, No auto-renewal
  </p>
  </div>
  </section>

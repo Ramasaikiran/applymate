@@ -73,9 +73,9 @@ create table if not exists public.subscriptions (
   amount_paise          int not null,
   status                text not null default 'pending'
                           check (status in ('pending','active','expired','cancelled','failed')),
-  razorpay_order_id     text unique,
-  razorpay_payment_id   text unique,
-  razorpay_signature    text,
+  payu_txnid            text unique,
+  payu_mihpayid         text unique,
+  payu_hash             text,
   starts_at             timestamptz,
   ends_at               timestamptz,
   created_at            timestamptz not null default now()

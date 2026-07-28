@@ -83,7 +83,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, footer 
  {/* Bottom trust */}
  <div style={{ marginTop: 40, paddingTop: 24, borderTop: '1px solid rgba(255,255,255,0.08)',
  display: 'flex', gap: 20 }}>
- {[' Razorpay secured', 'DPDPA compliant', 'Cancel anytime'].map(t => (
+ {[' PayU secured', 'DPDPA compliant', 'Cancel anytime'].map(t => (
  <span key={t} style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>{t}</span>
  ))}
  </div>

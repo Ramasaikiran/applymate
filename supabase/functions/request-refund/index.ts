@@ -1,7 +1,8 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { crypto } from 'https://deno.land/std@0.168.0/crypto/mod.ts'
 
-const RAZORPAY_FEE_PCT = 0.02
+const PAYU_FEE_PCT = 0.02
 const PLAN_DAYS = 30
 
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])
@@ -11,6 +12,11 @@ function corsFor(req: Request) {
     'Access-Control-Allow-Origin': ALLOWED_ORIGINS.has(origin) ? origin : 'https://applymate.in',
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   }
+}
+
+async function sha512(input: string): Promise<string> {
+  const digest = await crypto.subtle.digest('SHA-512', new TextEncoder().encode(input))
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
 serve(async (req) => {
@@ -47,7 +53,7 @@ serve(async (req) => {
     if (sub.status !== 'active') {
       return new Response(JSON.stringify({ error: 'Only active subscriptions are eligible' }), { status: 400, headers: corsHeaders })
     }
-    if (!sub.razorpay_payment_id || !sub.starts_at) {
+    if (!sub.payu_mihpayid || !sub.starts_at) {
       return new Response(JSON.stringify({ error: 'No completed payment on this subscription' }), { status: 400, headers: corsHeaders })
     }
     if (sub.plan === 'free' || !sub.amount_paise) {
@@ -83,15 +89,15 @@ serve(async (req) => {
     const totalPaise = sub.amount_paise
     // Unused portion, refunded gross
     const grossPaise = Math.round((totalPaise * daysRemaining) / PLAN_DAYS)
-    // Razorpay's 2% gateway fee on the total paid amount is never refunded
-    const feePaise = Math.round(totalPaise * RAZORPAY_FEE_PCT)
+    // PayU's 2% gateway fee on the total paid amount is never refunded
+    const feePaise = Math.round(totalPaise * PAYU_FEE_PCT)
     const netPaise = Math.max(0, grossPaise - feePaise)
 
     // ── Atomic claim ────────────────────────────────────────────────
     // Flip active → refund_processing only if it's still 'active' right
     // now. If two requests race, only one of these conditional updates
     // can succeed — the loser gets 0 rows back and is rejected here,
-    // before either one calls Razorpay. Prevents a double-refund from
+    // before either one calls PayU. Prevents a double-refund from
     // a double-click or a retried request.
     const { data: claimed } = await supabase.from('subscriptions')
       .update({ status: 'refund_processing' })
@@ -102,26 +108,27 @@ serve(async (req) => {
         { status: 409, headers: corsHeaders })
     }
 
-    // ── Issue refund via Razorpay ──────────────────────────────────
-    const keyId = Deno.env.get('RAZORPAY_KEY_ID')!
-    const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET')!
-    const auth = btoa(`${keyId}:${keySecret}`)
+    // ── Issue refund via PayU's cancel_refund_transaction API ──────
+    const key  = Deno.env.get('PAYU_MERCHANT_KEY')!
+    const salt = Deno.env.get('PAYU_MERCHANT_SALT')!
+    const payuInfoBase = Deno.env.get('PAYU_ENV') === 'production' ? 'https://info.payu.in' : 'https://test.payu.in'
 
-    const rpRes = await fetch(`https://api.razorpay.com/v1/payments/${sub.razorpay_payment_id}/refund`, {
+    const command = 'cancel_refund_transaction'
+    const var1 = sub.payu_mihpayid            // PayU payment id being refunded
+    const var2 = ''                            // token id (optional, unused)
+    const var3 = (netPaise / 100).toFixed(2)   // refund amount in rupees
+
+    // PayU postservice hash sequence: key|command|var1|salt
+    const hash = await sha512(`${key}|${command}|${var1}|${salt}`)
+
+    const payuRes = await fetch(`${payuInfoBase}/merchant/postservice?form=2`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Basic ${auth}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        amount: netPaise,
-        speed: 'normal',
-        notes: { reason, days_used: String(daysUsed), subscription_id },
-      }),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ key, command, var1, var2, var3, hash, token: '' }),
     })
-    const rpData = await rpRes.json()
+    const payuData = await payuRes.json()
 
-    if (!rpRes.ok) {
+    if (!payuRes.ok || Number(payuData.status) !== 1) {
       await supabase.from('subscriptions').update({
         status: 'active', // release the claim so the user can retry
         refund_requested_at: now.toISOString(),
@@ -132,7 +139,7 @@ serve(async (req) => {
         refund_net_paise: netPaise,
         refund_status: 'failed',
       }).eq('id', sub.id)
-      return new Response(JSON.stringify({ error: 'Razorpay refund failed', detail: rpData }),
+      return new Response(JSON.stringify({ error: 'PayU refund failed', detail: payuData }),
         { status: 502, headers: corsHeaders })
     }
 
@@ -144,7 +151,7 @@ serve(async (req) => {
       refund_gross_paise: grossPaise,
       refund_fee_paise: feePaise,
       refund_net_paise: netPaise,
-      razorpay_refund_id: rpData.id,
+      payu_refund_id: String(payuData.request_id ?? ''),
       refund_status: 'processed',
     }).eq('id', sub.id)
 
@@ -153,9 +160,9 @@ serve(async (req) => {
       days_used: daysUsed,
       days_remaining: daysRemaining,
       refund_gross_rupees: grossPaise / 100,
-      razorpay_fee_rupees: feePaise / 100,
+      payu_fee_rupees: feePaise / 100,
       refund_net_rupees: netPaise / 100,
-      razorpay_refund_id: rpData.id,
+      payu_refund_id: payuData.request_id,
     }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } })
   } catch (err) {
     return new Response(JSON.stringify({ error: String(err) }), { status: 500, headers: corsHeaders })
