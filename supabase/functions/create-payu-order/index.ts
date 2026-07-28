@@ -81,12 +81,17 @@ serve(async (req) => {
     if (insertErr) throw new Error(`Failed to record order: ${insertErr.message}`)
 
     const functionsBase = `${Deno.env.get('SUPABASE_URL')}/functions/v1`
+    // PayU's callback POST is made by their server, not our frontend — it
+    // can't carry an Authorization or apikey header, so the anon key has
+    // to travel as a query param for the gateway to route the request.
+    const anonKey = Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    const callbackUrl = `${functionsBase}/verify-payu-payment?apikey=${encodeURIComponent(anonKey)}`
 
     return new Response(JSON.stringify({
       action: `${payuBase}/_payment`,
       key, txnid, amount: amountRupees, productinfo, firstname, email, phone, hash,
-      surl: `${functionsBase}/verify-payu-payment`,
-      furl: `${functionsBase}/verify-payu-payment`,
+      surl: callbackUrl,
+      furl: callbackUrl,
     }), {
       headers: { ...cors, 'Content-Type': 'application/json' },
     })
