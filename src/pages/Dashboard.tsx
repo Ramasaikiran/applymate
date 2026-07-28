@@ -57,6 +57,7 @@ export default function Dashboard() {
  const [availableJobs, setAvailableJobs] = useState<Job[]>([])
  const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
  const [jobTab, setJobTab] = useState<'available' | 'saved'>('available')
+ const [workModeFilter, setWorkModeFilter] = useState<'all' | 'remote' | 'hybrid' | 'onsite'>('all')
  const [jobsLoading, setJobsLoading] = useState(true)
  const [usage, setUsage] = useState<{ plan: string; used: number; limit: number | null } | null>(null)
  const [applying, setApplying] = useState<string | null>(null)
@@ -399,17 +400,29 @@ export default function Dashboard() {
  }}>{t === 'available' ? 'Available' : 'Saved'}</button>
  ))}
  </div>
+ <select value={workModeFilter} onChange={e => setWorkModeFilter(e.target.value as typeof workModeFilter)}
+ style={{ fontSize: 12.5, fontWeight: 600, border: '1px solid #e5e5e5', borderRadius: 7,
+ padding: '6px 10px', background: '#fff', color: '#0f0f0f',
+ fontFamily: "'Inter',sans-serif", cursor: 'pointer', outline: 'none' }}>
+ <option value="all">All work modes</option>
+ <option value="remote">Remote</option>
+ <option value="hybrid">Hybrid</option>
+ <option value="onsite">Onsite</option>
+ </select>
  </div>
 
  {jobsLoading ? (
  <div style={{ fontSize: 13, color: '#b5b5b5', textAlign: 'center', padding: '32px 0' }}>Loading…</div>
  ) : (() => {
- const shown = jobTab === 'available' ? availableJobs : availableJobs.filter(j => savedIds.has(j.id))
+ const base = jobTab === 'available' ? availableJobs : availableJobs.filter(j => savedIds.has(j.id))
+ const shown = workModeFilter === 'all' ? base : base.filter(j => j.work_mode === workModeFilter)
  if (shown.length === 0) {
  return (
  <div style={{ background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12,
  padding: '32px 24px', textAlign: 'center', fontSize: 13, color: '#9b9b9b' }}>
- {jobTab === 'available' ? 'No jobs published for your plan yet. Check back soon.' : 'No saved jobs yet.'}
+ {jobTab === 'available'
+ ? (workModeFilter === 'all' ? 'No jobs published for your plan yet. Check back soon.' : `No ${workModeFilter} jobs right now. Try a different filter.`)
+ : 'No saved jobs yet.'}
  </div>
  )
  }
@@ -424,6 +437,12 @@ export default function Dashboard() {
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>{job.title}</p>
  <p style={{ fontSize: 12, color: '#9b9b9b', marginBottom: 6 }}>
  {job.company}, {job.location || 'Remote'}, {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+ {job.work_mode && (
+ <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, padding: '1px 7px',
+ background: '#f0f0f0', color: '#6b6b6b', borderRadius: 99, textTransform: 'capitalize' }}>
+ {job.work_mode}
+ </span>
+ )}
  </p>
  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
  {job.required_skills.slice(0, 4).map(s => (
