@@ -38,6 +38,26 @@ serve(async (req) => {
     const { txnid, amount, productinfo, firstname, email, status, hash: receivedHash, mihpayid } = fields
     if (!txnid) return redirect('failure', { reason: 'missing_txnid' })
 
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    )
+
+    // This endpoint is public (PayU's hosted page redirects the buyer's
+    // own browser here — no way to require auth). Rate limit by IP so it
+    // can't be flooded; the real callback is a one-time POST per
+    // transaction from a real customer, not repeated traffic.
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim()
+      ?? req.headers.get('cf-connecting-ip')
+      ?? 'unknown'
+    const { data: allowed } = await supabase.rpc('check_rate_limit', {
+      p_identifier:    ip,
+      p_action:        'payu_callback',
+      p_max_hits:      30,
+      p_window_minutes: 10,
+    })
+    if (!allowed) return redirect('failure', { reason: 'rate_limited' })
+
     const key  = Deno.env.get('PAYU_MERCHANT_KEY')!
     const salt = Deno.env.get('PAYU_MERCHANT_SALT')!
 
@@ -49,11 +69,6 @@ serve(async (req) => {
     if (expectedHash !== receivedHash) {
       return redirect('failure', { reason: 'invalid_hash' })
     }
-
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
-    )
 
     const { data: sub } = await supabase.from('subscriptions')
       .select('*').eq('payu_txnid', txnid).single()

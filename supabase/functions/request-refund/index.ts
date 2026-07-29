@@ -42,6 +42,20 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: corsHeaders })
     }
 
+    // Rate limit: max 5 refund attempts per user per hour — this hits
+    // PayU's API and does DB writes on every call, so it's a request-
+    // flooding target even though it's auth-gated.
+    const { data: allowed } = await supabase.rpc('check_rate_limit', {
+      p_identifier:    user.id,
+      p_action:        'refund_request',
+      p_max_hits:      5,
+      p_window_minutes: 60,
+    })
+    if (!allowed) {
+      return new Response(JSON.stringify({ error: 'Too many refund attempts. Please wait and try again.' }),
+        { status: 429, headers: corsHeaders })
+    }
+
     const { data: sub, error: subErr } = await supabase.from('subscriptions')
       .select('*').eq('id', subscription_id).single()
     if (subErr || !sub) {
