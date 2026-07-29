@@ -88,7 +88,7 @@ export default function Dashboard() {
    }
  }
  useEffect(() => { if (profile) loadResume() }, [profile])
- useEffect(() => { if (profile && (subscription?.plan === 'basic' || subscription?.plan === 'free' || !subscription)) loadJobs() }, [profile, subscription])
+ useEffect(() => { if (profile) loadJobs() }, [profile, subscription])
 
  async function loadJobs() {
  if (!profile) return
@@ -385,8 +385,8 @@ export default function Dashboard() {
  : `${usage.used}/${usage.limit} applications used this month (Free plan)`}
  </div>
  )}
- {/* Available Jobs: Basic plan self-serve job feed */}
- {(subscription?.plan === 'basic' || subscription?.plan === 'free' || !subscription) && (
+ {/* Available Jobs: browsable feed with work-mode filter, all plans */}
+ {true && (
  <div style={{ marginBottom: 24 }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
  <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f' }}>Jobs</p>
