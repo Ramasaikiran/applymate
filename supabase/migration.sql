@@ -84,11 +84,11 @@ create table if not exists public.subscriptions (
 alter table public.subscriptions enable row level security;
 
 drop policy if exists "Users view own subscriptions"   on public.subscriptions;
-drop policy if exists "Users insert own subscriptions" on public.subscriptions;
 create policy "Users view own subscriptions"
   on public.subscriptions for select using (auth.uid() = user_id);
-create policy "Users insert own subscriptions"
-  on public.subscriptions for insert with check (auth.uid() = user_id);
+-- No client-side insert policy — see note in schema.sql. Every legitimate
+-- row is written server-side with the service role key.
+drop policy if exists "Users insert own subscriptions" on public.subscriptions;
 
 -- ── 5. CREATE JOBS TABLE ─────────────────────────────────────────
 create table if not exists public.jobs (

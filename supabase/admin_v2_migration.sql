@@ -76,6 +76,10 @@ returns json language plpgsql security definer set search_path = public as $$
 declare
   result json;
 begin
+  if not exists (select 1 from public.profiles where id = auth.uid() and is_admin) then
+    raise exception 'Forbidden' using errcode = '42501';
+  end if;
+
   select json_build_object(
     'total_users',           (select count(*) from public.profiles where is_admin = false),
     'active_subscribers',    (select count(*) from public.subscriptions where status = 'active' and ends_at > now()),
@@ -97,6 +101,10 @@ returns json language plpgsql security definer set search_path = public as $$
 declare
   result json;
 begin
+  if not exists (select 1 from public.profiles where id = auth.uid() and is_admin) then
+    raise exception 'Forbidden' using errcode = '42501';
+  end if;
+
   select json_build_object(
     'total_applications', (select count(*) from public.job_applications where user_id = p_user_id),
     'interviews',          (select count(*) from public.job_applications where user_id = p_user_id and status in ('interview','hr_round')),

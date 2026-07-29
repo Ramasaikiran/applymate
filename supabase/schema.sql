@@ -181,9 +181,13 @@ alter table public.subscriptions enable row level security;
 drop policy if exists "Users view own subscriptions" on public.subscriptions;
 create policy "Users view own subscriptions"
   on public.subscriptions for select using (auth.uid() = user_id);
+-- No client-side insert policy: every legitimate row is written server-side
+-- (service role, bypasses RLS) by create-payu-order / verify-payu-payment.
+-- A "Users insert own subscriptions" policy existed here previously and
+-- let any authenticated user POST status='active', amount_paise=0 directly
+-- and grant themselves a free paid plan — see migration
+-- 20260725130000_remove_vulnerable_subscriptions_insert_policy.sql.
 drop policy if exists "Users insert own subscriptions" on public.subscriptions;
-create policy "Users insert own subscriptions"
-  on public.subscriptions for insert with check (auth.uid() = user_id);
 drop policy if exists "Admins view all subscriptions" on public.subscriptions;
 create policy "Admins view all subscriptions"
   on public.subscriptions for select
@@ -191,10 +195,17 @@ create policy "Admins view all subscriptions"
 
 -- Helper: get active subscription for a user
 create or replace function public.get_active_subscription(p_user_id uuid)
-returns table (plan text, ends_at timestamptz) language sql security definer as $$
-  select plan, ends_at from public.subscriptions
-  where user_id = p_user_id and status = 'active' and ends_at > now()
-  order by ends_at desc limit 1;
+returns table (plan text, ends_at timestamptz) language plpgsql security definer set search_path = public as $$
+begin
+  if auth.uid() <> p_user_id and not exists (select 1 from public.profiles where id = auth.uid() and is_admin) then
+    raise exception 'Forbidden' using errcode = '42501';
+  end if;
+
+  return query
+    select s.plan, s.ends_at from public.subscriptions s
+    where s.user_id = p_user_id and s.status = 'active' and s.ends_at > now()
+    order by s.ends_at desc limit 1;
+end;
 $$;
 
 -- ── 8. JOBS ──────────────────────────────────────────────────────
@@ -254,10 +265,14 @@ create policy "Admins manage all applications"
 
 -- ── 10. APPLICATION STATS FUNCTION ───────────────────────────────
 create or replace function public.get_application_stats(p_user_id uuid)
-returns json language plpgsql security definer as $$
+returns json language plpgsql security definer set search_path = public as $$
 declare
   result json;
 begin
+  if auth.uid() <> p_user_id and not exists (select 1 from public.profiles where id = auth.uid() and is_admin) then
+    raise exception 'Forbidden' using errcode = '42501';
+  end if;
+
   select json_build_object(
     'last_7_days',  (select count(*) from public.job_applications where user_id = p_user_id and applied_at >= now() - interval '7 days'),
     'last_30_days', (select count(*) from public.job_applications where user_id = p_user_id and applied_at >= now() - interval '30 days'),
@@ -273,11 +288,15 @@ $$;
 -- ── 11. MATCHED JOBS FUNCTION ─────────────────────────────────────
 -- Returns job count where user skills overlap >= 1 required skill
 create or replace function public.get_matched_jobs_count(p_user_id uuid)
-returns int language plpgsql security definer as $$
+returns int language plpgsql security definer set search_path = public as $$
 declare
   user_skills text[];
   matched int;
 begin
+  if auth.uid() <> p_user_id and not exists (select 1 from public.profiles where id = auth.uid() and is_admin) then
+    raise exception 'Forbidden' using errcode = '42501';
+  end if;
+
   -- get skills from whichever detail table exists
   select technical_skills into user_skills from public.student_details where id = p_user_id;
   if user_skills is null then
