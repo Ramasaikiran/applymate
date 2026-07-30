@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase, type UserType } from '../lib/supabase'
 import { pickFile } from '../lib/filePicker'
 import { uploadResumeWithProgress } from '../lib/uploadResume'
+import { routePostAuth } from '../lib/routing'
 
 /* ── Shared style helpers ──────────────────────────────────── */
 const inp = (err?: string): React.CSSProperties => ({
@@ -454,7 +455,14 @@ export default function Onboarding() {
  setLoading(false)
  clearDraft()
  await refreshProfile()
- navigate('/dashboard')
+ // Route by subscription status, not a hardcoded dashboard redirect —
+ // a freshly onboarded user with no active plan should land on
+ // /subscription to pay, not skip straight to the dashboard.
+ try {
+ await routePostAuth(user.id, navigate)
+ } catch {
+ navigate('/subscription')
+ }
  }
 
  /* ── Render ─────────────────────────────────────────────────── */
