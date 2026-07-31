@@ -7,7 +7,7 @@ import { supabase, type SubscriptionPlan } from '../lib/supabase'
 // form with the signed fields the edge function returns and POST it to
 // PayU's payment page. PayU then posts back to our verify-payu-payment
 // edge function (surl/furl), which redirects the browser here with
-// ?payu_status=success|failure — see the useEffect below.
+// ?payu_status=success|failure. See the useEffect below.
 function submitToPayU(order: {
   action: string; key: string; txnid: string; amount: string; productinfo: string
   firstname: string; email: string; phone: string; hash: string; surl: string; furl: string
@@ -133,7 +133,7 @@ export default function Subscription() {
  const order = await res.json()
  if (!res.ok) throw new Error(order.error || 'Could not create order.')
 
- // Full-page redirect to PayU's hosted checkout — control returns via
+ // Full-page redirect to PayU's hosted checkout. Control returns via
  // the surl/furl round trip handled in the useEffect above.
  submitToPayU(order)
  } catch (err) {
@@ -332,11 +332,11 @@ export default function Subscription() {
  ))}
  </ul>
 
- {/* Job-application email note — Pro and Max Pro only */}
+ {/* Job-application email note. Pro and Max Pro only */}
  {(plan.id === 'pro' || plan.id === 'maxpro') && (
  <p style={{ fontSize: 11, lineHeight: 1.5, marginTop: 12,
  color: isSelected ? 'rgba(255,255,255,0.6)' : '#9b9b9b' }}>
- A new email + password is required — some companies ask for
+ A new email + password is required. Some companies ask for
  OTP verification during applications. Create it fresh, don't
  reuse your personal email, and keep it professional.
  </p>
