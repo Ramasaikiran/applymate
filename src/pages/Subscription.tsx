@@ -332,6 +332,16 @@ export default function Subscription() {
  ))}
  </ul>
 
+ {/* Job-application email note — Pro and Max Pro only */}
+ {(plan.id === 'pro' || plan.id === 'maxpro') && (
+ <p style={{ fontSize: 11, lineHeight: 1.5, marginTop: 12,
+ color: isSelected ? 'rgba(255,255,255,0.6)' : '#9b9b9b' }}>
+ A new email + password is required — some companies ask for
+ OTP verification during applications. Create it fresh, don't
+ reuse your personal email, and keep it professional.
+ </p>
+ )}
+
  {/* Selected indicator */}
  {isSelected && (
  <div style={{ position: 'absolute', top: 14, left: 20,
