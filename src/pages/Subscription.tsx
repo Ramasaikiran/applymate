@@ -134,13 +134,18 @@ export default function Subscription() {
  // round trip needed.
  await openRazorpayCheckout(order, async (payment) => {
  try {
+ // Re-fetch the session here rather than reusing the one from
+ // checkout-open time — the user may have left the modal open
+ // long enough for that token to expire.
+ const { data: { session: verifySession } } = await supabase.auth.getSession()
+ if (!verifySession) throw new Error('Session expired. Please sign in again and retry — your payment was not lost, contact support with your payment ID if unsure.')
  const verifyRes = await fetch(
  `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
  {
  method: 'POST',
  headers: {
  'Content-Type': 'application/json',
- 'Authorization': `Bearer ${session.access_token}`,
+ 'Authorization': `Bearer ${verifySession.access_token}`,
  'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
  },
  body: JSON.stringify(payment),

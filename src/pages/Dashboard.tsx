@@ -121,7 +121,6 @@ export default function Dashboard() {
  }
 
  async function handleResumeUpload(file: File) {
- console.log('[resume] handleResumeUpload called, file:', file?.name, file?.size, file?.type)
  // profile can still be loading right after a mobile file-picker remount,
  // poll briefly instead of silently doing nothing.
  let p = profileRef.current

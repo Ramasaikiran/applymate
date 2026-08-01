@@ -35,7 +35,6 @@ export async function uploadResumeWithProgress(
   let lastError: Error = new Error('Upload failed')
 
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    console.log(`[resume-upload] attempt ${attempt}/${MAX_ATTEMPTS} starting — requesting signed URL`)
     try {
       const { data: signed, error: signErr } = await supabase
         .storage.from('resumes')
@@ -44,20 +43,16 @@ export async function uploadResumeWithProgress(
         console.error('[resume-upload] createSignedUploadUrl failed:', signErr?.message ?? 'no data returned')
         throw signErr ?? new Error('Could not prepare upload')
       }
-      console.log('[resume-upload] got signed URL, starting XHR PUT, file size:', file.size)
 
       await uploadToSignedUrlWithStallTimeout(signed.signedUrl, file, STALL_TIMEOUT_MS, (percent) => {
-        console.log(`[resume-upload] progress: ${percent}%`)
         onProgress?.({ percent, attempt, maxAttempts: MAX_ATTEMPTS })
       })
-      console.log('[resume-upload] attempt succeeded')
       return // success
     } catch (err) {
       lastError = err as Error
       console.error(`[resume-upload] attempt ${attempt} failed:`, lastError.message)
       if (attempt < MAX_ATTEMPTS) {
         const delay = RETRY_DELAYS_MS[attempt - 1] ?? 8_000
-        console.log(`[resume-upload] retrying in ${delay}ms`)
         await new Promise(r => setTimeout(r, delay))
       }
     }
@@ -85,7 +80,6 @@ function uploadToSignedUrlWithStallTimeout(
     }
 
     xhr.upload.addEventListener('loadstart', () => {
-      console.log('[resume-upload] xhr loadstart')
       resetStallTimer()
     })
     xhr.upload.addEventListener('progress', (e) => {
@@ -94,13 +88,11 @@ function uploadToSignedUrlWithStallTimeout(
     })
     xhr.addEventListener('readystatechange', () => {
       if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
-        console.log('[resume-upload] response headers received, status:', xhr.status)
         resetStallTimer()
       }
     })
     xhr.addEventListener('load', () => {
       clearTimeout(stallTimer)
-      console.log('[resume-upload] xhr load event, status:', xhr.status, xhr.responseText?.slice(0, 200))
       if (xhr.status >= 200 && xhr.status < 300) resolve()
       else reject(new Error(`Upload failed (status ${xhr.status}).`))
     })

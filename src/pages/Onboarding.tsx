@@ -256,7 +256,6 @@ export default function Onboarding() {
  prevSalary, noticeStr, resumePath, resumeName, expectedSalary, reasonChange, prevProjects])
 
  async function handleResumeSelect(file: File | null) {
- console.log('[resume] handleResumeSelect called, file:', file?.name, file?.size, file?.type)
  if (!file) return
  // Mobile file providers (Google Drive, Files app, some Android pickers)
  // frequently report a blank or generic MIME type ('', 'application/octet-stream')

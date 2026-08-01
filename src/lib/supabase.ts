@@ -41,7 +41,6 @@ async function authRequest(path: string, body: unknown, redirectTo?: string) {
   }
 
   const raw = await res.text()
-  console.log(`[auth-rest] POST ${fullUrl} -> ${res.status}`, raw.slice(0, 500))
 
   if (res.ok) return { ok: true, status: res.status, raw, message: null as string | null }
 
