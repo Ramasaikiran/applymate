@@ -6,7 +6,7 @@ import { supabase, type SubscriptionPlan } from '../lib/supabase'
 // Razorpay Checkout is a JS modal, not a redirect: we load their script
 // once, open the modal with the order the edge function created, and
 // handle success/failure right here via callbacks — no round trip
-// through query params like the old PayU flow needed.
+// through query params like a redirect-based flow would need.
 declare global {
   interface Window { Razorpay: any }
 }
