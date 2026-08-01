@@ -69,7 +69,7 @@ serve(async (req) => {
 
     if (sub.status === 'active') {
       // Already processed — don't let a replayed call extend it again.
-      return new Response(JSON.stringify({ success: true, plan: sub.plan, ends_at: sub.ends_at }), {
+      return new Response(JSON.stringify({ success: true, plan: sub.plan, ends_at: sub.ends_at, amount_paise: sub.amount_paise, coupon_code: sub.coupon_code }), {
         headers: { ...cors, 'Content-Type': 'application/json' },
       })
     }
@@ -88,7 +88,7 @@ serve(async (req) => {
 
     await supabase.from('profiles').update({ account_status: 'active' }).eq('id', sub.user_id)
 
-    return new Response(JSON.stringify({ success: true, plan: sub.plan, ends_at: ends.toISOString() }), {
+    return new Response(JSON.stringify({ success: true, plan: sub.plan, ends_at: ends.toISOString(), amount_paise: sub.amount_paise, coupon_code: sub.coupon_code }), {
       headers: { ...cors, 'Content-Type': 'application/json' },
     })
   } catch (err) {

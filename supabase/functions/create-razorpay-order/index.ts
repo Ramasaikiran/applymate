@@ -7,6 +7,13 @@ const PLANS: Record<string, { amount: number; days: number }> = {
   maxpro: { amount: 359900, days: 30 },
 }
 
+// Coupon codes are validated here only — never trust a discount amount
+// sent from the client, since that's editable in the browser before
+// the request is sent.
+const COUPONS: Record<string, { pct: number }> = {
+  applymate10: { pct: 10 },
+}
+
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])
 function corsFor(req: Request) {
   const origin = req.headers.get('origin') ?? ''
@@ -21,7 +28,7 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   try {
-    const { plan } = await req.json()
+    const { plan, coupon } = await req.json()
     if (!PLANS[plan]) return new Response(JSON.stringify({ error: 'Invalid plan' }), { status: 400, headers: cors })
 
     const supabase = createClient(
@@ -50,7 +57,13 @@ serve(async (req) => {
     const { data: profile } = await supabase.from('profiles')
       .select('full_name, email, mobile_number').eq('id', user.id).single()
 
-    const { amount } = PLANS[plan]
+    const { amount: originalAmount } = PLANS[plan]
+    const normalizedCoupon = typeof coupon === 'string' ? coupon.trim().toLowerCase() : ''
+    const matchedCoupon = normalizedCoupon && COUPONS[normalizedCoupon] ? normalizedCoupon : null
+    const amount = matchedCoupon
+      ? Math.round(originalAmount * (1 - COUPONS[matchedCoupon].pct / 100))
+      : originalAmount
+
     const keyId     = Deno.env.get('RAZORPAY_KEY_ID')!
     const keySecret = Deno.env.get('RAZORPAY_KEY_SECRET')!
 
@@ -68,7 +81,7 @@ serve(async (req) => {
         amount,               // paise
         currency: 'INR',
         receipt,
-        notes: { user_id: user.id, plan },
+        notes: { user_id: user.id, plan, coupon: matchedCoupon || '' },
       }),
     })
     const order = await orderRes.json()
@@ -80,6 +93,7 @@ serve(async (req) => {
       user_id: user.id, plan,
       amount_paise: amount, status: 'pending',
       razorpay_order_id: order.id,
+      coupon_code: matchedCoupon,
     })
     if (insertErr) throw new Error(`Failed to record order: ${insertErr.message}`)
 
@@ -87,9 +101,11 @@ serve(async (req) => {
       key: keyId,
       order_id: order.id,
       amount,
+      original_amount: originalAmount,
+      coupon_applied: matchedCoupon,
       currency: 'INR',
       name: 'ApplyMate',
-      description: `ApplyMate ${plan} plan`,
+      description: `ApplyMate ${plan} plan${matchedCoupon ? ` (${COUPONS[matchedCoupon].pct}% off)` : ''}`,
       prefill: {
         name: profile?.full_name || '',
         email: profile?.email || user.email || '',

@@ -99,7 +99,25 @@ export default function Subscription() {
  const [selected, setSelected] = useState<SubscriptionPlan>('basic')
  const [loading, setLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
- const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string } | null>(null)
+ const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string; amountPaid: number } | null>(null)
+ const [couponInput, setCouponInput] = useState('')
+ const [couponApplied, setCouponApplied] = useState<string | null>(null)
+ const [couponError, setCouponError] = useState<string | null>(null)
+
+ // Preview only — the real discount is validated and applied
+ // server-side in create-razorpay-order, this just shows the user
+ // what to expect before they pay.
+ const COUPON_DISCOUNT_PCT = 10
+ function applyCoupon() {
+ const code = couponInput.trim().toLowerCase()
+ if (code === 'applymate10') {
+ setCouponApplied(code)
+ setCouponError(null)
+ } else {
+ setCouponApplied(null)
+ setCouponError('Invalid coupon code.')
+ }
+ }
 
  async function handlePay() {
  if (!user) return
@@ -120,7 +138,7 @@ export default function Subscription() {
  'Authorization': `Bearer ${session.access_token}`,
  'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
  },
- body: JSON.stringify({ plan: selected }),
+ body: JSON.stringify({ plan: selected, coupon: couponApplied || undefined }),
  }
  )
  } catch {
@@ -157,7 +175,7 @@ export default function Subscription() {
  const plan = PLANS.find(p => p.id === result.plan)
  if (plan) {
  refreshProfile()
- setSuccess({ plan, endsAt: result.ends_at })
+ setSuccess({ plan, endsAt: result.ends_at, amountPaid: (result.amount_paise ?? plan.price * 100) / 100 })
  }
  } catch (err) {
  setError((err as Error).message)
@@ -176,7 +194,7 @@ export default function Subscription() {
 
  /* ── Success ─────────────────────────────────────────────────── */
  if (success) {
- const { plan, endsAt } = success
+ const { plan, endsAt, amountPaid } = success
  return (
  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
  fontFamily: "'Inter',sans-serif", background: '#fff', padding: '0 24px' }}>
@@ -192,7 +210,7 @@ export default function Subscription() {
  <div style={{ background: '#f7f7f7', borderRadius: 16, padding: '24px', marginBottom: 28, textAlign: 'left' }}>
  {[
  { label: 'Plan', value: plan.label },
- { label: 'Amount paid', value: `₹${plan.price.toLocaleString('en-IN')}` },
+ { label: 'Amount paid', value: `₹${amountPaid.toLocaleString('en-IN')}` },
  { label: 'Duration', value: plan.duration },
  ].map(({ label, value }) => (
  <div key={label} style={{ display: 'flex', justifyContent: 'space-between',
@@ -313,7 +331,7 @@ export default function Subscription() {
  {PLANS.map(plan => {
  const isSelected = selected === plan.id
  return (
- <button key={plan.id} type="button" className="sub-pricing-card" onClick={() => setSelected(plan.id)} style={{
+ <button key={plan.id} type="button" className="sub-pricing-card" onClick={() => { setSelected(plan.id); setCouponError(null) }} style={{
  background: isSelected ? plan.color : '#fff',
  border: `2px solid ${isSelected ? plan.color : '#e8e8e8'}`,
  borderRadius: 16, padding: '22px 20px', textAlign: 'left',
@@ -397,7 +415,16 @@ export default function Subscription() {
  <div>
  <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 2 }}>Selected</p>
  <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>
- {selectedPlan.label}: ₹{selectedPlan.price.toLocaleString('en-IN')}
+ {selectedPlan.label}: {couponApplied && selectedPlan.id !== 'free' ? (
+ <>
+ <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
+ ₹{selectedPlan.price.toLocaleString('en-IN')}
+ </span>
+ ₹{Math.round(selectedPlan.price * (1 - COUPON_DISCOUNT_PCT / 100)).toLocaleString('en-IN')}
+ </>
+ ) : (
+ <>₹{selectedPlan.price.toLocaleString('en-IN')}</>
+ )}
  </p>
  </div>
  <div style={{ textAlign: 'right' }}>
@@ -405,6 +432,44 @@ export default function Subscription() {
  <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>{selectedPlan.whoApplies}</p>
  </div>
  </div>
+
+ {/* Coupon code */}
+ {selectedPlan.id !== 'free' && (
+ <div style={{ marginBottom: 16 }}>
+ {couponApplied ? (
+ <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+ padding: '10px 14px', background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 10 }}>
+ <span style={{ fontSize: 13, fontWeight: 600, color: '#16a34a' }}>
+ "{couponApplied.toUpperCase()}" applied — {COUPON_DISCOUNT_PCT}% off
+ </span>
+ <button type="button" onClick={() => { setCouponApplied(null); setCouponInput(''); setCouponError(null) }}
+ style={{ background: 'none', border: 'none', color: '#6b6b6b', fontSize: 13, cursor: 'pointer', fontWeight: 600 }}>
+ Remove
+ </button>
+ </div>
+ ) : (
+ <div>
+ <div style={{ display: 'flex', gap: 8 }}>
+ <input
+ value={couponInput}
+ onChange={e => { setCouponInput(e.target.value); setCouponError(null) }}
+ onKeyDown={e => { if (e.key === 'Enter') applyCoupon() }}
+ placeholder="Coupon code"
+ style={{ flex: 1, height: 42, padding: '0 14px', borderRadius: 10,
+ border: '1.5px solid #e8e8e8', fontSize: 14, fontFamily: "'Inter',sans-serif" }}
+ />
+ <button type="button" onClick={applyCoupon} disabled={!couponInput.trim()} style={{
+ height: 42, padding: '0 18px', borderRadius: 10, border: 'none',
+ background: couponInput.trim() ? '#0f0f0f' : '#e8e8e8',
+ color: couponInput.trim() ? '#fff' : '#9b9b9b',
+ fontSize: 13, fontWeight: 600, cursor: couponInput.trim() ? 'pointer' : 'not-allowed',
+ }}>Apply</button>
+ </div>
+ {couponError && <p style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{couponError}</p>}
+ </div>
+ )}
+ </div>
+ )}
 
  {error && (
  <div style={{ marginBottom: 16, padding: '14px 16px', background: '#fef2f2',
@@ -431,7 +496,10 @@ export default function Subscription() {
  </>
  ) : (
  selectedPlan.id === 'free' ? 'Continue with Free' :
- `Pay ₹${selectedPlan.price.toLocaleString('en-IN')} for ${selectedPlan.label}`
+ `Pay ₹${(couponApplied
+ ? Math.round(selectedPlan.price * (1 - COUPON_DISCOUNT_PCT / 100))
+ : selectedPlan.price
+ ).toLocaleString('en-IN')} for ${selectedPlan.label}`
  )}
  </button>
 
