@@ -1,35 +1,51 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase, type SubscriptionPlan } from '../lib/supabase'
 
-// PayU's hosted checkout is redirect-based, not a JS modal: we build a
-// form with the signed fields the edge function returns and POST it to
-// PayU's payment page. PayU then posts back to our verify-payu-payment
-// edge function (surl/furl), which redirects the browser here with
-// ?payu_status=success|failure. See the useEffect below.
-function submitToPayU(order: {
-  action: string; key: string; txnid: string; amount: string; productinfo: string
-  firstname: string; email: string; phone: string; hash: string; surl: string; furl: string
-}) {
-  const form = document.createElement('form')
-  form.method = 'POST'
-  form.action = order.action
-  const fields: Record<string, string> = {
-    key: order.key, txnid: order.txnid, amount: order.amount,
-    productinfo: order.productinfo, firstname: order.firstname, email: order.email,
-    phone: order.phone, hash: order.hash, surl: order.surl, furl: order.furl,
-    service_provider: 'payu_paisa',
-  }
-  for (const [name, value] of Object.entries(fields)) {
-    const input = document.createElement('input')
-    input.type = 'hidden'
-    input.name = name
-    input.value = value
-    form.appendChild(input)
-  }
-  document.body.appendChild(form)
-  form.submit()
+// Razorpay Checkout is a JS modal, not a redirect: we load their script
+// once, open the modal with the order the edge function created, and
+// handle success/failure right here via callbacks — no round trip
+// through query params like the old PayU flow needed.
+declare global {
+  interface Window { Razorpay: any }
+}
+
+function loadRazorpayScript(): Promise<void> {
+  if (window.Razorpay) return Promise.resolve()
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script')
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Could not load Razorpay checkout.'))
+    document.body.appendChild(script)
+  })
+}
+
+async function openRazorpayCheckout(order: {
+  key: string; order_id: string; amount: number; currency: string
+  name: string; description: string
+  prefill: { name: string; email: string; contact: string }
+}, onSuccess: (resp: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => void,
+   onDismiss: () => void) {
+  await loadRazorpayScript()
+  const rzp = new window.Razorpay({
+    key: order.key,
+    order_id: order.order_id,
+    amount: order.amount,
+    currency: order.currency,
+    name: order.name,
+    description: order.description,
+    prefill: order.prefill,
+    theme: { color: '#0f0f0f' },
+    handler: (resp: any) => onSuccess({
+      razorpay_order_id: resp.razorpay_order_id,
+      razorpay_payment_id: resp.razorpay_payment_id,
+      razorpay_signature: resp.razorpay_signature,
+    }),
+    modal: { ondismiss: onDismiss },
+  })
+  rzp.open()
 }
 
 /* ── Plan definitions ──────────────────────────────────────────── */
@@ -85,26 +101,6 @@ export default function Subscription() {
  const [error, setError] = useState<string | null>(null)
  const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string } | null>(null)
 
- // PayU redirects the browser back here (via our verify-payu-payment
- // edge function) with ?payu_status=success|failure after checkout.
- useEffect(() => {
- const payuStatus = params.get('payu_status')
- if (!payuStatus) return
- if (payuStatus === 'success') {
- const planId = params.get('plan') as SubscriptionPlan | null
- const endsAt = params.get('ends_at')
- const plan = PLANS.find(p => p.id === planId)
- if (plan && endsAt) {
- refreshProfile()
- setSuccess({ plan, endsAt })
- }
- } else {
- setError('Payment was not completed. No amount was charged.')
- }
- navigate('/subscription', { replace: true })
- // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [])
-
  async function handlePay() {
  if (!user) return
  if (selected === 'free') { navigate('/dashboard'); return }
@@ -116,7 +112,7 @@ export default function Subscription() {
  let res: Response
  try {
  res = await fetch(
- `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-payu-order`,
+ `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-razorpay-order`,
  {
  method: 'POST',
  headers: {
@@ -128,14 +124,45 @@ export default function Subscription() {
  }
  )
  } catch {
- throw new Error('Payment server unreachable. Edge function not deployed or PayU keys missing.')
+ throw new Error('Payment server unreachable. Edge function not deployed or Razorpay keys missing.')
  }
  const order = await res.json()
  if (!res.ok) throw new Error(order.error || 'Could not create order.')
 
- // Full-page redirect to PayU's hosted checkout. Control returns via
- // the surl/furl round trip handled in the useEffect above.
- submitToPayU(order)
+ // Opens Razorpay's checkout modal. On success we verify the payment
+ // server-side, then show the success screen directly — no redirect
+ // round trip needed.
+ await openRazorpayCheckout(order, async (payment) => {
+ try {
+ const verifyRes = await fetch(
+ `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/verify-razorpay-payment`,
+ {
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json',
+ 'Authorization': `Bearer ${session.access_token}`,
+ 'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+ },
+ body: JSON.stringify(payment),
+ }
+ )
+ const result = await verifyRes.json()
+ if (!verifyRes.ok || !result.success) throw new Error(result.error || 'Payment verification failed.')
+
+ const plan = PLANS.find(p => p.id === result.plan)
+ if (plan) {
+ refreshProfile()
+ setSuccess({ plan, endsAt: result.ends_at })
+ }
+ } catch (err) {
+ setError((err as Error).message)
+ } finally {
+ setLoading(false)
+ }
+ }, () => {
+ // User closed the checkout modal without paying.
+ setLoading(false)
+ })
  } catch (err) {
  setError((err as Error).message)
  setLoading(false)
@@ -417,7 +444,7 @@ export default function Subscription() {
  </div>
 
  <p style={{ textAlign: 'center', fontSize: 12, color: '#b5b5b5', marginTop: 6 }}>
- Secured by PayU, UPI, Cards, Net banking, No auto-renewal
+ Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
  </p>
  </div>
  <style>{`

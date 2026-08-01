@@ -143,8 +143,8 @@ export interface Subscription {
   plan: SubscriptionPlan
   amount_paise: number
   status: SubStatus
-  payu_txnid: string | null
-  payu_mihpayid: string | null
+  razorpay_order_id: string | null
+  razorpay_payment_id: string | null
   starts_at: string | null
   ends_at: string | null
   created_at: string

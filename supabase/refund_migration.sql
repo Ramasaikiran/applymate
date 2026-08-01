@@ -6,7 +6,7 @@ alter table public.subscriptions
   add column if not exists refund_gross_paise int,
   add column if not exists refund_fee_paise int,
   add column if not exists refund_net_paise int,
-  add column if not exists payu_refund_id text,
+  add column if not exists razorpay_refund_id text,
   add column if not exists refund_status text
     check (refund_status in ('pending','processed','failed'));
 

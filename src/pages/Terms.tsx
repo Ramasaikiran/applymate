@@ -38,7 +38,7 @@ export default function Terms() {
       </Ul>
 
       <H2>6. Subscription, Billing, Cancellation</H2>
-      <P>Billed monthly, in advance, in INR, via PayU. Cancel anytime, no lock-in.</P>
+      <P>Billed monthly, in advance, in INR, via Razorpay. Cancel anytime, no lock-in.</P>
       <P>Refunds are governed entirely by our Refund and Cancellation Policy.</P>
 
       <H2>7. Match Transparency</H2>

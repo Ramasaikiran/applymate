@@ -169,9 +169,9 @@ create table if not exists public.subscriptions (
   amount_paise          int not null,   -- stored in paise (₹1 = 100 paise)
   status                text not null default 'pending'
                           check (status in ('pending','active','expired','cancelled','failed')),
-  payu_txnid            text unique,
-  payu_mihpayid         text unique,
-  payu_hash             text,
+  razorpay_order_id     text unique,
+  razorpay_payment_id   text unique,
+  razorpay_signature    text,
   starts_at             timestamptz,
   ends_at               timestamptz,
   created_at            timestamptz not null default now()
@@ -182,7 +182,7 @@ drop policy if exists "Users view own subscriptions" on public.subscriptions;
 create policy "Users view own subscriptions"
   on public.subscriptions for select using (auth.uid() = user_id);
 -- No client-side insert policy: every legitimate row is written server-side
--- (service role, bypasses RLS) by create-payu-order / verify-payu-payment.
+-- (service role, bypasses RLS) by create-razorpay-order / verify-razorpay-payment.
 -- A "Users insert own subscriptions" policy existed here previously and
 -- let any authenticated user POST status='active', amount_paise=0 directly
 -- and grant themselves a free paid plan — see migration
@@ -353,8 +353,8 @@ create index if not exists idx_jobs_active         on public.jobs(is_active, pos
 -- 1. Auth → Providers → Email + Google
 -- 2. Auth → URL Config → add site URL + /auth/callback
 -- 3. Set first admin: UPDATE public.profiles SET is_admin = true WHERE email = 'your@email.com';
--- 4. Add PAYU_MERCHANT_KEY + PAYU_MERCHANT_SALT (+ optional PAYU_ENV=production) to Edge Function secrets
--- 5. Deploy edge functions: supabase functions deploy create-payu-order
---                           supabase functions deploy verify-payu-payment
+-- 4. Add RAZORPAY_KEY_ID + RAZORPAY_KEY_SECRET to Edge Function secrets
+-- 5. Deploy edge functions: supabase functions deploy create-razorpay-order
+--                           supabase functions deploy verify-razorpay-payment
 --                           supabase functions deploy request-refund
 -- ================================================================

@@ -10,7 +10,7 @@ export default function Privacy() {
       <Ul>
         <li>Profile data: name, email, phone, skills, role preference, location.</li>
         <li>Resume and application history.</li>
-        <li>Payment data via PayU. We never see your full card details.</li>
+        <li>Payment data via Razorpay. We never see your full card details.</li>
         <li>Usage data: pages visited, actions taken on the dashboard.</li>
       </Ul>
 
@@ -25,7 +25,7 @@ export default function Privacy() {
       <H2>3. Data Sharing</H2>
       <P>We never sell your data. We only share it with:</P>
       <Ul>
-        <li>PayU, for payment processing.</li>
+        <li>Razorpay, for payment processing.</li>
         <li>Employers, only when we submit an application on your behalf.</li>
       </Ul>
 
