@@ -207,8 +207,8 @@ export default function Landing() {
  marginBottom: 28,
  }}>
  Job applications for<br />
- Indian job seekers.<br />
- <span style={{ color: '#9b9b9b' }}>Done daily, for you.</span>
+ Indian job seekers<br />
+ <span style={{ color: '#9b9b9b' }}>Done daily, for you</span>
  </h1>
 
  <p style={{ fontSize: 20, color: '#6b6b6b', lineHeight: 1.65,
