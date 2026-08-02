@@ -144,7 +144,7 @@ export default function Landing() {
  <span>
  🎉 10% off all plans — use code{' '}
  <strong style={{ background: 'rgba(255,255,255,0.15)', padding: '2px 8px',
- borderRadius: 6, letterSpacing: '0.03em' }}>APPLYMATE10</strong>{' '}
+ borderRadius: 6, letterSpacing: '0.03em' }}>applymate10</strong>{' '}
  at checkout
  </span>
  </div>
