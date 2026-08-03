@@ -481,7 +481,7 @@ export default function Landing() {
             { label: 'Free', tagline: 'Get discovered. Apply yourself.', price: '₹0', sub: 'Up to 30 applications / month', highlight: false, popular: false, saving: null, color: '#6b7280' },
             { label: 'Basic', tagline: 'You apply. We surface the jobs.', price: '₹399', sub: 'Daily job feed for you', highlight: false, popular: false, saving: null, color: '#0f0f0f' },
             { label: 'Pro', tagline: 'We apply for you.', price: '₹1,999', sub: 'Admin applies + tracker', highlight: true, popular: true, saving: null, color: '#1d4ed8' },
-            { label: 'Max Pro', tagline: 'We apply + get you interview-ready.', price: '₹3,599', sub: 'Interview prep + strategy call', highlight: false, popular: false, saving: null, color: '#7c3aed' },
+            { label: 'Max Pro', tagline: 'We apply + get you interview-ready.', price: '₹2,999', sub: 'Interview prep + strategy call', highlight: false, popular: false, saving: null, color: '#7c3aed' },
  ].map(p => (
  <div key={p.label} className="pricing-card" onClick={() => setSelectedPlan({ label: p.label, price: p.price })} style={{
  background: p.highlight ? p.color : '#fff',

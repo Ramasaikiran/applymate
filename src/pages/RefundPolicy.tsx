@@ -11,7 +11,7 @@ export default function RefundPolicy() {
       <Ul>
         <li><strong>Basic (₹399/month):</strong> You apply. We surface a daily matched job feed.</li>
         <li><strong>Pro (₹1,999/month):</strong> Our team applies for you, official career portals only.</li>
-        <li><strong>Max Pro (₹3,599/month):</strong> Everything in Pro, plus resume rewrite and interview support.</li>
+        <li><strong>Max Pro (₹2,999/month):</strong> Everything in Pro, plus resume rewrite and interview support.</li>
       </Ul>
       <P>All payments are processed via Razorpay. We never store your card or bank details.</P>
 

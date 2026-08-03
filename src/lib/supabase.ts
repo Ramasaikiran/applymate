@@ -268,7 +268,7 @@ export const PLANS: Record<SubscriptionPlan, {
     features: ['Everything in Basic', 'Admin applies on your behalf', 'Application tracker with live status', 'Priority job matching'],
   },
   maxpro: {
-    label: 'Max Pro', amount: 3599, tagline: 'We apply + get you interview-ready.',
+    label: 'Max Pro', amount: 2999, tagline: 'We apply + get you interview-ready.',
     whoApplies: 'admin',
     features: ['Everything in Pro', 'Interview scheduling support', 'Career strategy call'],
   },

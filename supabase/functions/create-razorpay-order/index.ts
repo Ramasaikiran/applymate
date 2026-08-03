@@ -4,7 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const PLANS: Record<string, { amount: number; days: number }> = {
   basic:  { amount: 39900,  days: 30 },
   pro:    { amount: 199900, days: 30 },
-  maxpro: { amount: 359900, days: 30 },
+  maxpro: { amount: 299900, days: 30 },
 }
 
 // Coupon codes are validated here only — never trust a discount amount

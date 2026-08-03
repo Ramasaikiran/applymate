@@ -79,7 +79,7 @@ const PLANS: {
     features: ['Everything in Basic', 'Admin applies on your behalf', 'Application tracker with live status', 'Priority job matching'],
   },
   {
-    id: 'maxpro', label: 'Max Pro', price: 3599, duration: '30 days',
+    id: 'maxpro', label: 'Max Pro', price: 2999, duration: '30 days',
     tagline: 'We apply + get you interview-ready.', whoApplies: 'Admin applies + preps you',
     saving: null, color: '#7c3aed',
     features: ['Everything in Pro', 'Interview scheduling support', 'Career strategy call'],
