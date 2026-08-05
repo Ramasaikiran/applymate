@@ -56,7 +56,7 @@ function ActivityFeed() {
         fontSize: 13.5, color: '#166534', animation: 'fadeIn 0.4s ease',
       }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
-        <span>
+        <span className="activity-pill-text">
           <strong>{item.first_name}</strong> {STATUS_LABEL[item.status] ?? 'made progress at'} <strong>{item.company}</strong>
           <span style={{ color: '#4b7c58' }}> ({timeAgo(item.days_ago)})</span>
         </span>
@@ -291,7 +291,7 @@ export default function Landing() {
  {/* ── WHY APPLYMATE (comparison table) ─────────────────── */}
  <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '88px 0' }}>
  <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px' }}>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
  letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
  COMPARE
  </p>
@@ -315,16 +315,16 @@ export default function Landing() {
  background: '#fff', padding: '3px 10px', borderRadius: 99, marginBottom: 10 }}>
  ★ MOST EFFECTIVE
  </span>
- <p style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>ApplyMate</p>
- <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Done for you</p>
+ <p className="compare-title" style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>ApplyMate</p>
+ <p className="compare-sub" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Done for you</p>
  </div>
  <div style={{ padding: '18px 16px', textAlign: 'center' }}>
- <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Applying solo</p>
- <p style={{ fontSize: 12, color: '#9b9b9b' }}>DIY, manual</p>
+ <p className="compare-title" style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Applying solo</p>
+ <p className="compare-sub" style={{ fontSize: 12, color: '#9b9b9b' }}>DIY, manual</p>
  </div>
  <div style={{ padding: '18px 16px', textAlign: 'center' }}>
- <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Staffing agencies</p>
- <p style={{ fontSize: 12, color: '#9b9b9b' }}>Agencies & consultancies</p>
+ <p className="compare-title" style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f' }}>Staffing agencies</p>
+ <p className="compare-sub" style={{ fontSize: 12, color: '#9b9b9b' }}>Agencies & consultancies</p>
  </div>
 
  {[
@@ -348,15 +348,15 @@ export default function Landing() {
  borderLeft: '1px solid #e8edff', borderRight: '1px solid #e8edff',
  borderBottom: i === 7 ? '1px solid #e8edff' : 'none',
  borderRadius: i === 7 ? '0 0 14px 14px' : 0 }}>
- <TICK /><span style={{ fontSize: 13.5, fontWeight: 600, color: '#0f0f0f', lineHeight: 1.4 }}>{row.us}</span>
+ <TICK /><span className="compare-us-text" style={{ fontSize: 13.5, fontWeight: 600, color: '#0f0f0f', lineHeight: 1.4 }}>{row.us}</span>
  </div>
  <div key={row.label + 't1'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
  display: 'flex', alignItems: 'flex-start', gap: 10 }}>
- <CROSS /><span style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them1}</span>
+ <CROSS /><span className="compare-them-text" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them1}</span>
  </div>
  <div key={row.label + 't2'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
  display: 'flex', alignItems: 'flex-start', gap: 10 }}>
- <CROSS /><span style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them2}</span>
+ <CROSS /><span className="compare-them-text" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.4 }}>{row.them2}</span>
  </div>
  </>
  ))}
@@ -376,7 +376,7 @@ export default function Landing() {
 
  {/* ── HOW IT WORKS ──────────────────────────────────────── */}
  <section style={{ maxWidth: 900, margin: '0 auto', padding: '96px 24px' }}>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
  letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 }}>
  HOW IT WORKS
  </p>
@@ -427,9 +427,9 @@ export default function Landing() {
  background: i === 1 ? 'rgba(255,255,255,0.1)' : '#f5f5f5',
  color: i === 1 ? 'rgba(255,255,255,0.6)' : '#9b9b9b' }}>{s.time}</span>
  </div>
- <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 22,
+ <p className="step-title" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 22,
  color: i === 1 ? '#fff' : '#0f0f0f', marginBottom: 10 }}>{s.title}</p>
- <p style={{ fontSize: 14, color: i === 1 ? 'rgba(255,255,255,0.55)' : '#9b9b9b',
+ <p className="step-desc" style={{ fontSize: 14, color: i === 1 ? 'rgba(255,255,255,0.55)' : '#9b9b9b',
  lineHeight: 1.65 }}>{s.desc}</p>
  </div>
  ))}
@@ -452,26 +452,26 @@ export default function Landing() {
  <div style={{ background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 16,
  padding: '40px 32px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
  <div>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
+ <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
  Who applies
  </p>
- <p style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
+ <p className="trust-body" style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
  Basic: you apply. Pro & Max Pro: a real admin applies for you.
  </p>
  </div>
  <div>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
+ <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
  How matches are chosen
  </p>
- <p style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
+ <p className="trust-body" style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
  We apply only when skills and experience match exactly.
  </p>
  </div>
  <div>
- <p style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
+ <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
  What you get
  </p>
- <p style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
+ <p className="trust-body" style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
  10–15 tailored applications daily. WhatsApp update for each one.
  </p>
  </div>
@@ -481,7 +481,7 @@ export default function Landing() {
  {/* ── JOB REFUND PROMO ─────────────────────────────────── */}
  <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '72px 24px' }}>
  <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
  letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
  LIMITED OFFER — FIRST 10 USERS
  </p>
@@ -536,7 +536,7 @@ export default function Landing() {
  {/* ── PRICING ───────────────────────────────────────────── */}
  <section id="pricing" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
  <div style={{ maxWidth: 960, margin: '0 auto' }}>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
  letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 }}>
  FOUNDING MEMBER PRICING
  </p>
@@ -591,15 +591,15 @@ export default function Landing() {
  {p.saving}
  </span>
  )}
- <p style={{ fontSize: 13, fontWeight: 600, color: p.highlight ? '#fff' : '#0f0f0f', marginBottom: 6 }}>
+ <p className="price-label" style={{ fontSize: 13, fontWeight: 600, color: p.highlight ? '#fff' : '#0f0f0f', marginBottom: 6 }}>
  {p.label}
  </p>
- <p style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.7)' : '#9b9b9b', marginBottom: 14, lineHeight: 1.4, minHeight: 32 }}>
+ <p className="price-tagline" style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.7)' : '#9b9b9b', marginBottom: 14, lineHeight: 1.4, minHeight: 32 }}>
  {p.tagline}
  </p>
- <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 32,
+ <p className="price-amount" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 32,
  color: p.highlight ? '#fff' : '#0f0f0f', marginBottom: 4 }}>{p.price}</p>
- <p style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.5)' : '#b5b5b5', marginBottom: 20 }}>{p.sub}</p>
+ <p className="price-sub" style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.5)' : '#b5b5b5', marginBottom: 20 }}>{p.sub}</p>
  <button onClick={(e) => { e.stopPropagation(); setSelectedPlan({ label: p.label, price: p.price }); goSignUp() }} style={{
  width: '100%', padding: '10px 0', borderRadius: 8,
  border: p.highlight ? '1px solid rgba(255,255,255,0.25)' : '1px solid #e8e8e8',
@@ -622,7 +622,7 @@ export default function Landing() {
  {/* ── FAQ ───────────────────────────────────────────────── */}
  <section style={{ background: '#fff', padding: '96px 24px' }}>
  <div style={{ maxWidth: 680, margin: '0 auto' }}>
- <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
  letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 }}>
  FAQ
  </p>
@@ -641,7 +641,7 @@ export default function Landing() {
  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
  cursor: 'pointer', textAlign: 'left', fontFamily: "'Inter',sans-serif",
  }}>
- <span style={{ fontSize: 16, fontWeight: 600, color: '#0f0f0f', paddingRight: 24 }}>
+ <span className="faq-question" style={{ fontSize: 16, fontWeight: 600, color: '#0f0f0f', paddingRight: 24 }}>
  {faq.q}
  </span>
  <span style={{ fontSize: 22, color: '#9b9b9b', flexShrink: 0,
@@ -654,7 +654,7 @@ export default function Landing() {
  transition: 'grid-template-rows 0.3s ease',
  }}>
  <div style={{ overflow: 'hidden' }}>
- <p style={{ fontSize: 15, color: '#6b6b6b', lineHeight: 1.7,
+ <p className="faq-answer" style={{ fontSize: 15, color: '#6b6b6b', lineHeight: 1.7,
  paddingBottom: 22, paddingRight: 32 }}>
  {faq.a}
  </p>
@@ -677,7 +677,7 @@ export default function Landing() {
 
  {/* ── FINAL CTA ─────────────────────────────────────────── */}
  <section style={{ background: '#0f0f0f', padding: '100px 24px', textAlign: 'center' }}>
- <p style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)',
+ <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)',
  letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 20 }}>
  YOUR MOVE
  </p>
@@ -718,11 +718,11 @@ export default function Landing() {
  </span>
  </div>
  <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
- <a href="/about.html" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>About</a>
- <a href="/contact.html" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
- <a href="/terms.html" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Terms</a>
- <a href="/privacy.html" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
- <a href="/refund-policy.html" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
+ <a href="/about.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>About</a>
+ <a href="/contact.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
+ <a href="/terms.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Terms</a>
+ <a href="/privacy.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
+ <a href="/refund-policy.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 All rights reserved</p>
  </div>
  </div>
@@ -741,7 +741,7 @@ export default function Landing() {
  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e',
  display: 'block', boxShadow: '0 0 0 3px rgba(34,197,94,0.25)' }} />
- <span style={{ fontSize: 14, color: '#fff', fontWeight: 500 }}>
+ <span className="sticky-bar-text" style={{ fontSize: 14, color: '#fff', fontWeight: 500 }}>
  {selectedPlan ? (
  <><strong>{selectedPlan.label} selected.</strong> {selectedPlan.price}/mo</>
  ) : (
@@ -770,6 +770,36 @@ export default function Landing() {
  .nav-free-pill { display: none !important; }
  .nav-signin { display: none !important; }
  .nav-inner { padding: 0 16px !important; gap: 6px !important; }
+ }
+ @media (max-width: 640px) {
+ .eyebrow-label { font-size: 12px !important; }
+ .compare-title { font-size: 15px !important; }
+ .compare-sub { font-size: 12.5px !important; }
+ .compare-us-text { font-size: 14.5px !important; }
+ .compare-them-text { font-size: 13.5px !important; }
+ .trust-heading { font-size: 14px !important; }
+ .trust-body { font-size: 14.5px !important; }
+ .price-label { font-size: 14px !important; }
+ .price-tagline { font-size: 13px !important; }
+ .price-amount { font-size: 30px !important; }
+ .price-sub { font-size: 12.5px !important; }
+ .faq-question { font-size: 15px !important; }
+ .faq-answer { font-size: 14.5px !important; }
+ .footer-link { font-size: 13px !important; }
+ .step-title { font-size: 20px !important; }
+ .step-desc { font-size: 14.5px !important; }
+ .activity-pill-text { font-size: 14.5px !important; }
+ .sticky-bar-text { font-size: 13.5px !important; }
+ }
+ @media (max-width: 640px) {
+ .steps-card, .pricing-card { animation: fadeInUp 0.5s ease both !important; }
+ }
+ @media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+ @keyframes fadeInUpMobile {
+ from { opacity: 0; transform: translateY(18px); }
+ to { opacity: 1; transform: translateY(0); }
+ }
+ .steps-card { animation: fadeInUpMobile 0.55s ease both !important; }
  }
  @media (max-width: 768px) {
  .steps-progress-track, .steps-progress-fill { display: none !important; }
