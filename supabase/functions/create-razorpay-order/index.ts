@@ -12,6 +12,7 @@ const PLANS: Record<string, { amount: number; days: number }> = {
 // the request is sent.
 const COUPONS: Record<string, { pct: number }> = {
   applymate10: { pct: 10 },
+  rishitha10: { pct: 10 },
 }
 
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])

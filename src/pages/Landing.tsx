@@ -149,7 +149,7 @@ export default function Landing() {
  },
  {
  q: 'What if I get a job early, or want out?',
- a: 'Job in 15 days? We keep applying the next 15, for a better offer. No refund there. Want out mid-plan? We refund unused days, minus days used and Razorpay\'s 2% fee.',
+ a: 'Job in 15 days? We keep applying the next 15, aiming for an even better offer. Want out mid-plan? We refund unused days, minus days used and Razorpay\'s 2% fee.',
  },
  ]
 
@@ -334,7 +334,7 @@ export default function Landing() {
  { label: 'Volume', us: '10–15 tailored applications/day', them1: '3–5/day before burnout', them2: 'Limited applications' },
  { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
  { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
- { label: 'Where we apply', us: 'Official career pages. No Easy Apply.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
+ { label: 'Where we apply', us: 'Official career pages, every time.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
  { label: 'Pricing', us: 'From ₹399/month, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
  ].map((row, i) => (
  <>

@@ -110,7 +110,7 @@ export default function Subscription() {
  const COUPON_DISCOUNT_PCT = 10
  function applyCoupon() {
  const code = couponInput.trim().toLowerCase()
- if (code === 'applymate10') {
+ if (code === 'applymate10' || code === 'rishitha10') {
  setCouponApplied(code)
  setCouponError(null)
  } else {
