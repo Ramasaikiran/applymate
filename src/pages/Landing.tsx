@@ -483,7 +483,7 @@ export default function Landing() {
  <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
  <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
  letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
- LIMITED OFFER — FIRST 10 USERS
+ LIMITED OFFER: FIRST 10 USERS
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 34,
  fontWeight: 400, letterSpacing: '-0.02em', color: '#0f0f0f', marginBottom: 14 }}>
@@ -491,7 +491,7 @@ export default function Landing() {
  </h2>
  <p style={{ fontSize: 15.5, color: '#6b6b6b', lineHeight: 1.65, maxWidth: 560, margin: '0 auto 36px' }}>
  The first 10 subscribers who land a job while on ApplyMate get a{' '}
- <strong style={{ color: '#0f0f0f' }}>100% refund</strong> — just do a short podcast
+ <strong style={{ color: '#0f0f0f' }}>100% refund</strong>, just do a short podcast
  episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
  <strong style={{ color: '#0f0f0f' }}>50% back</strong>.
  </p>
