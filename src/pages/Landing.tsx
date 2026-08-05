@@ -73,6 +73,24 @@ export default function Landing() {
  const [openFaq, setOpenFaq] = useState<number | null>(null)
  const [selectedPlan, setSelectedPlan] = useState<{ label: string; price: string } | null>(null)
  const [howItWorksInView, setHowItWorksInView] = useState(false)
+ const [jobRefundClaimed, setJobRefundClaimed] = useState(0)
+ const [jobRefundTotal, setJobRefundTotal] = useState(10)
+ const [jobRefundBarFilled, setJobRefundBarFilled] = useState(false)
+
+ /* job-refund promo counter */
+ useEffect(() => {
+ let cancelled = false
+ supabase.from('job_refund_program').select('claimed_count, total_slots').eq('id', 1).single()
+ .then(({ data }) => {
+ if (cancelled || !data) return
+ setJobRefundClaimed(data.claimed_count)
+ setJobRefundTotal(data.total_slots)
+ // Trigger the fill-in animation a tick after mount so the CSS
+ // transition actually runs instead of snapping to final width.
+ requestAnimationFrame(() => requestAnimationFrame(() => setJobRefundBarFilled(true)))
+ })
+ return () => { cancelled = true }
+ }, [])
 
  /* auth redirect */
  useEffect(() => {
@@ -457,6 +475,61 @@ export default function Landing() {
  10–15 tailored applications daily. WhatsApp update for each one.
  </p>
  </div>
+ </div>
+ </section>
+
+ {/* ── JOB REFUND PROMO ─────────────────────────────────── */}
+ <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '72px 24px' }}>
+ <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
+ <p style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
+ LIMITED OFFER — FIRST 10 USERS
+ </p>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 34,
+ fontWeight: 400, letterSpacing: '-0.02em', color: '#0f0f0f', marginBottom: 14 }}>
+ Land a job. Get your money back.
+ </h2>
+ <p style={{ fontSize: 15.5, color: '#6b6b6b', lineHeight: 1.65, maxWidth: 560, margin: '0 auto 36px' }}>
+ The first 10 subscribers who land a job while on ApplyMate get a{' '}
+ <strong style={{ color: '#0f0f0f' }}>100% refund</strong> — just do a short podcast
+ episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
+ <strong style={{ color: '#0f0f0f' }}>50% back</strong>.
+ </p>
+
+ {/* progress track */}
+ <div style={{ maxWidth: 420, margin: '0 auto' }}>
+ <div style={{ position: 'relative', height: 4, background: '#efefef', borderRadius: 999 }}>
+ <div style={{
+ position: 'absolute', top: 0, left: 0, height: 4, borderRadius: 999,
+ background: 'linear-gradient(90deg,#0f0f0f,#7c3aed)',
+ width: jobRefundBarFilled ? `${Math.min(100, (jobRefundClaimed / jobRefundTotal) * 100)}%` : '0%',
+ transition: 'width 1.1s cubic-bezier(0.22,1,0.36,1)',
+ }} />
+ <div style={{
+ position: 'absolute', top: '50%', left: 0, width: 14, height: 14,
+ borderRadius: '50%', background: '#0f0f0f', transform: 'translate(-50%,-50%)',
+ }} />
+ <div style={{
+ position: 'absolute', top: '50%', width: 10, height: 10, borderRadius: '50%',
+ background: '#7c3aed', border: '2px solid #fff', boxShadow: '0 0 0 1px #7c3aed',
+ left: jobRefundBarFilled ? `${Math.min(100, (jobRefundClaimed / jobRefundTotal) * 100)}%` : '0%',
+ transform: 'translate(-50%,-50%)',
+ transition: 'left 1.1s cubic-bezier(0.22,1,0.36,1)',
+ }} />
+ <div style={{
+ position: 'absolute', top: '50%', right: 0, width: 14, height: 14,
+ borderRadius: '50%', border: '1.5px solid #d4d4d4', background: '#fff',
+ transform: 'translate(50%,-50%)',
+ }} />
+ </div>
+ <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
+ <span style={{ fontSize: 12, color: '#9b9b9b' }}>0</span>
+ <span style={{ fontSize: 12, color: '#9b9b9b' }}>{jobRefundTotal}</span>
+ </div>
+ </div>
+ <p style={{ fontSize: 13.5, color: '#6b6b6b', marginTop: 14 }}>
+ <strong style={{ color: '#0f0f0f' }}>{jobRefundClaimed} of {jobRefundTotal}</strong> spots claimed so far
+ </p>
  </div>
  </section>
 

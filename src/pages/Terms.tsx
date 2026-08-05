@@ -40,6 +40,12 @@ export default function Terms() {
       <H2>6. Subscription, Billing, Cancellation</H2>
       <P>Billed monthly, in advance, in INR, via Razorpay. Cancel anytime, no lock-in.</P>
       <P>Refunds are governed entirely by our Refund and Cancellation Policy.</P>
+      <P><strong>Job Refund Promotion (limited offer):</strong> The first 10 paying subscribers who land a job while subscribed to ApplyMate are eligible for a refund of their subscription fee, subject to verification of the job offer at our discretion.</P>
+      <Ul>
+        <li>Subscribers who agree to record a short podcast episode with the ApplyMate team about their job search receive a <strong>100% refund</strong>.</li>
+        <li>Subscribers who prefer not to participate in a podcast receive a <strong>50% refund</strong> instead.</li>
+      </Ul>
+      <P>This offer is limited to the first 10 qualifying subscribers, may be withdrawn or modified at any time without notice, and is separate from and in addition to our standard Refund and Cancellation Policy.</P>
 
       <H2>7. Match Transparency</H2>
       <P>Every screened job is logged. Applied jobs and skipped jobs both show in your dashboard.</P>
