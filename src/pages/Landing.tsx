@@ -254,7 +254,7 @@ export default function Landing() {
  or see founding member plans where we apply for you →
  </button>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
- {['Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
+ {['No card required to start free', 'Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
  <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5, color: '#9b9b9b' }}>
  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
  {t}
