@@ -169,13 +169,13 @@ export default function Onboarding() {
  if (profile.user_type) { navigate('/dashboard', { replace: true }); return }
  }, [profile, navigate])
 
-  const [step, setStep] = useState(editMode ? 1 : (draft.step ?? 1))
+  const [step, setStep] = useState(editMode ? 4 : (draft.step ?? 1))
  const [role, setRole] = useState<UserType | null>(draft.role ?? (editMode ? (profile?.user_type as UserType ?? null) : null))
  const [errors, setErrors] = useState<Record<string, string>>({})
  const [loading, setLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
 
- // Resume-edit mode loads straight to step 1, where resume upload lives,
+ // Resume-edit mode loads straight to step 4, bypassing role selection,
  // backfill role from the existing profile once it's fetched.
  useEffect(() => {
    if (editMode && !role && profile?.user_type) setRole(profile.user_type as UserType)
@@ -228,9 +228,6 @@ export default function Onboarding() {
  const [resumeUploading, setResumeUploading] = useState(false)
  const [resumeUploadPct, setResumeUploadPct] = useState(0)
  const [resumeUploadAttempt, setResumeUploadAttempt] = useState(1)
- const [resumeParsing, setResumeParsing] = useState(false)
- const [resumeParsed, setResumeParsed] = useState(false)
- const [resumeParseErr, setResumeParseErr] = useState<string | null>(null)
  const [resumeUploadErr, setResumeUploadErr] = useState<string | null>(
  (() => {
  try {
@@ -289,52 +286,12 @@ export default function Onboarding() {
  })
  setResumePath(path)
  setResumeName(file.name)
- parseResume(path)
  } catch (err) {
  console.error('Resume upload error:', err)
  setResumeUploadErr(`Upload failed: ${(err as Error).message}. You can retry or skip and add it later.`)
  } finally {
  setResumeUploading(false)
  try { sessionStorage.removeItem(RESUME_INFLIGHT_KEY) } catch { /* noop */ }
- }
- }
-
- async function parseResume(path: string) {
- setResumeParsing(true)
- setResumeParseErr(null)
- setResumeParsed(false)
- try {
- const { data, error: fnErr } = await supabase.functions.invoke('parse-resume', { body: { resume_path: path } })
- if (fnErr) throw fnErr
- const p = data?.data as Record<string, string | null> | undefined
- if (!p) throw new Error('No data returned')
-
- // Only fill fields we don't already have a better answer for — never
- // clobber something the user has already typed in this session.
- if ((p.role_suggestion === 'student' || p.role_suggestion === 'professional') && !role) setRole(p.role_suggestion as UserType)
- if (p.first_name && !firstName) setFirstName(p.first_name)
- if (p.last_name && !lastName) setLastName(p.last_name)
- if (p.mobile && !mobile) setMobile(p.mobile)
- if (p.linkedin && !linkedin) setLinkedin(p.linkedin)
- if (p.github && !github) setGithub(p.github)
- if (p.address && !address) setAddress(p.address)
- if (p.college && !college) setCollege(p.college)
- if (p.degree && !degree) setDegree(p.degree)
- if (p.branch && !branch) setBranch(p.branch)
- if (p.current_year && !currentYear) setCurrentYear(p.current_year)
- if (p.passout_year && !passoutYear) setPassoutYear(p.passout_year)
- if (p.cgpa && !cgpa) setCgpa(p.cgpa)
- if (p.skills && !skills) setSkills(p.skills)
- if (p.projects && !projects) setProjects(p.projects)
- if (p.years_exp && !yearsExp) setYearsExp(p.years_exp)
- if (p.prev_title && !prevTitle) setPrevTitle(p.prev_title)
- if (p.prev_company && !prevCompany) setPrevCompany(p.prev_company)
- setResumeParsed(true)
- } catch (err) {
- console.error('Resume parse error:', err)
- setResumeParseErr('Could not auto-fill from your resume. No problem — just fill the next steps in yourself.')
- } finally {
- setResumeParsing(false)
  }
  }
 
@@ -545,83 +502,12 @@ export default function Onboarding() {
  </div>
  )}
 
- {/* ── STEP 1: Resume + Role ─────────────────────────────── */}
+ {/* ── STEP 1: Role ───────────────────────────────────────── */}
  {step === 1 && (
  <div className="anim-slide-up">
- <p style={sectionLabel}>LET'S SET UP YOUR PROFILE</p>
- <h1 style={{ ...serif, fontSize: 36, marginBottom: 10 }}>Start with your resume</h1>
- <p style={{ fontSize: 15, color: '#9b9b9b', marginBottom: 28 }}>
- Upload it and we'll fill in the next steps for you. Nothing here is shared until you choose to apply.
- </p>
-
- <button type="button" disabled={resumeUploading || resumeParsing} onClick={async () => {
- const f = await pickFile('application/pdf,.pdf')
- if (f) handleResumeSelect(f)
- }} style={{
- width: '100%', textAlign: 'inherit', font: 'inherit', appearance: 'none',
- display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
- gap: 12, padding: '32px 24px', marginBottom: 24,
- background: resumePath ? '#f0fdf4' : '#f7f7f7',
- border: `2px dashed ${resumePath ? '#22c55e' : '#e5e5e5'}`,
- borderRadius: 16, cursor: (resumeUploading || resumeParsing) ? 'wait' : 'pointer', transition: 'all 0.2s',
- }}>
- {resumeUploading ? (
- <>
- <div style={{ width: 28, height: 28, borderRadius: '50%',
- border: '3px solid #e5e5e5', borderTopColor: '#0f0f0f',
- animation: 'spin 0.8s linear infinite' }} />
- <p style={{ fontSize: 14, color: '#6b6b6b' }}>
- {resumeUploadAttempt > 1
- ? `Connection dropped, retrying (attempt ${resumeUploadAttempt}) ${resumeUploadPct}%`
- : `Uploading… ${resumeUploadPct}%`}
- </p>
- <div style={{ width: '80%', maxWidth: 240, height: 4, background: '#e5e5e5', borderRadius: 2, overflow: 'hidden' }}>
- <div style={{ width: `${resumeUploadPct}%`, height: '100%', background: '#0f0f0f', transition: 'width 0.2s' }} />
- </div>
- </>
- ) : resumeParsing ? (
- <>
- <div style={{ width: 28, height: 28, borderRadius: '50%',
- border: '3px solid #e5e5e5', borderTopColor: '#0f0f0f',
- animation: 'spin 0.8s linear infinite' }} />
- <p style={{ fontSize: 14, color: '#6b6b6b' }}>Reading your resume…</p>
- </>
- ) : resumePath ? (
- <>
- <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
- <polyline points="20 6 9 17 4 12"/>
- </svg>
- <p style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{resumeName}</p>
- <p style={{ fontSize: 13, color: '#9b9b9b' }}>
- {resumeParsed ? 'Details filled in below — click to replace' : 'Uploaded, click to replace'}
- </p>
- </>
- ) : (
- <>
- <div style={{ width: 48, height: 48, borderRadius: 12, background: '#fff',
- display: 'flex', alignItems: 'center', justifyContent: 'center',
- boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
- <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" strokeWidth="1.8">
- <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
- <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
- </svg>
- </div>
- <div style={{ textAlign: 'center' }}>
- <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>Upload resume</p>
- <p style={{ fontSize: 13, color: '#b5b5b5', marginTop: 4 }}>PDF only, Max 5MB — we'll auto-fill the rest</p>
- </div>
- </>
- )}
- </button>
- {resumeUploadErr && (
- <p style={{ fontSize: 13, color: '#dc2626', marginTop: -14, marginBottom: 20 }}>{resumeUploadErr}</p>
- )}
- {resumeParseErr && (
- <p style={{ fontSize: 13, color: '#c2410c', marginTop: -14, marginBottom: 20 }}>{resumeParseErr}</p>
- )}
-
- <p style={sectionLabel}>WHO ARE WE APPLYING FOR?</p>
- <p style={{ fontSize: 14, color: '#9b9b9b', marginBottom: 16 }}>
+ <p style={sectionLabel}>LET'S PERSONALISE YOUR EXPERIENCE</p>
+ <h1 style={{ ...serif, fontSize: 36, marginBottom: 10 }}>Who are we applying for?</h1>
+ <p style={{ fontSize: 15, color: '#9b9b9b', marginBottom: 36 }}>
  This shapes which jobs we target and how we tailor each application.
  </p>
  <div style={grid2}>
@@ -630,18 +516,10 @@ export default function Onboarding() {
  { type: 'professional' as UserType, icon: '', title: 'Working professional', desc: "I've worked before and I'm levelling up." },
  ]).map(r => (
  <button key={r.type} onClick={() => { setRole(r.type); setStep(2) }} style={{
- background: '#fff',
- border: role === r.type ? '1.5px solid #22c55e' : '1.5px solid #e8e8e8',
- borderRadius: 16, padding: '24px 20px', textAlign: 'left', cursor: 'pointer',
- boxShadow: role === r.type ? '0 0 0 3px rgba(34,197,94,0.12)' : '0 1px 3px rgba(0,0,0,0.04)',
- transition: 'all 0.15s', position: 'relative',
+ background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 16,
+ padding: '24px 20px', textAlign: 'left', cursor: 'pointer',
+ boxShadow: '0 1px 3px rgba(0,0,0,0.04)', transition: 'all 0.15s',
  }}>
- {role === r.type && resumeParsed && (
- <span style={{ position: 'absolute', top: -10, right: 14, fontSize: 10, fontWeight: 700,
- padding: '3px 10px', background: '#22c55e', color: '#fff', borderRadius: 99 }}>
- FROM YOUR RESUME
- </span>
- )}
  <span style={{ fontSize: 28, display: 'block', marginBottom: 14 }}>{r.icon}</span>
  <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 20, color: '#0f0f0f', marginBottom: 8 }}>{r.title}</p>
  <p style={{ fontSize: 13, color: '#9b9b9b', lineHeight: 1.5 }}>{r.desc}</p>
@@ -966,7 +844,7 @@ export default function Onboarding() {
  </form>
  )}
 
- {/* ── STEP 4: Review + finish ────────────────────────────── */}
+ {/* ── STEP 4: Resume + finish ────────────────────────────── */}
  {step === 4 && (
  <form className="anim-slide-up" onSubmit={handleFinish}
  style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -976,33 +854,69 @@ export default function Onboarding() {
  ← Back
  </button>
  <p style={sectionLabel}>ALMOST DONE</p>
- <h2 style={serif}>You're all set</h2>
+ <h2 style={serif}>Upload your resume</h2>
+ <p style={{ fontSize: 14, color: '#9b9b9b', marginBottom: 8 }}>
+ We tailor every application to the job. A strong resume = more interviews.
+ </p>
 
- <div style={{ background: '#f7f7f7', border: '1.5px solid #ececec', borderRadius: 14, padding: '18px 20px' }}>
- {resumePath ? (
- <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" style={{ flexShrink: 0 }}>
+ <button type="button" disabled={resumeUploading} onClick={async () => {
+ const f = await pickFile('application/pdf,.pdf')
+ if (f) handleResumeSelect(f)
+ }} style={{
+ width: '100%', textAlign: 'inherit', font: 'inherit', appearance: 'none',
+ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+ gap: 12, padding: '36px 24px',
+ background: resumePath ? '#f0fdf4' : '#f7f7f7',
+ border: `2px dashed ${resumePath ? '#22c55e' : '#e5e5e5'}`,
+ borderRadius: 16, cursor: resumeUploading ? 'wait' : 'pointer', transition: 'all 0.2s',
+ }}>
+ {resumeUploading ? (
+ <>
+ <div style={{ width: 28, height: 28, borderRadius: '50%',
+ border: '3px solid #e5e5e5', borderTopColor: '#0f0f0f',
+ animation: 'spin 0.8s linear infinite' }} />
+ <p style={{ fontSize: 14, color: '#6b6b6b' }}>
+ {resumeUploadAttempt > 1
+ ? `Connection dropped, retrying (attempt ${resumeUploadAttempt}) ${resumeUploadPct}%`
+ : `Uploading… ${resumeUploadPct}%`}
+ </p>
+ <div style={{ width: '80%', maxWidth: 240, height: 4, background: '#e5e5e5', borderRadius: 2, overflow: 'hidden' }}>
+ <div style={{ width: `${resumeUploadPct}%`, height: '100%', background: '#0f0f0f', transition: 'width 0.2s' }} />
+ </div>
+ </>
+ ) : resumePath ? (
+ <>
+ <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2">
  <polyline points="20 6 9 17 4 12"/>
  </svg>
- <span style={{ fontSize: 14, color: '#0f0f0f' }}>
- <strong>{resumeName}</strong> — we'll tailor every application to it.
- </span>
- </div>
+ <p style={{ fontSize: 15, fontWeight: 600, color: '#16a34a' }}>{resumeName}</p>
+ <p style={{ fontSize: 13, color: '#9b9b9b' }}>Uploaded, click to replace</p>
+ </>
  ) : (
- <div>
- <p style={{ fontSize: 14, color: '#0f0f0f', marginBottom: 10 }}>
- No resume yet, no problem. You can add one anytime from your dashboard and we'll tailor applications to it from then on.
- </p>
- <button type="button" onClick={() => setStep(1)} style={{
- fontSize: 13, fontWeight: 600, color: '#0f0f0f', background: 'none',
- border: 'none', textDecoration: 'underline', cursor: 'pointer', padding: 0,
- fontFamily: "'Inter',sans-serif",
- }}>
- Add resume now →
- </button>
+ <>
+ <div style={{ width: 48, height: 48, borderRadius: 12, background: '#fff',
+ display: 'flex', alignItems: 'center', justifyContent: 'center',
+ boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }}>
+ <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b6b6b" strokeWidth="1.8">
+ <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+ <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+ </svg>
  </div>
+ <div style={{ textAlign: 'center' }}>
+ <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>Upload resume</p>
+ <p style={{ fontSize: 13, color: '#b5b5b5', marginTop: 4 }}>PDF only, Max 5MB</p>
+ </div>
+ </>
  )}
- </div>
+ </button>
+ {resumeUploadErr && (
+ <p style={{ fontSize: 13, color: '#dc2626', marginTop: -10 }}> {resumeUploadErr}</p>
+ )}
+ {!resumePath && !resumeUploading && (
+ <p style={{ fontSize: 13, color: '#9b9b9b', marginTop: -10 }}>
+ Optional, you can add it later from your dashboard if your connection is giving you trouble.
+ </p>
+ )}
 
  <button type="submit" disabled={loading || resumeUploading}
  style={{ ...btn, opacity: (loading || resumeUploading) ? 0.5 : 1,
