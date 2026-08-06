@@ -148,8 +148,8 @@ export default function Landing() {
  a: 'Founding member pricing is locked for early sign-ups and we\'re limiting our first batch so every profile gets proper attention from our team. Once a batch fills, pricing moves to standard rates.',
  },
  {
- q: 'What if I get a job early, or want out?',
- a: 'Job in 15 days? We keep applying the next 15, aiming for an even better offer. Want out mid-plan? We refund unused days, minus days used and Razorpay\'s 2% fee.',
+ q: 'What if I get a job, or want out?',
+ a: 'Land a job on your plan? We keep applying to find you an even better offer, refunds aren\'t available once an offer is on record. Want out before that happens? We refund unused days, minus days used and Razorpay\'s 2% fee.',
  },
  ]
 

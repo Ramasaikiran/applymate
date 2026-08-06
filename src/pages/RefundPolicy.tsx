@@ -29,8 +29,7 @@ export default function RefundPolicy() {
       <P>Example: ₹399 plan, 15 days used → ₹199.50 refundable, minus ₹7.98 fee → ₹191.52 refunded.</P>
 
       <H3>B. Landed a Job Before Plan Ends</H3>
-      <P>We don't refund remaining days. We keep applying for a better offer instead.</P>
-      <P>Prefer to stop? Treated as a standard withdrawal under Section 3A.</P>
+      <P>We don't refund remaining days. We keep applying for a better offer instead. Refund access is blocked for the rest of your plan once you've landed a job.</P>
 
       <H3>C. Before Any Work Begins</H3>
       <P>Full refund minus Razorpay's 2% fee, if we haven't screened a single job yet.</P>

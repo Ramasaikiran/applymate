@@ -78,19 +78,18 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'No remaining days left to refund' }), { status: 400, headers: corsHeaders })
     }
 
-    // ── Got an offer within the first 15 days? We keep applying for a
-    // better one instead of refunding. ────────────────────────────
-    const fifteenDaysIn = new Date(startsAt.getTime() + 15 * 86400000)
-    const { data: earlyOffer } = await supabase.from('job_applications')
+    // ── Landed a job at any point on this plan? We keep applying for a
+    // better offer instead of refunding — refund access is blocked for
+    // the rest of the plan once an offer is on record, per Policy 3B. ──
+    const { data: gotOffer } = await supabase.from('job_applications')
       .select('id').eq('user_id', user.id)
       .in('status', ['offer', 'joined', 'hired'])
       .gte('applied_at', startsAt.toISOString())
-      .lte('applied_at', fifteenDaysIn.toISOString())
       .limit(1).maybeSingle()
 
-    if (earlyOffer) {
+    if (gotOffer) {
       return new Response(JSON.stringify({
-        error: 'You received a job offer within your first 15 days. We\'ll keep applying for 15 more days to find you a better offer — refunds aren\'t available in this case.',
+        error: 'You\'ve landed a job offer on this plan. We\'ll keep applying to find you an even better one — refunds aren\'t available once an offer is on record.',
       }), { status: 400, headers: corsHeaders })
     }
 
