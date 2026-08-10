@@ -54,6 +54,8 @@ export default function SignUp() {
   const [formError, setFormError] = useState<string | null>(null)
  const [blockedUntil, setBlockedUntil] = useState<number | null>(null)
  const [nowTick, setNowTick] = useState(Date.now())
+ const [agreed, setAgreed] = useState(false)
+ const [agreedErr, setAgreedErr] = useState(false)
 
  useEffect(() => {
  if (!blockedUntil) return
@@ -98,6 +100,7 @@ export default function SignUp() {
     e.preventDefault()
     setFormError(null)
     if (!validateDetails()) return
+    if (!agreed) { setAgreedErr(true); return }
     if (blocked || secsLeft > 0) return
     setLoading(true)
 
@@ -145,6 +148,7 @@ export default function SignUp() {
   }
 
   async function handleGoogle() {
+    if (!agreed) { setAgreedErr(true); return }
     setGLoading(true)
     const { error } = await signInWithGoogle()
     if (error) { setFormError(error); setGLoading(false) }
@@ -167,18 +171,26 @@ export default function SignUp() {
       {/* Google: Primary CTA */}
       <button type="button" onClick={handleGoogle} disabled={gLoading} className="oc-btn-primary" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-        opacity: gLoading ? 0.6 : 1,
+        opacity: gLoading ? 0.6 : (agreed ? 1 : 0.55),
       }}>
         <GoogleIcon />
         {gLoading ? 'Redirecting…' : 'Continue with Google'}
       </button>
 
-      <p style={{ fontSize: 11.5, color: '#9b9b9b', textAlign: 'center', margin: '10px 0 0', lineHeight: 1.5 }}>
-        By signing up, you agree to our{' '}
-        <a href="/terms" style={{ color: '#6b6b6b', textDecoration: 'underline' }}>Terms</a>,{' '}
-        <a href="/privacy" style={{ color: '#6b6b6b', textDecoration: 'underline' }}>Privacy Policy</a>, and{' '}
-        <a href="/refund-policy" style={{ color: '#6b6b6b', textDecoration: 'underline' }}>Refund Policy</a>.
-      </p>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, margin: '14px 0 0' }}>
+        <input
+          id="agree-checkbox" type="checkbox" checked={agreed}
+          onChange={(e) => { setAgreed(e.target.checked); if (e.target.checked) setAgreedErr(false) }}
+          style={{ width: 16, height: 16, marginTop: 2, flexShrink: 0, accentColor: '#0f0f0f', cursor: 'pointer' }}
+        />
+        <label htmlFor="agree-checkbox" style={{ fontSize: 11.5, color: agreedErr ? '#dc2626' : '#9b9b9b', lineHeight: 1.5, cursor: 'pointer' }}>
+          I agree to the{' '}
+          <a href="/terms" style={{ color: '#6b6b6b', textDecoration: 'underline' }}>Terms</a>,{' '}
+          <a href="/privacy" style={{ color: '#6b6b6b', textDecoration: 'underline' }}>Privacy Policy</a>, and{' '}
+          <a href="/refund-policy" style={{ color: '#6b6b6b', textDecoration: 'underline' }}>Refund Policy</a>.
+        </label>
+      </div>
+      {agreedErr && <p style={{ fontSize: 12, color: '#dc2626', margin: '4px 0 0 25px' }}>Please accept the Terms to continue.</p>}
 
       <TrustStrip />
 
