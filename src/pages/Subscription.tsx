@@ -106,11 +106,15 @@ export default function Subscription() {
 
  // Preview only — the real discount is validated and applied
  // server-side in create-razorpay-order, this just shows the user
- // what to expect before they pay.
- const COUPON_DISCOUNT_PCT = 10
+ // what to expect before they pay. Keep in sync with the COUPONS
+ // map in supabase/functions/create-razorpay-order/index.ts.
+ const COUPON_DISCOUNTS: Record<string, number> = {
+ applymate50: 50,
+ rishitha10: 10,
+ }
  function applyCoupon() {
  const code = couponInput.trim().toLowerCase()
- if (code === 'applymate10' || code === 'rishitha10') {
+ if (COUPON_DISCOUNTS[code]) {
  setCouponApplied(code)
  setCouponError(null)
  } else {
@@ -420,7 +424,7 @@ export default function Subscription() {
  <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
  ₹{selectedPlan.price.toLocaleString('en-IN')}
  </span>
- ₹{Math.round(selectedPlan.price * (1 - COUPON_DISCOUNT_PCT / 100)).toLocaleString('en-IN')}
+ ₹{Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100)).toLocaleString('en-IN')}
  </>
  ) : (
  <>₹{selectedPlan.price.toLocaleString('en-IN')}</>
@@ -440,7 +444,7 @@ export default function Subscription() {
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
  padding: '10px 14px', background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 10 }}>
  <span style={{ fontSize: 13, fontWeight: 600, color: '#16a34a' }}>
- "{couponApplied.toUpperCase()}" applied — {COUPON_DISCOUNT_PCT}% off
+ "{couponApplied.toUpperCase()}" applied — {COUPON_DISCOUNTS[couponApplied]}% off
  </span>
  <button type="button" onClick={() => { setCouponApplied(null); setCouponInput(''); setCouponError(null) }}
  style={{ background: 'none', border: 'none', color: '#6b6b6b', fontSize: 13, cursor: 'pointer', fontWeight: 600 }}>
@@ -497,7 +501,7 @@ export default function Subscription() {
  ) : (
  selectedPlan.id === 'free' ? 'Continue with Free' :
  `Pay ₹${(couponApplied
- ? Math.round(selectedPlan.price * (1 - COUPON_DISCOUNT_PCT / 100))
+ ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100))
  : selectedPlan.price
  ).toLocaleString('en-IN')} for ${selectedPlan.label}`
  )}
