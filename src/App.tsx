@@ -24,6 +24,7 @@ const AdminLogin          = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminUsers          = lazy(() => import('./pages/admin/AdminUsers'))
 const AdminUserDetail     = lazy(() => import('./pages/admin/AdminUserDetail'))
 const AdminJobs           = lazy(() => import('./pages/admin/AdminJobs'))
+const AdminHackathons     = lazy(() => import('./pages/admin/AdminHackathons'))
 const AdminSubscriptions  = lazy(() => import('./pages/admin/AdminSubscriptions'))
 const AdminAnalytics      = lazy(() => import('./pages/admin/AdminAnalytics'))
 const AdminActivityLog    = lazy(() => import('./pages/admin/AdminActivityLog'))
@@ -53,6 +54,7 @@ export default function App() {
         <Route path="/admin/users"     element={<AdminRoute><AdminUsers /></AdminRoute>} />
         <Route path="/admin/users/:id" element={<AdminRoute><AdminUserDetail /></AdminRoute>} />
         <Route path="/admin/jobs"      element={<AdminRoute><AdminJobs /></AdminRoute>} />
+        <Route path="/admin/hackathons" element={<AdminRoute><AdminHackathons /></AdminRoute>} />
         <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
         <Route path="/admin/analytics"     element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
         <Route path="/admin/activity"      element={<AdminRoute><AdminActivityLog /></AdminRoute>} />

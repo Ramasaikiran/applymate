@@ -198,6 +198,37 @@ export interface JobApplication {
   notes: string | null
 }
 
+export type HackathonStatus = 'draft' | 'published' | 'inactive'
+export type HackathonMode = 'online' | 'offline' | 'hybrid'
+
+export interface Hackathon {
+  id: string
+  title: string
+  organizer: string
+  description: string | null
+  mode: HackathonMode | null
+  location: string | null
+  tags: string[]
+  prize_pool: string | null
+  team_size_min: number | null
+  team_size_max: number | null
+  register_url: string | null
+  start_date: string | null
+  end_date: string | null
+  last_date: string | null
+  status: HackathonStatus
+  is_active: boolean
+  posted_at: string
+  updated_at: string
+}
+
+export interface SavedHackathon {
+  id: string
+  user_id: string
+  hackathon_id: string
+  created_at: string
+}
+
 export interface ActivityLogEntry {
   id: string
   admin_id: string | null

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { supabase, PLANS, type AppStats, type JobApplication, type Job } from '../lib/supabase'
+import { supabase, PLANS, type AppStats, type JobApplication, type Job, type Hackathon } from '../lib/supabase'
 import RefundModal from '../components/RefundModal'
 import { pickFile } from '../lib/filePicker'
 import { uploadResumeWithProgress } from '../lib/uploadResume'
@@ -63,6 +63,12 @@ export default function Dashboard() {
  const [applying, setApplying] = useState<string | null>(null)
  const [applyError, setApplyError] = useState<string | null>(null)
 
+ const [availableHackathons, setAvailableHackathons] = useState<Hackathon[]>([])
+ const [savedHackathonIds, setSavedHackathonIds] = useState<Set<string>>(new Set())
+ const [hackathonTab, setHackathonTab] = useState<'available' | 'saved'>('available')
+ const [hackathonModeFilter, setHackathonModeFilter] = useState<'all' | 'online' | 'offline' | 'hybrid'>('all')
+ const [hackathonsLoading, setHackathonsLoading] = useState(true)
+
  useEffect(() => { if (profile) load() }, [profile])
  useEffect(() => {
    if (!profile) return
@@ -89,6 +95,30 @@ export default function Dashboard() {
  }
  useEffect(() => { if (profile) loadResume() }, [profile])
  useEffect(() => { if (profile) loadJobs() }, [profile, subscription])
+ useEffect(() => { if (profile) loadHackathons() }, [profile])
+
+ async function loadHackathons() {
+ if (!profile) return
+ setHackathonsLoading(true)
+ const [hackathonsRes, savedRes] = await Promise.all([
+ supabase.rpc('get_published_hackathons'),
+ supabase.from('saved_hackathons').select('hackathon_id').eq('user_id', profile.id),
+ ])
+ setAvailableHackathons((hackathonsRes.data as Hackathon[]) ?? [])
+ setSavedHackathonIds(new Set((savedRes.data ?? []).map(r => r.hackathon_id as string)))
+ setHackathonsLoading(false)
+ }
+
+ async function toggleSaveHackathon(hackathonId: string) {
+ if (!profile) return
+ if (savedHackathonIds.has(hackathonId)) {
+ await supabase.from('saved_hackathons').delete().eq('user_id', profile.id).eq('hackathon_id', hackathonId)
+ setSavedHackathonIds(prev => { const next = new Set(prev); next.delete(hackathonId); return next })
+ } else {
+ await supabase.from('saved_hackathons').insert({ user_id: profile.id, hackathon_id: hackathonId })
+ setSavedHackathonIds(prev => new Set(prev).add(hackathonId))
+ }
+ }
 
  async function loadJobs() {
  if (!profile) return
@@ -472,6 +502,100 @@ export default function Dashboard() {
  })()}
  </div>
  )}
+
+ {/* Hackathons: browsable feed with mode filter */}
+ <div style={{ marginBottom: 24 }}>
+ <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 14 }}>
+ <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f' }}>Hackathons</p>
+ <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 8, padding: 3 }}>
+ {(['available', 'saved'] as const).map(t => (
+ <button key={t} onClick={() => setHackathonTab(t)} style={{
+ padding: '5px 12px', borderRadius: 6, fontSize: 12, fontWeight: 600,
+ border: 'none', cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ background: hackathonTab === t ? '#fff' : 'transparent',
+ color: hackathonTab === t ? '#0f0f0f' : '#9b9b9b',
+ }}>{t === 'available' ? 'Available' : 'Saved'}</button>
+ ))}
+ </div>
+ <select value={hackathonModeFilter} onChange={e => setHackathonModeFilter(e.target.value as typeof hackathonModeFilter)}
+ style={{ fontSize: 12.5, fontWeight: 600, border: '1px solid #e5e5e5', borderRadius: 7,
+ padding: '6px 10px', background: '#fff', color: '#0f0f0f',
+ fontFamily: "'Inter',sans-serif", cursor: 'pointer', outline: 'none' }}>
+ <option value="all">All modes</option>
+ <option value="online">Online</option>
+ <option value="offline">Offline</option>
+ <option value="hybrid">Hybrid</option>
+ </select>
+ </div>
+
+ {hackathonsLoading ? (
+ <div style={{ fontSize: 13, color: '#b5b5b5', textAlign: 'center', padding: '32px 0' }}>Loading…</div>
+ ) : (() => {
+ const base = hackathonTab === 'available' ? availableHackathons : availableHackathons.filter(h => savedHackathonIds.has(h.id))
+ const shown = hackathonModeFilter === 'all' ? base : base.filter(h => h.mode === hackathonModeFilter)
+ if (shown.length === 0) {
+ return (
+ <div style={{ background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12,
+ padding: '32px 24px', textAlign: 'center', fontSize: 13, color: '#9b9b9b' }}>
+ {hackathonTab === 'available'
+ ? (hackathonModeFilter === 'all' ? 'No hackathons published yet. Check back soon.' : `No ${hackathonModeFilter} hackathons right now. Try a different filter.`)
+ : 'No saved hackathons yet.'}
+ </div>
+ )
+ }
+ return (
+ <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+ {shown.map(h => (
+ <div key={h.id} style={{
+ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12,
+ padding: '14px 16px', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 10,
+ }}>
+ <div style={{ flex: 1, minWidth: 0 }}>
+ <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>{h.title}</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b', marginBottom: 6 }}>
+ {h.organizer}, {h.location || 'Online'}
+ {h.last_date && `, register by ${new Date(h.last_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}`}
+ {h.mode && (
+ <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, padding: '1px 7px',
+ background: '#f0f0f0', color: '#6b6b6b', borderRadius: 99, textTransform: 'capitalize' }}>
+ {h.mode}
+ </span>
+ )}
+ {h.prize_pool && (
+ <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, padding: '1px 7px',
+ background: '#fef3c7', color: '#92400e', borderRadius: 99 }}>
+ {h.prize_pool}
+ </span>
+ )}
+ </p>
+ <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+ {h.tags.slice(0, 4).map(t => (
+ <span key={t} style={{ fontSize: 11, padding: '2px 7px', background: '#f0f0f0',
+ color: '#6b6b6b', borderRadius: 99 }}>{t}</span>
+ ))}
+ </div>
+ </div>
+ <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+ <button onClick={() => toggleSaveHackathon(h.id)} style={{
+ padding: '7px 12px', background: savedHackathonIds.has(h.id) ? '#fef3c7' : '#f5f5f5',
+ color: savedHackathonIds.has(h.id) ? '#92400e' : '#6b6b6b',
+ border: 'none', borderRadius: 7, fontSize: 12, fontWeight: 600, cursor: 'pointer',
+ fontFamily: "'Inter',sans-serif",
+ }}>{savedHackathonIds.has(h.id) ? 'Saved' : 'Save'}</button>
+ {h.register_url && (
+ <a href={h.register_url} target="_blank" rel="noreferrer" style={{
+ padding: '7px 14px', background: '#0f0f0f', color: '#fff', borderRadius: 7, border: 'none', cursor: 'pointer',
+ fontSize: 12, fontWeight: 600, fontFamily: "'Inter',sans-serif", textDecoration: 'none',
+ display: 'inline-flex', alignItems: 'center',
+ }}>Register →</a>
+ )}
+ </div>
+ </div>
+ ))}
+ </div>
+ )
+ })()}
+ </div>
 
  {/* Stats: period dropdown */}
  <div style={{ marginBottom: 20 }}>
