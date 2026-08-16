@@ -214,16 +214,6 @@ export default function Landing() {
  {/* ── HERO ──────────────────────────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
 
- {/* Early access pill */}
- <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
- background: '#fff7ed', border: '1px solid #fed7aa',
- borderRadius: 99, padding: '7px 16px', marginBottom: 32 }}>
- <span style={{ fontSize: 13 }}>🔥</span>
- <span style={{ fontSize: 13, fontWeight: 600, color: '#c2410c' }}>
- Founding member pricing. Limited first batch
- </span>
- </div>
-
  <h1 style={{
  fontFamily: "'Instrument Serif',Georgia,serif",
  fontSize: 'clamp(48px, 9vw, 84px)',
