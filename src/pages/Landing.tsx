@@ -129,6 +129,16 @@ export default function Landing() {
 
  const goSignUp = () => navigate('/sign-up')
 
+ const COMPANIES = [
+ { name: 'Google', logo: '/logos/google.svg', color: '#4285F4' },
+ { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true },
+ { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
+ { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true },
+ { name: 'iamneo (NIIT Venture)', color: '#0b3d3d' },
+ { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
+ { name: 'hiringg', color: '#6d28d9' },
+ ]
+
  const FAQS = [
  {
  q: 'What is the 100% money-back program?',
@@ -290,23 +300,17 @@ export default function Landing() {
  <ActivityFeed />
 
  {/* ── COMPANIES STRIP ───────────────────────────────────── */}
- <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 64px' }}>
+ <section style={{ maxWidth: '100%', padding: '0 0 64px', overflow: 'hidden' }}>
  <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 24 }}>
+ letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 24, padding: '0 24px' }}>
  Companies our users have applied to
  </p>
- <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12 }}>
- {[
- { name: 'Google', logo: '/logos/google.svg', color: '#4285F4' },
- { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true },
- { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
- { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true },
- { name: 'iamneo (NIIT Venture)', color: '#0b3d3d' },
- { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
- { name: 'hiringg', color: '#6d28d9' },
- ].map(c => (
- <div key={c.name} style={{
- display: 'flex', alignItems: 'center', gap: 10,
+ <div style={{ width: '100%', overflow: 'hidden' }}>
+ <div className="inbox-marquee-track" style={{ display: 'flex', width: 'max-content', gap: 12,
+ animationDuration: '26s' }}>
+ {[...COMPANIES, ...COMPANIES].map((c, i) => (
+ <div key={c.name + i} style={{
+ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
  background: c.dark ? '#0f0f0f' : '#fff',
  border: c.dark ? '1px solid #0f0f0f' : '1px solid #f0f0f0',
  borderRadius: 999,
@@ -318,7 +322,7 @@ export default function Landing() {
  ) : c.logo ? (
  <>
  <img src={c.logo} alt={c.name} style={{ width: 20, height: 20, flexShrink: 0 }} />
- <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f' }}>{c.name}</span>
+ <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', whiteSpace: 'nowrap' }}>{c.name}</span>
  </>
  ) : (
  <>
@@ -329,11 +333,12 @@ export default function Landing() {
  }}>
  {c.name[0]}
  </span>
- <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f' }}>{c.name}</span>
+ <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', whiteSpace: 'nowrap' }}>{c.name}</span>
  </>
  )}
  </div>
  ))}
+ </div>
  </div>
  </section>
 
