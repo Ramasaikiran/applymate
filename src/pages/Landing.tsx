@@ -7,19 +7,6 @@ import inboxProof2 from '../assets/inbox-proof/proof-2.jpg'
 import inboxProof3 from '../assets/inbox-proof/proof-3.jpg'
 import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
 import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
-import logoMoodle from '../assets/company-logos/logo-moodle.jpg'
-import logoTuring from '../assets/company-logos/logo-turing.jpg'
-import logoWipro from '../assets/company-logos/logo-wipro.jpg'
-import logoGoogle from '../assets/company-logos/logo-google.jpg'
-import logoSalesforce from '../assets/company-logos/logo-salesforce.jpg'
-
-const COMPANY_LOGOS = [
- { name: 'Moodle', src: logoMoodle },
- { name: 'Turing', src: logoTuring },
- { name: 'Wipro', src: logoWipro },
- { name: 'Google', src: logoGoogle },
- { name: 'Salesforce', src: logoSalesforce },
-]
 
 const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5]
 
@@ -611,26 +598,6 @@ export default function Landing() {
  }}>
  Claim your spot →
  </button>
- </div>
- </div>
- </section>
-
- {/* ── COMPANIES OUR MEMBERS HAVE INTERVIEWED AT ───────────── */}
- <section style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0',
- borderBottom: '1px solid #f0f0f0', padding: '56px 0', overflow: 'hidden' }}>
- <p style={{ textAlign: 'center', fontSize: 13, fontWeight: 700, letterSpacing: '0.04em',
- color: '#9b9b9b', textTransform: 'uppercase', marginBottom: 36, padding: '0 24px' }}>
- Our members have interviewed at companies including
- </p>
- <div style={{ width: '100%', overflow: 'hidden' }}>
- <div className="inbox-marquee-track" style={{ display: 'flex', gap: 48, width: 'max-content',
- alignItems: 'center', animationDuration: '22s' }}>
- {[...COMPANY_LOGOS, ...COMPANY_LOGOS].map((logo, i) => (
- <img key={i} src={logo.src} alt={logo.name} style={{
- height: 34, flexShrink: 0, objectFit: 'contain', filter: 'grayscale(100%)',
- opacity: 0.75,
- }} />
- ))}
  </div>
  </div>
  </section>
