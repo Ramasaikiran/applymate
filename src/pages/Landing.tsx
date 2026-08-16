@@ -524,6 +524,20 @@ export default function Landing() {
  <div style={{ width: '0%', height: '100%', borderRadius: 99, background: '#16a34a' }} />
  </div>
  </div>
+
+ <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
+ marginTop: 24, flexWrap: 'wrap' }}>
+ <p style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>
+ First come, first served — once 10 members claim it, it's gone for good.
+ </p>
+ <button onClick={goSignUp} style={{
+ background: '#16a34a', color: '#fff', border: 'none', flexShrink: 0,
+ padding: '13px 28px', borderRadius: 10, fontSize: 14.5, fontWeight: 700,
+ cursor: 'pointer', fontFamily: "'Inter',sans-serif", whiteSpace: 'nowrap',
+ }}>
+ Claim your spot →
+ </button>
+ </div>
  </div>
  </section>
 
@@ -561,6 +575,16 @@ export default function Landing() {
  </div>
  ))}
  </div>
+ </div>
+
+ <div style={{ textAlign: 'center', marginTop: 48, padding: '0 24px' }}>
+ <button onClick={goSignUp} style={{
+ background: '#fff', color: '#0f0f0f', border: 'none',
+ padding: '15px 36px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+ cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ }}>
+ Get your own inbox proof →
+ </button>
  </div>
  </section>
 
