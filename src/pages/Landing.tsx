@@ -485,21 +485,64 @@ export default function Landing() {
  </div>
  </section>
 
+ {/* ── 100% MONEY BACK PROGRAM ──────────────────────────── */}
+ <section style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 96px' }}>
+ <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '40px 32px' }}>
+ <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#dcfce7',
+ border: '1px solid #bbf7d0', borderRadius: 99, padding: '6px 18px 6px 6px', marginBottom: 24 }}>
+ <span style={{ background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 800,
+ letterSpacing: '0.02em', borderRadius: 99, padding: '5px 12px' }}>FIRST 100</span>
+ <span style={{ fontSize: 12.5, fontWeight: 700, color: '#15803d', letterSpacing: '0.03em' }}>
+ MEMBERS ONLY · MONEY-BACK PROGRAM
+ </span>
+ </div>
+
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
+ fontSize: 'clamp(26px,4.5vw,36px)', color: '#0f0f0f', marginBottom: 16, letterSpacing: '-0.01em' }}>
+ 100% money-back program
+ </h2>
+ <p style={{ fontSize: 15.5, color: '#4b5563', lineHeight: 1.7, marginBottom: 32 }}>
+ Get up to <strong style={{ color: '#0f0f0f' }}>100% of your money back</strong> when ApplyMate
+ helps you land a job — our way of celebrating your win, and helping our next members.
+ </p>
+
+ <div style={{ background: '#fff', border: '1px solid #bbf7d0', borderRadius: 14, padding: '22px 24px' }}>
+ <p style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700,
+ color: '#15803d', marginBottom: 18 }}>
+ <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
+ This program is limited to the first 100 placements
+ </p>
+ <div style={{ display: 'flex', alignItems: 'baseline', gap: 28, marginBottom: 16, flexWrap: 'wrap' }}>
+ <span><strong style={{ fontSize: 26, color: '#16a34a' }}>6</strong>{' '}
+ <span style={{ fontSize: 14, color: '#6b6b6b' }}>Placed</span></span>
+ <span><strong style={{ fontSize: 26, color: '#16a34a' }}>4</strong>{' '}
+ <span style={{ fontSize: 14, color: '#6b6b6b' }}>Claimed</span></span>
+ <span><strong style={{ fontSize: 26, color: '#f59e0b' }}>96</strong>{' '}
+ <span style={{ fontSize: 14, color: '#6b6b6b' }}>Spots left</span></span>
+ </div>
+ <div style={{ height: 6, borderRadius: 99, background: '#dcfce7', overflow: 'hidden' }}>
+ <div style={{ width: '6%', height: '100%', borderRadius: 99, background: '#16a34a' }} />
+ </div>
+ </div>
+ </div>
+ </section>
+
  {/* ── STRAIGHT FROM THEIR INBOXES ──────────────────────── */}
- <section style={{ background: '#0b0f19', padding: '88px 0', overflow: 'hidden' }}>
+ <section style={{ background: '#0f0f0f', padding: '88px 0', overflow: 'hidden' }}>
  <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 48px', textAlign: 'center' }}>
- <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', color: '#5b9dff',
+ <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', color: '#22c55e',
  textTransform: 'uppercase', marginBottom: 14 }}>
- Straight from their inboxes
+ Straight from members' inboxes
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
  fontSize: 'clamp(30px,5vw,44px)', color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>
- 10+ real results
+ 10+ real replies, not mockups
  </h2>
- <p style={{ fontSize: 15.5, color: '#8b93a7', lineHeight: 1.6 }}>
- Real screening-call invites and recruiter replies, straight from our members' inboxes.
+ <p style={{ fontSize: 15.5, color: '#a8a8a8', lineHeight: 1.6 }}>
+ Screening-call invites, interview confirmations, recruiter replies — every screenshot
+ below came straight from a member's own inbox.
  </p>
- <p style={{ fontSize: 12.5, color: '#5b6478', marginTop: 10 }}>
+ <p style={{ fontSize: 12.5, color: '#6b6b6b', marginTop: 10 }}>
  Hover over a screenshot to pause.
  </p>
  </div>
@@ -509,8 +552,8 @@ export default function Landing() {
  {[...INBOX_PROOFS, ...INBOX_PROOFS].map((src, i) => (
  <div key={i} style={{
  flexShrink: 0, width: 260, borderRadius: 18, overflow: 'hidden',
- border: '1px solid #232a3d', boxShadow: '0 20px 40px -20px rgba(0,0,0,0.6)',
- background: '#151b29',
+ border: '1px solid #262626', boxShadow: '0 20px 40px -20px rgba(0,0,0,0.7)',
+ background: '#1a1a1a',
  }}>
  <img src={src} alt="Real recruiter email screenshot" style={{
  display: 'block', width: '100%', height: 400, objectFit: 'cover', objectPosition: 'top',
