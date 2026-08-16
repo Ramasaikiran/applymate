@@ -499,36 +499,59 @@ export default function Landing() {
 
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
  fontSize: 'clamp(26px,4.5vw,36px)', color: '#0f0f0f', marginBottom: 16, letterSpacing: '-0.01em' }}>
- 100% money-back program
+ Land a job. Get your money back.
  </h2>
  <p style={{ fontSize: 15.5, color: '#4b5563', lineHeight: 1.7, marginBottom: 32 }}>
- Get up to <strong style={{ color: '#0f0f0f' }}>100% of your money back</strong> when ApplyMate
- helps you land a job — our way of celebrating your win, and helping our next members.
+ The first 10 subscribers who land a job while on ApplyMate get a{' '}
+ <strong style={{ color: '#0f0f0f' }}>100% refund</strong>, just do a short podcast
+ episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
+ <strong style={{ color: '#0f0f0f' }}>50% back</strong>.
  </p>
 
  <div style={{ background: '#fff', border: '1px solid #bbf7d0', borderRadius: 14, padding: '22px 24px' }}>
  <p style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700,
  color: '#15803d', marginBottom: 18 }}>
  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
- This program is limited to the first 10 placements
+ This program is limited to the first {jobRefundTotal} placements
  </p>
- <div style={{ display: 'flex', alignItems: 'baseline', gap: 28, marginBottom: 16, flexWrap: 'wrap' }}>
- <span><strong style={{ fontSize: 26, color: '#16a34a' }}>0</strong>{' '}
- <span style={{ fontSize: 14, color: '#6b6b6b' }}>Placed</span></span>
- <span><strong style={{ fontSize: 26, color: '#16a34a' }}>0</strong>{' '}
- <span style={{ fontSize: 14, color: '#6b6b6b' }}>Claimed</span></span>
- <span><strong style={{ fontSize: 26, color: '#f59e0b' }}>10</strong>{' '}
- <span style={{ fontSize: 14, color: '#6b6b6b' }}>Spots left</span></span>
+
+ <div style={{ position: 'relative', height: 6, background: '#dcfce7', borderRadius: 999 }}>
+ <div style={{
+ position: 'absolute', top: 0, left: 0, height: 6, borderRadius: 999,
+ background: '#16a34a',
+ width: jobRefundBarFilled ? `${Math.min(100, (jobRefundClaimed / jobRefundTotal) * 100)}%` : '0%',
+ transition: 'width 1.1s cubic-bezier(0.22,1,0.36,1)',
+ }} />
+ <div style={{
+ position: 'absolute', top: '50%', left: 0, width: 14, height: 14,
+ borderRadius: '50%', background: '#16a34a', transform: 'translate(-50%,-50%)',
+ }} />
+ <div style={{
+ position: 'absolute', top: '50%', width: 10, height: 10, borderRadius: '50%',
+ background: '#fff', border: '2px solid #16a34a',
+ left: jobRefundBarFilled ? `${Math.min(100, (jobRefundClaimed / jobRefundTotal) * 100)}%` : '0%',
+ transform: 'translate(-50%,-50%)',
+ transition: 'left 1.1s cubic-bezier(0.22,1,0.36,1)',
+ }} />
+ <div style={{
+ position: 'absolute', top: '50%', right: 0, width: 14, height: 14,
+ borderRadius: '50%', border: '1.5px solid #bbf7d0', background: '#fff',
+ transform: 'translate(50%,-50%)',
+ }} />
  </div>
- <div style={{ height: 6, borderRadius: 99, background: '#dcfce7', overflow: 'hidden' }}>
- <div style={{ width: '0%', height: '100%', borderRadius: 99, background: '#16a34a' }} />
+ <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
+ <span style={{ fontSize: 12, color: '#6b6b6b' }}>0</span>
+ <span style={{ fontSize: 12, color: '#6b6b6b' }}>{jobRefundTotal}</span>
  </div>
+ <p style={{ fontSize: 13.5, color: '#4b5563', marginTop: 6 }}>
+ <strong style={{ color: '#0f0f0f' }}>{jobRefundClaimed} of {jobRefundTotal}</strong> spots claimed so far
+ </p>
  </div>
 
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
  marginTop: 24, flexWrap: 'wrap' }}>
  <p style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>
- First come, first served — once 10 members claim it, it's gone for good.
+ First come, first served — once {jobRefundTotal} members claim it, it's gone for good.
  </p>
  <button onClick={goSignUp} style={{
  background: '#16a34a', color: '#fff', border: 'none', flexShrink: 0,
@@ -585,61 +608,6 @@ export default function Landing() {
  }}>
  Get your own inbox proof →
  </button>
- </div>
- </section>
-
- {/* ── JOB REFUND PROMO ─────────────────────────────────── */}
- <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '72px 24px' }}>
- <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 12 }}>
- LIMITED OFFER: FIRST 10 USERS
- </p>
- <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 34,
- fontWeight: 400, letterSpacing: '-0.02em', color: '#0f0f0f', marginBottom: 14 }}>
- Land a job. Get your money back.
- </h2>
- <p style={{ fontSize: 15.5, color: '#6b6b6b', lineHeight: 1.65, maxWidth: 560, margin: '0 auto 36px' }}>
- The first 10 subscribers who land a job while on ApplyMate get a{' '}
- <strong style={{ color: '#0f0f0f' }}>100% refund</strong>, just do a short podcast
- episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
- <strong style={{ color: '#0f0f0f' }}>50% back</strong>.
- </p>
-
- {/* progress track */}
- <div style={{ maxWidth: 420, margin: '0 auto' }}>
- <div style={{ position: 'relative', height: 4, background: '#efefef', borderRadius: 999 }}>
- <div style={{
- position: 'absolute', top: 0, left: 0, height: 4, borderRadius: 999,
- background: 'linear-gradient(90deg,#0f0f0f,#7c3aed)',
- width: jobRefundBarFilled ? `${Math.min(100, (jobRefundClaimed / jobRefundTotal) * 100)}%` : '0%',
- transition: 'width 1.1s cubic-bezier(0.22,1,0.36,1)',
- }} />
- <div style={{
- position: 'absolute', top: '50%', left: 0, width: 14, height: 14,
- borderRadius: '50%', background: '#0f0f0f', transform: 'translate(-50%,-50%)',
- }} />
- <div style={{
- position: 'absolute', top: '50%', width: 10, height: 10, borderRadius: '50%',
- background: '#7c3aed', border: '2px solid #fff', boxShadow: '0 0 0 1px #7c3aed',
- left: jobRefundBarFilled ? `${Math.min(100, (jobRefundClaimed / jobRefundTotal) * 100)}%` : '0%',
- transform: 'translate(-50%,-50%)',
- transition: 'left 1.1s cubic-bezier(0.22,1,0.36,1)',
- }} />
- <div style={{
- position: 'absolute', top: '50%', right: 0, width: 14, height: 14,
- borderRadius: '50%', border: '1.5px solid #d4d4d4', background: '#fff',
- transform: 'translate(50%,-50%)',
- }} />
- </div>
- <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
- <span style={{ fontSize: 12, color: '#9b9b9b' }}>0</span>
- <span style={{ fontSize: 12, color: '#9b9b9b' }}>{jobRefundTotal}</span>
- </div>
- </div>
- <p style={{ fontSize: 13.5, color: '#6b6b6b', marginTop: 14 }}>
- <strong style={{ color: '#0f0f0f' }}>{jobRefundClaimed} of {jobRefundTotal}</strong> spots claimed so far
- </p>
  </div>
  </section>
 
