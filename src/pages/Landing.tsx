@@ -131,6 +131,10 @@ export default function Landing() {
 
  const FAQS = [
  {
+ q: 'What is the 100% money-back program?',
+ a: 'The first 10 subscribers who land a job while on ApplyMate get a 100% refund, just do a short podcast episode with us about your job search. Prefer to skip the podcast? You still get 50% back. Once 10 members claim it, the program closes for good.',
+ },
+ {
  q: 'Is this live? How do I know you\'ll actually apply?',
  a: 'We\'re onboarding our first founding members right now. Once your profile is active, your dashboard shows every single application: company, role, date, matched skills, and status.',
  },
