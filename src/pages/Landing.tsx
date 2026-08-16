@@ -491,7 +491,7 @@ export default function Landing() {
  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#dcfce7',
  border: '1px solid #bbf7d0', borderRadius: 99, padding: '6px 18px 6px 6px', marginBottom: 24 }}>
  <span style={{ background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 800,
- letterSpacing: '0.02em', borderRadius: 99, padding: '5px 12px' }}>FIRST 100</span>
+ letterSpacing: '0.02em', borderRadius: 99, padding: '5px 12px' }}>FIRST 10</span>
  <span style={{ fontSize: 12.5, fontWeight: 700, color: '#15803d', letterSpacing: '0.03em' }}>
  MEMBERS ONLY · MONEY-BACK PROGRAM
  </span>
@@ -510,18 +510,18 @@ export default function Landing() {
  <p style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, fontWeight: 700,
  color: '#15803d', marginBottom: 18 }}>
  <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#16a34a', display: 'inline-block' }} />
- This program is limited to the first 100 placements
+ This program is limited to the first 10 placements
  </p>
  <div style={{ display: 'flex', alignItems: 'baseline', gap: 28, marginBottom: 16, flexWrap: 'wrap' }}>
- <span><strong style={{ fontSize: 26, color: '#16a34a' }}>6</strong>{' '}
+ <span><strong style={{ fontSize: 26, color: '#16a34a' }}>0</strong>{' '}
  <span style={{ fontSize: 14, color: '#6b6b6b' }}>Placed</span></span>
- <span><strong style={{ fontSize: 26, color: '#16a34a' }}>4</strong>{' '}
+ <span><strong style={{ fontSize: 26, color: '#16a34a' }}>0</strong>{' '}
  <span style={{ fontSize: 14, color: '#6b6b6b' }}>Claimed</span></span>
- <span><strong style={{ fontSize: 26, color: '#f59e0b' }}>96</strong>{' '}
+ <span><strong style={{ fontSize: 26, color: '#f59e0b' }}>10</strong>{' '}
  <span style={{ fontSize: 14, color: '#6b6b6b' }}>Spots left</span></span>
  </div>
  <div style={{ height: 6, borderRadius: 99, background: '#dcfce7', overflow: 'hidden' }}>
- <div style={{ width: '6%', height: '100%', borderRadius: 99, background: '#16a34a' }} />
+ <div style={{ width: '0%', height: '100%', borderRadius: 99, background: '#16a34a' }} />
  </div>
  </div>
  </div>
