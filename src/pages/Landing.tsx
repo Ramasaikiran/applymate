@@ -430,7 +430,7 @@ export default function Landing() {
  color: '#0f0f0f', marginBottom: 16 }}>
  4 minutes setup. Applications for months.
  </h2>
- <p style={{ fontSize: 16, color: '#9b9b9b', textAlign: 'center', marginBottom: 56, maxWidth: 500, margin: '0 auto 56px' }}>
+ <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', marginBottom: 56, maxWidth: 500, margin: '0 auto 56px' }}>
  You set up once. We do the grind. You focus on being ready when they call.
  </p>
 
@@ -661,7 +661,7 @@ export default function Landing() {
  color: '#0f0f0f', marginBottom: 8 }}>
           One plan for how you want to job hunt.
  </h2>
- <p style={{ fontSize: 16, color: '#9b9b9b', textAlign: 'center', marginBottom: 56 }}>
+ <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', marginBottom: 56 }}>
           All plans run 30 days. Pick how much of the work you want off your plate.
  </p>
 
@@ -715,7 +715,7 @@ export default function Landing() {
  </p>
  <p className="price-amount" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 32,
  color: p.highlight ? '#fff' : '#0f0f0f', marginBottom: 4 }}>{p.price}</p>
- <p className="price-sub" style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.5)' : '#b5b5b5', marginBottom: 20 }}>{p.sub}</p>
+ <p className="price-sub" style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.55)' : '#8a8a8a', marginBottom: 20 }}>{p.sub}</p>
  <button onClick={(e) => { e.stopPropagation(); setSelectedPlan({ label: p.label, price: p.price }); goSignUp() }} style={{
  width: '100%', padding: '10px 0', borderRadius: 8,
  border: p.highlight ? '1px solid rgba(255,255,255,0.25)' : '1px solid #e8e8e8',
@@ -729,7 +729,7 @@ export default function Landing() {
  ))}
  </div>
 
- <p style={{ textAlign: 'center', fontSize: 13, color: '#b5b5b5', marginTop: 28 }}>
+ <p style={{ textAlign: 'center', fontSize: 13, color: '#8a8a8a', marginTop: 28 }}>
  Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
  </p>
  </div>
