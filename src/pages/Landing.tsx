@@ -212,7 +212,7 @@ export default function Landing() {
  </nav>
 
  {/* ── HERO ──────────────────────────────────────────────── */}
- <section style={{ maxWidth: 780, margin: '0 auto', padding: '100px 24px 80px', textAlign: 'center' }}>
+ <section style={{ maxWidth: 780, margin: '0 auto', padding: '56px 24px 80px', textAlign: 'center' }}>
 
  <h1 style={{
  fontFamily: "'Instrument Serif',Georgia,serif",
