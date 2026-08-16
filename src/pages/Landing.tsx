@@ -2,6 +2,13 @@ import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import inboxProof1 from '../assets/inbox-proof/proof-1.jpg'
+import inboxProof2 from '../assets/inbox-proof/proof-2.jpg'
+import inboxProof3 from '../assets/inbox-proof/proof-3.jpg'
+import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
+import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
+
+const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5]
 
 /* ── tiny helpers ─────────────────────────────────────────────── */
 const TICK = () => (
@@ -478,6 +485,42 @@ export default function Landing() {
  </div>
  </section>
 
+ {/* ── STRAIGHT FROM THEIR INBOXES ──────────────────────── */}
+ <section style={{ background: '#0b0f19', padding: '88px 0', overflow: 'hidden' }}>
+ <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 48px', textAlign: 'center' }}>
+ <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', color: '#5b9dff',
+ textTransform: 'uppercase', marginBottom: 14 }}>
+ Straight from their inboxes
+ </p>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
+ fontSize: 'clamp(30px,5vw,44px)', color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>
+ 10+ real results
+ </h2>
+ <p style={{ fontSize: 15.5, color: '#8b93a7', lineHeight: 1.6 }}>
+ Real screening-call invites and recruiter replies, straight from our members' inboxes.
+ </p>
+ <p style={{ fontSize: 12.5, color: '#5b6478', marginTop: 10 }}>
+ Hover over a screenshot to pause.
+ </p>
+ </div>
+
+ <div style={{ width: '100%', overflow: 'hidden' }}>
+ <div className="inbox-marquee-track" style={{ display: 'flex', gap: 20, width: 'max-content' }}>
+ {[...INBOX_PROOFS, ...INBOX_PROOFS].map((src, i) => (
+ <div key={i} style={{
+ flexShrink: 0, width: 260, borderRadius: 18, overflow: 'hidden',
+ border: '1px solid #232a3d', boxShadow: '0 20px 40px -20px rgba(0,0,0,0.6)',
+ background: '#151b29',
+ }}>
+ <img src={src} alt="Real recruiter email screenshot" style={{
+ display: 'block', width: '100%', height: 400, objectFit: 'cover', objectPosition: 'top',
+ }} />
+ </div>
+ ))}
+ </div>
+ </div>
+ </section>
+
  {/* ── JOB REFUND PROMO ─────────────────────────────────── */}
  <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '72px 24px' }}>
  <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
@@ -762,6 +805,15 @@ export default function Landing() {
  @keyframes fadeInUp {
  from { opacity: 0; transform: translateY(10px); }
  to { opacity: 1; transform: translateY(0); }
+ }
+ @keyframes inboxMarquee {
+ from { transform: translateX(0); }
+ to { transform: translateX(-50%); }
+ }
+ .inbox-marquee-track { animation: inboxMarquee 38s linear infinite; }
+ .inbox-marquee-track:hover { animation-play-state: paused; }
+ @media (prefers-reduced-motion: reduce) {
+ .inbox-marquee-track { animation: none; }
  }
  @media (max-width: 1024px) and (min-width: 769px) {
  .pricing-grid { grid-template-columns: repeat(2,1fr) !important; }
