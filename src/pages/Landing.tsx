@@ -218,7 +218,7 @@ export default function Landing() {
  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8,
  background: '#fff7ed', border: '1px solid #fed7aa',
  borderRadius: 99, padding: '7px 16px', marginBottom: 32 }}>
- <span style={{ fontSize: 13 }}></span>
+ <span style={{ fontSize: 13 }}>🔥</span>
  <span style={{ fontSize: 13, fontWeight: 600, color: '#c2410c' }}>
  Founding member pricing. Limited first batch
  </span>
@@ -551,7 +551,7 @@ export default function Landing() {
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
  marginTop: 24, flexWrap: 'wrap' }}>
  <p style={{ fontSize: 13, color: '#15803d', fontWeight: 600 }}>
- First come, first served — once {jobRefundTotal} members claim it, it's gone for good.
+ First come, first served. Once {jobRefundTotal} members claim it, it's gone for good.
  </p>
  <button onClick={goSignUp} style={{
  background: '#16a34a', color: '#fff', border: 'none', flexShrink: 0,
@@ -576,7 +576,7 @@ export default function Landing() {
  10+ real replies, not mockups
  </h2>
  <p style={{ fontSize: 15.5, color: '#a8a8a8', lineHeight: 1.6 }}>
- Screening-call invites, interview confirmations, recruiter replies — every screenshot
+ Screening-call invites, interview confirmations, recruiter replies. Every screenshot
  below came straight from a member's own inbox.
  </p>
  <p style={{ fontSize: 12.5, color: '#6b6b6b', marginTop: 10 }}>

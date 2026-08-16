@@ -13,7 +13,7 @@ export default function About() {
       <P>Job hunting is slow and repetitive. We remove the manual work so candidates can focus on interviews, not applications.</P>
 
       <H2>Contact</H2>
-      <P>Reach us anytime — see our Contact page for details.</P>
+      <P>Reach us anytime, see our Contact page for details.</P>
     </LegalPage>
   )
 }

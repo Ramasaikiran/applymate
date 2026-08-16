@@ -444,7 +444,7 @@ export default function Subscription() {
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
  padding: '10px 14px', background: '#f0fdf4', border: '1.5px solid #bbf7d0', borderRadius: 10 }}>
  <span style={{ fontSize: 13, fontWeight: 600, color: '#16a34a' }}>
- "{couponApplied.toUpperCase()}" applied — {COUPON_DISCOUNTS[couponApplied]}% off
+ "{couponApplied.toUpperCase()}" applied: {COUPON_DISCOUNTS[couponApplied]}% off
  </span>
  <button type="button" onClick={() => { setCouponApplied(null); setCouponInput(''); setCouponError(null) }}
  style={{ background: 'none', border: 'none', color: '#6b6b6b', fontSize: 13, cursor: 'pointer', fontWeight: 600 }}>
