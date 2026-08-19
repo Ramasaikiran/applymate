@@ -305,15 +305,18 @@ export default function Landing() {
 
  {/* ── COMPANIES STRIP ───────────────────────────────────── */}
  <section style={{ maxWidth: '100%', padding: '0 0 64px', overflow: 'hidden' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 24, padding: '0 24px' }}>
- Companies our users have applied to
+ <h2 className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
+ letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', margin: '0 0 8px', padding: '0 24px' }}>
+ Companies our users interviewed at
+ </h2>
+ <p style={{ fontSize: 13, color: '#c2c2c2', textAlign: 'center', margin: '0 0 24px', padding: '0 24px' }}>
+ Including Google, Amazon, Wipro, Turing, Salesforce, micro1 &amp; more
  </p>
  <div style={{ width: '100%', overflow: 'hidden' }}>
- <div className="inbox-marquee-track" style={{ display: 'flex', width: 'max-content', gap: 12,
+ <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 12,
  animationDuration: '26s' }}>
  {[...COMPANIES, ...COMPANIES].map((c, i) => (
- <div key={c.name + i} style={{
+ <div key={c.name + i} role="listitem" aria-hidden={i >= COMPANIES.length} style={{
  display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
  background: c.dark ? '#0f0f0f' : '#fff',
  border: c.dark ? '1px solid #0f0f0f' : '1px solid #f0f0f0',
@@ -322,15 +325,15 @@ export default function Landing() {
  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
  }}>
  {c.wordmark ? (
- <img src={c.logo} alt={c.name} style={{ height: 20, width: 'auto', flexShrink: 0 }} />
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" style={{ height: 20, width: 'auto', flexShrink: 0 }} />
  ) : c.logo ? (
  <>
- <img src={c.logo} alt={c.name} style={{ width: 20, height: 20, flexShrink: 0 }} />
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" style={{ width: 20, height: 20, flexShrink: 0 }} />
  <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', whiteSpace: 'nowrap' }}>{c.name}</span>
  </>
  ) : (
  <>
- <span style={{
+ <span aria-hidden="true" style={{
  width: 22, height: 22, borderRadius: '50%', background: c.color,
  color: '#fff', fontSize: 11, fontWeight: 700,
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
