@@ -131,9 +131,11 @@ export default function Landing() {
 
  const COMPANIES = [
  { name: 'Google', logo: '/logos/google.svg', color: '#4285F4' },
+ { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true },
  { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true },
  { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
  { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true },
+ { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true },
  { name: 'iamneo (NIIT Venture)', color: '#0b3d3d' },
  { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
  { name: 'hiringg', color: '#6d28d9' },
