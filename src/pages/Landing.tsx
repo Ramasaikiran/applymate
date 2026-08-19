@@ -7,8 +7,10 @@ import inboxProof2 from '../assets/inbox-proof/proof-2.jpg'
 import inboxProof3 from '../assets/inbox-proof/proof-3.jpg'
 import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
 import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
+import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
+import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
 
-const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5]
+const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7]
 
 /* ── tiny helpers ─────────────────────────────────────────────── */
 const TICK = () => (
