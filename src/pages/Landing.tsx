@@ -9,8 +9,9 @@ import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
 import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
 import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
 import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
+import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
 
-const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7]
+const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8]
 
 /* ── tiny helpers ─────────────────────────────────────────────── */
 const TICK = () => (
@@ -138,6 +139,7 @@ export default function Landing() {
  { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
  { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true },
  { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true },
+ { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true },
  { name: 'iamneo (NIIT Venture)', color: '#0b3d3d' },
  { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
  { name: 'hiringg', color: '#6d28d9' },
