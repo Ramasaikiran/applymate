@@ -134,12 +134,12 @@ export default function Landing() {
 
  const COMPANIES = [
  { name: 'Google', logo: '/logos/google.svg', color: '#4285F4' },
- { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true, logoW: 57 },
- { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true, logoW: 28 },
+ { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true, logoW: 114 },
+ { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true, logoW: 56 },
  { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
- { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true, logoW: 100 },
- { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true, logoW: 89 },
- { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true, logoW: 46 },
+ { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true, logoW: 200 },
+ { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true, logoW: 178 },
+ { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true, logoW: 92 },
  { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
  ]
 
@@ -313,36 +313,36 @@ export default function Landing() {
  Google, Amazon, Salesforce, Wipro, Turing, micro1, Growth School &amp; Moodle
  </p>
  <div style={{ width: '100%', overflow: 'hidden' }}>
- <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 12,
- animationDuration: '26s' }}>
+ <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 20,
+ animationDuration: '30s' }}>
  {[...COMPANIES, ...COMPANIES].map((c, i) => (
  <div key={c.name + i} role="listitem" aria-hidden={i >= COMPANIES.length} style={{
- display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0,
+ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0,
  background: c.dark ? '#0f0f0f' : '#fff',
  border: c.dark ? '1px solid #0f0f0f' : '1px solid #f0f0f0',
- borderRadius: 999,
- padding: c.wordmark ? '8px 20px' : '10px 20px',
- boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+ borderRadius: 22,
+ padding: c.wordmark ? '18px 28px' : '16px 28px',
+ boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
  }}>
  {c.wordmark ? (
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={c.logoW ?? 90} height={20}
- style={{ height: 20, width: 'auto', flexShrink: 0 }} />
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={c.logoW ?? 180} height={40}
+ style={{ height: 40, width: 'auto', flexShrink: 0 }} />
  ) : c.logo ? (
  <>
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={20} height={20}
- style={{ width: 20, height: 20, flexShrink: 0 }} />
- <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', whiteSpace: 'nowrap' }}>{c.name}</span>
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={44} height={44}
+ style={{ width: 44, height: 44, flexShrink: 0 }} />
+ <span style={{ fontSize: 22, fontWeight: 700, color: '#0f0f0f', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
  </>
  ) : (
  <>
  <span aria-hidden="true" style={{
- width: 22, height: 22, borderRadius: '50%', background: c.color,
- color: '#fff', fontSize: 11, fontWeight: 700,
+ width: 44, height: 44, borderRadius: '50%', background: c.color,
+ color: '#fff', fontSize: 20, fontWeight: 700,
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
  }}>
  {c.name[0]}
  </span>
- <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', whiteSpace: 'nowrap' }}>{c.name}</span>
+ <span style={{ fontSize: 22, fontWeight: 700, color: '#0f0f0f', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
  </>
  )}
  </div>
