@@ -134,15 +134,13 @@ export default function Landing() {
 
  const COMPANIES = [
  { name: 'Google', logo: '/logos/google.svg', color: '#4285F4' },
- { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true },
- { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true },
+ { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true, logoW: 57 },
+ { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true, logoW: 28 },
  { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
- { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true },
- { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true },
- { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true },
- { name: 'iamneo (NIIT Venture)', color: '#0b3d3d' },
+ { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true, logoW: 100 },
+ { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true, logoW: 89 },
+ { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true, logoW: 46 },
  { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
- { name: 'hiringg', color: '#6d28d9' },
  ]
 
  const FAQS = [
@@ -312,7 +310,7 @@ export default function Landing() {
  Companies our users interviewed at
  </h2>
  <p style={{ fontSize: 13, color: '#c2c2c2', textAlign: 'center', margin: '0 0 24px', padding: '0 24px' }}>
- Including Google, Amazon, Wipro, Turing, Salesforce, micro1 &amp; more
+ Google, Amazon, Salesforce, Wipro, Turing, micro1, Growth School &amp; Moodle
  </p>
  <div style={{ width: '100%', overflow: 'hidden' }}>
  <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 12,
@@ -327,10 +325,12 @@ export default function Landing() {
  boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
  }}>
  {c.wordmark ? (
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" style={{ height: 20, width: 'auto', flexShrink: 0 }} />
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={c.logoW ?? 90} height={20}
+ style={{ height: 20, width: 'auto', flexShrink: 0 }} />
  ) : c.logo ? (
  <>
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" style={{ width: 20, height: 20, flexShrink: 0 }} />
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={20} height={20}
+ style={{ width: 20, height: 20, flexShrink: 0 }} />
  <span style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', whiteSpace: 'nowrap' }}>{c.name}</span>
  </>
  ) : (
