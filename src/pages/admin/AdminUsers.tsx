@@ -39,7 +39,7 @@ export default function AdminUsers() {
  const enriched: UserRow[] = await Promise.all(profiles.map(async (p) => {
  const [subRes, appRes, sdRes, pdRes] = await Promise.all([
  supabase.from('subscriptions').select('plan,status,ends_at')
- .eq('user_id', p.id).order('ends_at', { ascending: false }).limit(1).maybeSingle(),
+ .eq('user_id', p.id).order('ends_at', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
  supabase.from('job_applications').select('id', { count: 'exact', head: true }).eq('user_id', p.id),
  supabase.from('student_details').select('technical_skills').eq('id', p.id).maybeSingle(),
  supabase.from('professional_details').select('technical_skills').eq('id', p.id).maybeSingle(),
