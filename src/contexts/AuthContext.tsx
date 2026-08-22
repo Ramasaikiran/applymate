@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .from('subscriptions')
       .select('*')
       .eq('user_id', userId)
-      .order('ends_at', { ascending: false })
+      .order('ends_at', { ascending: false, nullsFirst: false })
       .limit(1)
       .maybeSingle()
 
