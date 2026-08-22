@@ -63,7 +63,7 @@ function ActivityFeed() {
       <div key={idx} style={{
         display: 'flex', alignItems: 'center', gap: 10, padding: '10px 18px',
         background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 999,
-        fontSize: 13.5, color: '#166534', animation: 'fadeIn 0.4s ease',
+        fontSize: 13, color: '#166534', animation: 'fadeIn 0.4s ease',
       }}>
         <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
         <span className="activity-pill-text">
@@ -183,7 +183,7 @@ export default function Landing() {
 
  {/* ── PROMO BANNER ──────────────────────────────────────── */}
  <div style={{ background: '#0f0f0f', color: '#fff', textAlign: 'center',
- padding: '10px 16px', fontSize: 13.5 }}>
+ padding: '10px 16px', fontSize: 13 }}>
  <span>
  🎉 50% off all plans - use code{' '}
  <strong style={{ background: 'rgba(255,255,255,0.15)', padding: '2px 8px',
@@ -262,7 +262,7 @@ export default function Landing() {
  Get started for free
  </button>
  <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{
- background: 'none', border: 'none', fontSize: 13.5, color: '#9b9b9b',
+ background: 'none', border: 'none', fontSize: 13, color: '#9b9b9b',
  cursor: 'pointer', fontFamily: "'Inter',sans-serif", textDecoration: 'underline',
  textUnderlineOffset: 3,
  }}>
@@ -372,7 +372,7 @@ export default function Landing() {
  {/* header row */}
  <div />
  <div style={{ background: '#0f0f0f', borderRadius: '14px 14px 0 0', padding: '18px 20px', textAlign: 'center' }}>
- <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, color: '#0f0f0f',
+ <span style={{ display: 'inline-block', fontSize: 11, fontWeight: 700, color: '#0f0f0f',
  background: '#fff', padding: '3px 10px', borderRadius: 999, marginBottom: 10 }}>
  ★ MOST EFFECTIVE
  </span>
@@ -409,7 +409,7 @@ export default function Landing() {
  borderLeft: '1px solid #e8edff', borderRight: '1px solid #e8edff',
  borderBottom: i === 7 ? '1px solid #e8edff' : 'none',
  borderRadius: i === 7 ? '0 0 14px 14px' : 0 }}>
- <TICK /><span className="compare-us-text" style={{ fontSize: 13.5, fontWeight: 600, color: '#0f0f0f', lineHeight: 1.4 }}>{row.us}</span>
+ <TICK /><span className="compare-us-text" style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f', lineHeight: 1.4 }}>{row.us}</span>
  </div>
  <div key={row.label + 't1'} style={{ padding: '16px 16px', borderTop: '1px solid #f0f0f0',
  display: 'flex', alignItems: 'flex-start', gap: 10 }}>
@@ -515,7 +515,7 @@ export default function Landing() {
  <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
  Who applies
  </p>
- <p className="trust-body" style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
+ <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
  Basic: you apply. Pro & Max Pro: a real admin applies for you.
  </p>
  </div>
@@ -523,7 +523,7 @@ export default function Landing() {
  <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
  How matches are chosen
  </p>
- <p className="trust-body" style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
+ <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
  We apply only when skills and experience match exactly.
  </p>
  </div>
@@ -531,7 +531,7 @@ export default function Landing() {
  <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
  What you get
  </p>
- <p className="trust-body" style={{ fontSize: 13.5, color: '#7a7a7a', lineHeight: 1.6 }}>
+ <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
  10–15 tailored applications daily. WhatsApp update for each one.
  </p>
  </div>
@@ -596,7 +596,7 @@ export default function Landing() {
  <span style={{ fontSize: 12, color: '#6b6b6b' }}>0</span>
  <span style={{ fontSize: 12, color: '#6b6b6b' }}>{jobRefundTotal}</span>
  </div>
- <p style={{ fontSize: 13.5, color: '#4b5563', marginTop: 6 }}>
+ <p style={{ fontSize: 13, color: '#4b5563', marginTop: 6 }}>
  <strong style={{ color: '#0f0f0f' }}>{jobRefundClaimed} of {jobRefundTotal}</strong> spots claimed so far
  </p>
  </div>
@@ -821,7 +821,7 @@ export default function Landing() {
  </p>
  <button onClick={goSignUp} style={{
  background: '#fff', color: '#0f0f0f', border: 'none',
- padding: '20px 56px', borderRadius: 14, fontSize: 18, fontWeight: 800,
+ padding: '20px 56px', borderRadius: 14, fontSize: 19, fontWeight: 700,
  cursor: 'pointer', fontFamily: "'Inter',sans-serif", letterSpacing: '-0.02em',
  boxShadow: '0 8px 40px rgba(255,255,255,0.15)',
  }}>
