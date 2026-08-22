@@ -78,15 +78,23 @@ serve(async (req) => {
     const ends = new Date(now)
     ends.setDate(ends.getDate() + (PLAN_DAYS[sub.plan] || 30))
 
-    await supabase.from('subscriptions').update({
+    const { error: updateErr } = await supabase.from('subscriptions').update({
       status: 'active',
       razorpay_payment_id,
       razorpay_signature,
       starts_at: now.toISOString(),
       ends_at: ends.toISOString(),
     }).eq('id', sub.id)
+    if (updateErr) {
+      return new Response(JSON.stringify({ error: `Failed to activate subscription: ${updateErr.message}` }), { status: 500, headers: cors })
+    }
 
-    await supabase.from('profiles').update({ account_status: 'active' }).eq('id', sub.user_id)
+    const { error: profileErr } = await supabase.from('profiles').update({ account_status: 'active' }).eq('id', sub.user_id)
+    if (profileErr) {
+      // Subscription is active and paid for — don't fail the whole request over
+      // a secondary profile flag. Log it so it can be reconciled.
+      console.error('Failed to update profile account_status after payment:', profileErr.message)
+    }
 
     return new Response(JSON.stringify({ success: true, plan: sub.plan, ends_at: ends.toISOString(), amount_paise: sub.amount_paise, coupon_code: sub.coupon_code }), {
       headers: { ...cors, 'Content-Type': 'application/json' },
