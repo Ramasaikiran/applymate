@@ -209,7 +209,7 @@ export default function Landing() {
  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
  <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} className="nav-free-pill" style={{
  fontSize: 13, color: '#22c55e', fontWeight: 600,
- background: '#f0fdf4', padding: '4px 12px', borderRadius: 99,
+ background: '#f0fdf4', padding: '4px 12px', borderRadius: 999,
  border: '1px solid #bbf7d0', cursor: 'pointer', fontFamily: "'Inter',sans-serif",
  whiteSpace: 'nowrap',
  }}>
@@ -305,8 +305,7 @@ export default function Landing() {
 
  {/* ── COMPANIES STRIP ───────────────────────────────────── */}
  <section style={{ maxWidth: '100%', padding: '0 0 64px', overflow: 'hidden' }}>
- <h2 className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', margin: '0 0 8px', padding: '0 24px' }}>
+ <h2 className="eyebrow-label" style={{ textAlign: 'center', margin: '0 0 8px', padding: '0 24px' }}>
  Companies our users interviewed at
  </h2>
  <p style={{ fontSize: 13, color: '#c2c2c2', textAlign: 'center', margin: '0 0 24px', padding: '0 24px' }}>
@@ -354,8 +353,7 @@ export default function Landing() {
  {/* ── WHY APPLYMATE (comparison table) ─────────────────── */}
  <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '88px 0' }}>
  <div style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 10 }}>
+ <p className="eyebrow-label" style={{ marginBottom: 10 }}>
  COMPARE
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 34, fontWeight: 400,
@@ -375,7 +373,7 @@ export default function Landing() {
  <div />
  <div style={{ background: '#0f0f0f', borderRadius: '14px 14px 0 0', padding: '18px 20px', textAlign: 'center' }}>
  <span style={{ display: 'inline-block', fontSize: 10, fontWeight: 700, color: '#0f0f0f',
- background: '#fff', padding: '3px 10px', borderRadius: 99, marginBottom: 10 }}>
+ background: '#fff', padding: '3px 10px', borderRadius: 999, marginBottom: 10 }}>
  ★ MOST EFFECTIVE
  </span>
  <p className="compare-title" style={{ fontSize: 16, fontWeight: 700, color: '#fff' }}>ApplyMate</p>
@@ -439,8 +437,7 @@ export default function Landing() {
 
  {/* ── HOW IT WORKS ──────────────────────────────────────── */}
  <section style={{ maxWidth: 900, margin: '0 auto', padding: '96px 24px' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 }}>
+ <p className="eyebrow-label" style={{ textAlign: 'center', marginBottom: 12 }}>
  HOW IT WORKS
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
@@ -486,7 +483,7 @@ export default function Landing() {
  <span style={{ fontSize: 11, fontWeight: 700,
  color: i === 1 ? 'rgba(255,255,255,0.4)' : '#b5b5b5',
  letterSpacing: '0.08em' }}>{s.step}</span>
- <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 99,
+ <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 999,
  background: i === 1 ? 'rgba(255,255,255,0.1)' : '#f5f5f5',
  color: i === 1 ? 'rgba(255,255,255,0.6)' : '#9b9b9b' }}>{s.time}</span>
  </div>
@@ -545,9 +542,9 @@ export default function Landing() {
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 96px' }}>
  <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 20, padding: '40px 32px' }}>
  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, background: '#dcfce7',
- border: '1px solid #bbf7d0', borderRadius: 99, padding: '6px 18px 6px 6px', marginBottom: 24 }}>
+ border: '1px solid #bbf7d0', borderRadius: 999, padding: '6px 18px 6px 6px', marginBottom: 24 }}>
  <span style={{ background: '#16a34a', color: '#fff', fontSize: 11, fontWeight: 800,
- letterSpacing: '0.02em', borderRadius: 99, padding: '5px 12px' }}>FIRST 10</span>
+ letterSpacing: '0.02em', borderRadius: 999, padding: '5px 12px' }}>FIRST 10</span>
  <span style={{ fontSize: 12.5, fontWeight: 700, color: '#15803d', letterSpacing: '0.03em' }}>
  MEMBERS ONLY · MONEY-BACK PROGRAM
  </span>
@@ -670,8 +667,7 @@ export default function Landing() {
  {/* ── PRICING ───────────────────────────────────────────── */}
  <section id="pricing" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
  <div style={{ maxWidth: 960, margin: '0 auto' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 }}>
+ <p className="eyebrow-label" style={{ textAlign: 'center', marginBottom: 12 }}>
  FOUNDING MEMBER PRICING
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
@@ -714,14 +710,14 @@ export default function Landing() {
  {p.popular && (
  <span style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
  fontSize: 11, fontWeight: 700, padding: '4px 12px',
- background: '#f59e0b', color: '#fff', borderRadius: 99, whiteSpace: 'nowrap' }}>
+ background: '#f59e0b', color: '#fff', borderRadius: 999, whiteSpace: 'nowrap' }}>
  MOST POPULAR
  </span>
  )}
  {p.saving && !p.popular && (
  <span style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
  fontSize: 11, fontWeight: 700, padding: '3px 10px',
- background: '#fef9c3', color: '#92400e', borderRadius: 99, whiteSpace: 'nowrap' }}>
+ background: '#fef9c3', color: '#92400e', borderRadius: 999, whiteSpace: 'nowrap' }}>
  {p.saving}
  </span>
  )}
@@ -756,8 +752,7 @@ export default function Landing() {
  {/* ── FAQ ───────────────────────────────────────────────── */}
  <section style={{ background: '#fff', padding: '96px 24px' }}>
  <div style={{ maxWidth: 680, margin: '0 auto' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: '#b5b5b5',
- letterSpacing: '0.12em', textTransform: 'uppercase', textAlign: 'center', marginBottom: 12 }}>
+ <p className="eyebrow-label" style={{ textAlign: 'center', marginBottom: 12 }}>
  FAQ
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
@@ -811,8 +806,7 @@ export default function Landing() {
 
  {/* ── FINAL CTA ─────────────────────────────────────────── */}
  <section style={{ background: '#0f0f0f', padding: '100px 24px', textAlign: 'center' }}>
- <p className="eyebrow-label" style={{ fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.35)',
- letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 20 }}>
+ <p className="eyebrow-label" style={{ color: 'rgba(255,255,255,0.35)', marginBottom: 20 }}>
  YOUR MOVE
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif",
@@ -893,6 +887,13 @@ export default function Landing() {
  </div>
 
  <style>{`
+ .eyebrow-label {
+ font-size: 11px;
+ font-weight: 700;
+ letter-spacing: 0.12em;
+ text-transform: uppercase;
+ color: #b5b5b5;
+ }
  @keyframes fadeInUp {
  from { opacity: 0; transform: translateY(10px); }
  to { opacity: 1; transform: translateY(0); }
