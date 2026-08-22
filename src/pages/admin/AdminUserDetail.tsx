@@ -51,7 +51,7 @@ export default function AdminUserDetail() {
  const [pRes, appRes, subRes, statsRes, delReqRes] = await Promise.all([
  supabase.from('profiles').select('*').eq('id', uid).single(),
  supabase.from('job_applications').select('*').eq('user_id', uid).order('applied_at', { ascending: false }),
- supabase.from('subscriptions').select('*').eq('user_id', uid).order('ends_at', { ascending: false }).limit(1).maybeSingle(),
+ supabase.from('subscriptions').select('*').eq('user_id', uid).order('ends_at', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
  supabase.rpc('get_user_app_stats', { p_user_id: uid }),
  supabase.from('profile_deletion_requests').select('id,reason,requested_at')
  .eq('user_id', uid).eq('status', 'pending').maybeSingle(),
