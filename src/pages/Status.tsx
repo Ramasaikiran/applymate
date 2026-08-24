@@ -145,11 +145,8 @@ export default function Status() {
  marginTop: 44, padding: '22px 24px', borderRadius: 12,
  background: '#f7f7f7', textAlign: 'center',
  }}>
- <p style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', marginBottom: 4 }}>
+ <p style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', marginBottom: 16 }}>
  Have any other queries?
- </p>
- <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 16 }}>
- Drop an email at support@applymate.in
  </p>
  <a href="mailto:support@applymate.in" style={{
  display: 'inline-block', padding: '12px 28px', background: '#0f0f0f', color: '#fff',
