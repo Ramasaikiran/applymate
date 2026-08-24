@@ -19,6 +19,7 @@ const Contact        = lazy(() => import('./pages/Contact'))
 const Terms          = lazy(() => import('./pages/Terms'))
 const Privacy        = lazy(() => import('./pages/Privacy'))
 const RefundPolicy   = lazy(() => import('./pages/RefundPolicy'))
+const Status          = lazy(() => import('./pages/Status'))
 const AdminDashboard      = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminLogin          = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminUsers          = lazy(() => import('./pages/admin/AdminUsers'))
@@ -28,6 +29,7 @@ const AdminHackathons     = lazy(() => import('./pages/admin/AdminHackathons'))
 const AdminSubscriptions  = lazy(() => import('./pages/admin/AdminSubscriptions'))
 const AdminAnalytics      = lazy(() => import('./pages/admin/AdminAnalytics'))
 const AdminActivityLog    = lazy(() => import('./pages/admin/AdminActivityLog'))
+const AdminStatus         = lazy(() => import('./pages/admin/AdminStatus'))
 
 export default function App() {
   return (
@@ -39,6 +41,7 @@ export default function App() {
         <Route path="/terms"           element={<Terms />} />
         <Route path="/privacy"         element={<Privacy />} />
         <Route path="/refund-policy"   element={<RefundPolicy />} />
+ <Route path="/status"          element={<Status />} />
         <Route path="/sign-up"         element={<SignUp />} />
         <Route path="/sign-in"         element={<SignIn />} />
         <Route path="/check-inbox"     element={<CheckInbox />} />
@@ -58,6 +61,7 @@ export default function App() {
         <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
         <Route path="/admin/analytics"     element={<AdminRoute><AdminAnalytics /></AdminRoute>} />
         <Route path="/admin/activity"      element={<AdminRoute><AdminActivityLog /></AdminRoute>} />
+ <Route path="/admin/status"        element={<AdminRoute><AdminStatus /></AdminRoute>} />
         <Route path="*"                element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>

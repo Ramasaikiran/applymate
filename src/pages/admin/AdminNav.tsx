@@ -9,6 +9,7 @@ const LINKS = [
  { to: '/admin/subscriptions',label: 'Subscriptions' },
  { to: '/admin/analytics', label: 'Analytics' },
  { to: '/admin/activity', label: 'Activity log' },
+ { to: '/admin/status', label: 'Status page' },
 ]
 
 export default function AdminNav({ title }: { title?: string }) {

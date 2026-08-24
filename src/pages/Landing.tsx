@@ -851,6 +851,7 @@ export default function Landing() {
  <a href="/terms.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Terms</a>
  <a href="/privacy.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
  <a href="/refund-policy.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
+ <a href="/status" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Status</a>
  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 All rights reserved</p>
  </div>
  </div>

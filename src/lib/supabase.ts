@@ -250,6 +250,28 @@ export interface Notification {
   created_at: string
 }
 
+export type ComponentStatus = 'operational' | 'degraded' | 'down'
+export type IncidentStatus = 'investigating' | 'monitoring' | 'resolved'
+
+export interface StatusComponent {
+  id: string
+  name: string
+  status: ComponentStatus
+  sort_order: number
+  updated_at: string
+}
+
+export interface StatusIncident {
+  id: string
+  title: string
+  message: string
+  component_id: string | null
+  status: IncidentStatus
+  created_at: string
+  updated_at: string
+  resolved_at: string | null
+}
+
 export interface AdminDashboardStats {
   total_users: number
   active_subscribers: number
