@@ -846,11 +846,11 @@ export default function Landing() {
  </span>
  </div>
  <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
- <a href="/about.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>About</a>
- <a href="/contact.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
- <a href="/terms.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Terms</a>
- <a href="/privacy.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
- <a href="/refund-policy.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
+ <a href="/about" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>About</a>
+ <a href="/contact" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
+ <a href="/terms" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Terms</a>
+ <a href="/privacy" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
+ <a href="/refund-policy" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
  <a href="/status" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Status</a>
  <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 All rights reserved</p>
  </div>
