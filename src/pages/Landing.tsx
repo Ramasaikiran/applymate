@@ -10,8 +10,9 @@ import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
 import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
 import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
 import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
+import inboxProof9 from '../assets/inbox-proof/proof-9.jpg'
 
-const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8]
+const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8, inboxProof9]
 
 /* ── tiny helpers ─────────────────────────────────────────────── */
 const TICK = () => (
@@ -141,6 +142,7 @@ export default function Landing() {
  { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true, logoW: 178 },
  { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true, logoW: 92 },
  { name: 'Moodle', logo: '/logos/moodle.svg', color: '#F98012' },
+ { name: 'Tross', logo: '/logos/tross.png', wordmark: true, logoW: 150 },
  ]
 
  const FAQS = [
@@ -626,7 +628,7 @@ export default function Landing() {
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
  fontSize: 'clamp(30px,5vw,44px)', color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>
- 10+ real replies
+ 20+ real replies
  </h2>
  <p style={{ fontSize: 15.5, color: '#a8a8a8', lineHeight: 1.6 }}>
  Screening-call invites, interview confirmations, recruiter replies. Every screenshot
