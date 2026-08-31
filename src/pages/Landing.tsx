@@ -628,7 +628,7 @@ export default function Landing() {
  </p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
  fontSize: 'clamp(30px,5vw,44px)', color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>
- 20+ real replies
+ 20+ interview calls
  </h2>
  <p style={{ fontSize: 15.5, color: '#a8a8a8', lineHeight: 1.6 }}>
  Screening-call invites, interview confirmations, recruiter replies. Every screenshot
