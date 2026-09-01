@@ -109,7 +109,6 @@ export default function Subscription() {
  // what to expect before they pay. Keep in sync with the COUPONS
  // map in supabase/functions/create-razorpay-order/index.ts.
  const COUPON_DISCOUNTS: Record<string, number> = {
- applymate50: 50,
  rishitha10: 10,
  }
  function applyCoupon() {

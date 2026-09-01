@@ -183,17 +183,6 @@ export default function Landing() {
  return (
  <div style={{ fontFamily: "'Inter',-apple-system,sans-serif", background: '#fff', color: '#0f0f0f' }}>
 
- {/* ── PROMO BANNER ──────────────────────────────────────── */}
- <div style={{ background: '#0f0f0f', color: '#fff', textAlign: 'center',
- padding: '10px 16px', fontSize: 13 }}>
- <span>
- 🎉 50% off all plans - use code{' '}
- <strong style={{ background: 'rgba(255,255,255,0.15)', padding: '2px 8px',
- borderRadius: 6, letterSpacing: '0.03em' }}>applymate50</strong>{' '}
- at checkout
- </span>
- </div>
-
  {/* ── NAV ───────────────────────────────────────────────── */}
  <nav style={{ position: 'sticky', top: 0, left: 0, right: 0, zIndex: 100,
  background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(16px)',
