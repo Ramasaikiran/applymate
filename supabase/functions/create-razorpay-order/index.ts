@@ -11,7 +11,6 @@ const PLANS: Record<string, { amount: number; days: number }> = {
 // sent from the client, since that's editable in the browser before
 // the request is sent.
 const COUPONS: Record<string, { pct: number }> = {
-  rishitha10: { pct: 10 },
 }
 
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])
