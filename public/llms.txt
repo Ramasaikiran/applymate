@@ -1,0 +1,38 @@
+# ApplyMate
+
+> ApplyMate is a job-application delegation platform for job seekers in India. Instead of manually filling out application forms, ApplyMate applies to relevant jobs on the user's behalf every day.
+
+## What it does
+
+- Matches a user's profile (skills, projects, college, experience) to relevant open job roles
+- Submits tailored applications daily (10-15/day) through official company career portals only, with a cover letter written for each specific job
+- Built for both freshers/students and working professionals
+- Users can track every application (company, role, date, matched skills, status) from their dashboard
+
+## Who it's for
+
+- College students and recent graduates looking for their first job
+- Working professionals looking to switch jobs without spending hours per day on applications
+
+## Plans
+
+- Free: user applies themselves, up to 30 applications/month, ₹0
+- Basic: ApplyMate surfaces a daily job feed for the user to apply to, ₹399/30 days
+- Pro (most popular): ApplyMate's team applies on the user's behalf, with application tracking, ₹1,999/30 days
+- Max Pro: same as Pro, plus interview prep and a strategy call, ₹2,999/30 days
+
+All paid plans run 30 days, one-time payment, no auto-renewal, cancel anytime.
+
+## Key pages
+
+- Homepage / pricing: https://applymate.in/
+- Live status page: https://applymate.in/status
+- About: https://applymate.in/about
+- Contact: https://applymate.in/contact
+- Refund policy: https://applymate.in/refund-policy
+- Terms: https://applymate.in/terms
+- Privacy: https://applymate.in/privacy
+
+## Contact
+
+support@applymate.in

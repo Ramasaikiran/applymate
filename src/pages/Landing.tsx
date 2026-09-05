@@ -743,6 +743,15 @@ export default function Landing() {
  {/* ── FAQ ───────────────────────────────────────────────── */}
  <section style={{ background: '#fff', padding: '96px 24px' }}>
  <div style={{ maxWidth: 680, margin: '0 auto' }}>
+ <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+ '@context': 'https://schema.org',
+ '@type': 'FAQPage',
+ mainEntity: FAQS.map(faq => ({
+ '@type': 'Question',
+ name: faq.q,
+ acceptedAnswer: { '@type': 'Answer', text: faq.a },
+ })),
+ }) }} />
  <p className="eyebrow-label" style={{ textAlign: 'center', marginBottom: 12 }}>
  FAQ
  </p>
