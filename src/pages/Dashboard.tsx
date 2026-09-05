@@ -475,7 +475,7 @@ export default function Dashboard() {
  {job.graduation_years?.length > 0 && (
  <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, padding: '1px 7px',
  background: '#fef3c7', color: '#92400e', borderRadius: 99 }}>
- {job.graduation_years.join('/')} BATCH ONLY
+ Only {job.graduation_years.join('/')} Batch
  </span>
  )}
  </p>
