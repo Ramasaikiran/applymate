@@ -97,7 +97,7 @@ const RESUME_INFLIGHT_KEY = 'oc_onboarding_resume_inflight_v1'
 interface OnboardingDraft {
  step: number; role: UserType | null
  firstName: string; lastName: string; mobile: string
- country: string; address: string; roleInts: string[]; otherRole: string
+ country: string; address: string; roleInts: string[]; otherRole: string; passoutYear: string
  resumePath: string | null; resumeName: string | null
 }
 
@@ -149,6 +149,7 @@ export default function Onboarding() {
  const [address, setAddress] = useState(draft.address ?? '')
  const [roleInts, setRoleInts] = useState<string[]>(draft.roleInts ?? [])
  const [otherRole, setOtherRole] = useState(draft.otherRole ?? '')
+ const [passoutYear, setPassoutYear] = useState(draft.passoutYear ?? '')
  const [photoFile, setPhotoFile] = useState<File | null>(null)
  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
@@ -179,11 +180,11 @@ export default function Onboarding() {
  useEffect(() => {
  const d: OnboardingDraft = {
  step, role, firstName, lastName, mobile, country, address,
- roleInts, otherRole, resumePath, resumeName,
+ roleInts, otherRole, passoutYear, resumePath, resumeName,
  }
  try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify(d)) } catch { /* noop */ }
  }, [step, role, firstName, lastName, mobile, country, address,
- roleInts, otherRole, resumePath, resumeName])
+ roleInts, otherRole, passoutYear, resumePath, resumeName])
 
  async function handleResumeSelect(file: File | null) {
  if (!file) return
@@ -243,6 +244,7 @@ export default function Onboarding() {
  if (!lastName.trim()) errs.lastName = 'Required'
  if (!mobile.trim() || !/^\+?[\d\s-]{10,15}$/.test(mobile.trim())) errs.mobile = 'Enter valid mobile number'
  if (roleInts.length === 0) errs.roleInts = 'Select at least one role'
+ if (role === 'student' && !passoutYear.trim()) errs.passoutYear = 'Required'
  setErrors(errs)
  return Object.keys(errs).length === 0
  }
@@ -308,6 +310,7 @@ export default function Onboarding() {
  if (role === 'student') {
  const { error: dErr } = await supabase.from('student_details').upsert({
  id: user.id,
+ passout_year: passoutYear ? parseInt(passoutYear) : null,
  resume_url: resumeUrl,
  })
  if (dErr) { console.error('Student details error:', dErr); detailSaveFailed = true
@@ -465,6 +468,14 @@ export default function Onboarding() {
  placeholder="Hyderabad, Telangana" />
  </Field>
  </div>
+
+ {role === 'student' && (
+ <Field label="Passed out year" error={errors.passoutYear}>
+ <input style={inp(errors.passoutYear)} type="number" value={passoutYear}
+ onChange={e => { setPassoutYear(e.target.value); setErrors(p => ({ ...p, passoutYear: '' })) }}
+ placeholder="e.g. 2025" min="2020" max="2032" />
+ </Field>
+ )}
 
  <Field label="Roles interested in" error={errors.roleInts}>
  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
