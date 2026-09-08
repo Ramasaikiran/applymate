@@ -42,7 +42,6 @@ export default function Dashboard() {
 
  const [stats, setStats] = useState<AppStats | null>(null)
  const [matched, setMatched] = useState(0)
- const [matchStats, setMatchStats] = useState<{ jobs_in_domain: number; jobs_matched_skills: number; jobs_applied: number } | null>(null)
  const [skipped, setSkipped] = useState<any[]>([])
  const [apps, setApps] = useState<JobApplication[]>([])
  const [period, setPeriod] = useState<Period>('30')
@@ -196,12 +195,11 @@ export default function Dashboard() {
  async function load() {
  if (!profile) return
  setLoading(true)
- const [s, m, a, ms, sk] = await Promise.all([
+ const [s, m, a, sk] = await Promise.all([
  supabase.rpc('get_application_stats', { p_user_id: profile.id }),
  supabase.rpc('get_matched_jobs_count', { p_user_id: profile.id }),
  supabase.from('job_applications').select('*')
  .eq('user_id', profile.id).order('applied_at', { ascending: false }).limit(20),
- supabase.rpc('get_user_match_stats', { p_user_id: profile.id }),
  supabase.from('job_screening_log')
  .select('*, jobs(title, company)')
  .eq('user_id', profile.id).eq('decision', 'rejected')
@@ -210,7 +208,6 @@ export default function Dashboard() {
  if (s.data) setStats(s.data as AppStats)
  if (m.data !== null) setMatched(m.data as number)
  if (a.data) setApps(a.data as JobApplication[])
- if (ms.data) setMatchStats(ms.data as any)
  if (sk.data) setSkipped(sk.data)
  setLoading(false)
  }
@@ -624,15 +621,6 @@ export default function Dashboard() {
  <StatCard value={periodVal} label={PERIOD_MAP[period]} sub="applications sent" />
  <StatCard value={stats?.shortlisted ?? 0} label="Shortlisted" accent="#7c3aed" />
  <StatCard value={stats?.hired ?? 0} label="Offers received" accent="#16a34a" />
- {subscription?.plan !== 'free' && (
- <>
- <StatCard value={matchStats?.jobs_in_domain ?? 0} label="Jobs in your domain" accent="#0891b2" />
- <StatCard value={matchStats?.jobs_matched_skills ?? 0} label="Jobs matched to skills" accent="#2563eb" />
- {subscription && (
- <StatCard value={matchStats?.jobs_applied ?? 0} label="Jobs we applied to" accent="#16a34a" />
- )}
- </>
- )}
  </div>
  )}
  </div>
