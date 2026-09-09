@@ -66,7 +66,7 @@ serve(async (req) => {
       if (sub && sub.status !== 'active') {
         const now = new Date()
         const ends = new Date(now)
-        ends.setDate(ends.getDate() + (PLAN_DAYS[sub.plan] || 30))
+        ends.setDate(ends.getDate() + (sub.duration_days || PLAN_DAYS[sub.plan] || 30))
 
         await supabase.from('subscriptions').update({
           status: 'active',

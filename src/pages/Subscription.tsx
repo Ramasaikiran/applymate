@@ -59,6 +59,7 @@ const PLANS: {
   saving: string | null
   color: string
   features: string[]
+  trialPrice?: number
 }[] = [
   {
     id: 'free', label: 'Free', price: 0, duration: 'Always free',
@@ -71,18 +72,21 @@ const PLANS: {
     tagline: 'You apply. We surface the jobs.', whoApplies: 'You apply yourself',
     saving: null, color: '#0f0f0f',
     features: ['Daily job feed matched to your skills', 'Save & track jobs yourself'],
+    trialPrice: 99,
   },
   {
     id: 'pro', label: 'Pro', price: 1999, duration: '30 days',
     tagline: 'We apply for you.', whoApplies: 'Admin applies for you',
     saving: null, color: '#1d4ed8',
     features: ['Everything in Basic', 'Admin applies on your behalf', 'Application tracker with live status', 'Priority job matching'],
+    trialPrice: 500,
   },
   {
     id: 'maxpro', label: 'Max Pro', price: 2999, duration: '30 days',
     tagline: 'We apply + get you interview-ready.', whoApplies: 'Admin applies + preps you',
     saving: null, color: '#7c3aed',
     features: ['Everything in Pro', 'Interview scheduling support', 'Career strategy call'],
+    trialPrice: 999,
   },
 ]
 
@@ -97,9 +101,10 @@ export default function Subscription() {
  const isExpired = params.get('reason') === 'expired'
 
  const [selected, setSelected] = useState<SubscriptionPlan>('basic')
+ const [trialSelected, setTrialSelected] = useState(false)
  const [loading, setLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
- const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string; amountPaid: number } | null>(null)
+ const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string; amountPaid: number; isTrial: boolean } | null>(null)
  const [couponInput, setCouponInput] = useState('')
  const [couponApplied, setCouponApplied] = useState<string | null>(null)
  const [couponError, setCouponError] = useState<string | null>(null)
@@ -140,7 +145,7 @@ export default function Subscription() {
  'Authorization': `Bearer ${session.access_token}`,
  'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
  },
- body: JSON.stringify({ plan: selected, coupon: couponApplied || undefined }),
+ body: JSON.stringify({ plan: selected, coupon: couponApplied || undefined, trial: trialSelected || undefined }),
  }
  )
  } catch {
@@ -177,7 +182,7 @@ export default function Subscription() {
  const plan = PLANS.find(p => p.id === result.plan)
  if (plan) {
  refreshProfile()
- setSuccess({ plan, endsAt: result.ends_at, amountPaid: (result.amount_paise ?? plan.price * 100) / 100 })
+ setSuccess({ plan, endsAt: result.ends_at, amountPaid: (result.amount_paise ?? plan.price * 100) / 100, isTrial: trialSelected })
  }
  } catch (err) {
  setError((err as Error).message)
@@ -196,7 +201,7 @@ export default function Subscription() {
 
  /* ── Success ─────────────────────────────────────────────────── */
  if (success) {
- const { plan, endsAt, amountPaid } = success
+ const { plan, endsAt, amountPaid, isTrial } = success
  return (
  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
  fontFamily: "'Inter',sans-serif", background: '#fff', padding: '0 24px' }}>
@@ -213,7 +218,7 @@ export default function Subscription() {
  {[
  { label: 'Plan', value: plan.label },
  { label: 'Amount paid', value: `₹${amountPaid.toLocaleString('en-IN')}` },
- { label: 'Duration', value: plan.duration },
+ { label: 'Duration', value: isTrial ? '7 days (trial)' : plan.duration },
  ].map(({ label, value }) => (
  <div key={label} style={{ display: 'flex', justifyContent: 'space-between',
  paddingBottom: 12, marginBottom: 12, borderBottom: '1px solid #ebebeb' }}>
@@ -243,6 +248,8 @@ export default function Subscription() {
 
  /* ── Main ────────────────────────────────────────────────────── */
  const selectedPlan = PLANS.find(p => p.id === selected)!
+ const isTrialActive = trialSelected && !!selectedPlan.trialPrice
+ const effectivePrice = isTrialActive ? selectedPlan.trialPrice! : selectedPlan.price
 
  return (
  <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: "'Inter',sans-serif" }}>
@@ -333,7 +340,11 @@ export default function Subscription() {
  {PLANS.map(plan => {
  const isSelected = selected === plan.id
  return (
- <button key={plan.id} type="button" className="sub-pricing-card" onClick={() => { setSelected(plan.id); setCouponError(null) }} style={{
+ <button key={plan.id} type="button" className="sub-pricing-card" onClick={() => {
+ setSelected(plan.id)
+ setTrialSelected(false)
+ setCouponError(null)
+ }} style={{
  background: isSelected ? plan.color : '#fff',
  border: `2px solid ${isSelected ? plan.color : '#e8e8e8'}`,
  borderRadius: 16, padding: '22px 20px', textAlign: 'left',
@@ -365,11 +376,29 @@ export default function Subscription() {
  {/* Price */}
  <p style={{ fontSize: 28, fontWeight: 800,
  color: isSelected ? '#fff' : '#0f0f0f', marginBottom: 2, lineHeight: 1 }}>
- ₹{plan.price.toLocaleString('en-IN')}
+ ₹{((isSelected && trialSelected && plan.trialPrice) ? plan.trialPrice : plan.price).toLocaleString('en-IN')}
+ {isSelected && trialSelected && plan.trialPrice && (
+ <span style={{ fontSize: 13, fontWeight: 500, marginLeft: 6, color: 'rgba(255,255,255,0.6)' }}>/ 7 days</span>
+ )}
  </p>
- <p style={{ fontSize: 12, color: isSelected ? 'rgba(255,255,255,0.55)' : '#9b9b9b', marginBottom: 18 }}>
+ <p style={{ fontSize: 12, color: isSelected ? 'rgba(255,255,255,0.55)' : '#9b9b9b', marginBottom: plan.trialPrice ? 8 : 18 }}>
  {plan.tagline}
  </p>
+
+ {/* Trial toggle */}
+ {plan.trialPrice && (
+ <span
+ role="button" tabIndex={0}
+ onClick={e => { e.stopPropagation(); setSelected(plan.id); setTrialSelected(v => plan.id !== selected ? true : !v) }}
+ style={{
+ display: 'inline-block', fontSize: 11.5, fontWeight: 600, marginBottom: 16,
+ padding: '4px 10px', borderRadius: 99, cursor: 'pointer',
+ background: isSelected && trialSelected ? 'rgba(255,255,255,0.22)' : (isSelected ? 'rgba(255,255,255,0.12)' : '#f3f4f6'),
+ color: isSelected ? '#fff' : '#374151',
+ }}>
+ {isSelected && trialSelected ? '✓ 7-day trial selected' : `Try 7 days for ₹${plan.trialPrice}`}
+ </span>
+ )}
 
  {/* Features */}
  <ul style={{ listStyle: 'none', padding: 0, margin: 0,
@@ -417,7 +446,7 @@ export default function Subscription() {
  <div>
  <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 2 }}>Selected</p>
  <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>
- {selectedPlan.label}: {couponApplied && selectedPlan.id !== 'free' ? (
+ {selectedPlan.label}{isTrialActive ? ' (7-day trial)' : ''}: {couponApplied && selectedPlan.id !== 'free' && !isTrialActive ? (
  <>
  <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
  ₹{selectedPlan.price.toLocaleString('en-IN')}
@@ -425,7 +454,7 @@ export default function Subscription() {
  ₹{Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100)).toLocaleString('en-IN')}
  </>
  ) : (
- <>₹{selectedPlan.price.toLocaleString('en-IN')}</>
+ <>₹{effectivePrice.toLocaleString('en-IN')}</>
  )}
  </p>
  </div>
@@ -436,7 +465,7 @@ export default function Subscription() {
  </div>
 
  {/* Coupon code */}
- {selectedPlan.id !== 'free' && (
+ {selectedPlan.id !== 'free' && !isTrialActive && (
  <div style={{ marginBottom: 16 }}>
  {couponApplied ? (
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -498,10 +527,12 @@ export default function Subscription() {
  </>
  ) : (
  selectedPlan.id === 'free' ? 'Continue with Free' :
- `Pay ₹${(couponApplied
+ `Pay ₹${(isTrialActive
+ ? effectivePrice
+ : couponApplied
  ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100))
  : selectedPlan.price
- ).toLocaleString('en-IN')} for ${selectedPlan.label}`
+ ).toLocaleString('en-IN')} for ${selectedPlan.label}${isTrialActive ? ' (7-day trial)' : ''}`
  )}
  </button>
 

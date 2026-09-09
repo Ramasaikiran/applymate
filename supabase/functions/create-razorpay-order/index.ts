@@ -7,6 +7,16 @@ const PLANS: Record<string, { amount: number; days: number }> = {
   maxpro: { amount: 299900, days: 30 },
 }
 
+// 7-day trial pricing. Same three plans, far lower price, far shorter
+// duration_days -- everything else (features unlocked, plan_visibility
+// on jobs) is identical to the full plan since it's still the same
+// `plan` value under the hood.
+const TRIAL_PLANS: Record<string, { amount: number; days: number }> = {
+  basic:  { amount: 9900,  days: 7 },
+  pro:    { amount: 50000, days: 7 },
+  maxpro: { amount: 99900, days: 7 },
+}
+
 // Coupon codes are validated here only — never trust a discount amount
 // sent from the client, since that's editable in the browser before
 // the request is sent.
@@ -27,8 +37,9 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   try {
-    const { plan, coupon } = await req.json()
+    const { plan, coupon, trial } = await req.json()
     if (!PLANS[plan]) return new Response(JSON.stringify({ error: 'Invalid plan' }), { status: 400, headers: cors })
+    const wantsTrial = trial === true
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
@@ -56,9 +67,22 @@ serve(async (req) => {
     const { data: profile } = await supabase.from('profiles')
       .select('full_name, email, mobile_number').eq('id', user.id).single()
 
-    const { amount: originalAmount } = PLANS[plan]
+    // One trial ever, across any plan — checked server-side against
+    // subscriptions.is_trial, never trusted from the client's `trial`
+    // flag alone.
+    if (wantsTrial) {
+      const { data: priorTrial } = await supabase.from('subscriptions')
+        .select('id').eq('user_id', user.id).eq('is_trial', true).limit(1).maybeSingle()
+      if (priorTrial) {
+        return new Response(JSON.stringify({ error: "You've already used your trial period." }), { status: 400, headers: cors })
+      }
+    }
+
+    const { amount: originalAmount, days: planDays } = wantsTrial ? TRIAL_PLANS[plan] : PLANS[plan]
     const normalizedCoupon = typeof coupon === 'string' ? coupon.trim().toLowerCase() : ''
-    const matchedCoupon = normalizedCoupon && COUPONS[normalizedCoupon] ? normalizedCoupon : null
+    // Coupons don't stack with trial pricing — trial is already a
+    // steep discount off the real plan price.
+    const matchedCoupon = !wantsTrial && normalizedCoupon && COUPONS[normalizedCoupon] ? normalizedCoupon : null
     const amount = matchedCoupon
       ? Math.round(originalAmount * (1 - COUPONS[matchedCoupon].pct / 100))
       : originalAmount
@@ -93,6 +117,8 @@ serve(async (req) => {
       amount_paise: amount, status: 'pending',
       razorpay_order_id: order.id,
       coupon_code: matchedCoupon,
+      duration_days: planDays,
+      is_trial: wantsTrial,
     })
     if (insertErr) throw new Error(`Failed to record order: ${insertErr.message}`)
 
@@ -104,7 +130,7 @@ serve(async (req) => {
       coupon_applied: matchedCoupon,
       currency: 'INR',
       name: 'ApplyMate',
-      description: `ApplyMate ${plan} plan${matchedCoupon ? ` (${COUPONS[matchedCoupon].pct}% off)` : ''}`,
+      description: `ApplyMate ${plan} plan${wantsTrial ? ' (7-day trial)' : ''}${matchedCoupon ? ` (${COUPONS[matchedCoupon].pct}% off)` : ''}`,
       prefill: {
         name: profile?.full_name || '',
         email: profile?.email || user.email || '',
