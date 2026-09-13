@@ -216,7 +216,7 @@ export default function Landing() {
  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap',
  borderBottom: '1px solid #2a2a2a' }}>
  <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 500, margin: 0, letterSpacing: '-0.01em' }}>
- Move forward. Get <strong style={{ fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan before the price goes up.
+ Limited-time offer — get <strong style={{ fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan. Use code <strong style={{ fontWeight: 700 }}>APPLYMATE10</strong> at checkout, or it's applied automatically before this timer runs out.
  </p>
  <div style={{ display: 'flex', gap: 6 }}>
  {([['Day', promoCountdown.days], ['Hour', promoCountdown.hours], ['Minute', promoCountdown.minutes], ['Second', promoCountdown.seconds]] as const).map(([label, val]) => (
