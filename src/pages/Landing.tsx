@@ -212,16 +212,16 @@ export default function Landing() {
  {/* ── PROMO BANNER + NAV (stick together as one unit) ────── */}
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
  {promoCountdown && (
- <div style={{ background: '#0f0f0f', padding: '12px 20px',
+ <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '12px 20px',
  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap',
  borderBottom: '1px solid #2a2a2a' }}>
- <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 500, margin: 0, letterSpacing: '-0.01em' }}>
- Limited-time offer — get <strong style={{ fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan. Use code <strong style={{ fontWeight: 700 }}>APPLYMATE10</strong> at checkout, or it's applied automatically before this timer runs out.
+ <p style={{ color: '#e8b96b', fontSize: 13.5, fontWeight: 500, margin: 0, letterSpacing: '-0.01em' }}>
+ Limited time offer. Get <strong style={{ color: '#fff', fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan. Use code <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong> at checkout, or it's applied automatically before this timer runs out.
  </p>
  <div style={{ display: 'flex', gap: 6 }}>
  {([['Day', promoCountdown.days], ['Hour', promoCountdown.hours], ['Minute', promoCountdown.minutes], ['Second', promoCountdown.seconds]] as const).map(([label, val]) => (
- <span key={label} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)',
- borderRadius: 99, padding: '4px 11px', fontSize: 12.5, color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>
+ <span key={label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(232,185,107,0.4)',
+ borderRadius: 99, padding: '4px 11px', fontSize: 12.5, color: '#e8b96b', fontWeight: 500 }}>
  {label} : <strong style={{ color: '#fff', fontWeight: 700 }}>{pad2(val)}</strong>
  </span>
  ))}
