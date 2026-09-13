@@ -205,39 +205,32 @@ export default function Landing() {
  ]
 
  const promoCountdown = usePromoCountdown()
- const [promoBannerDismissed, setPromoBannerDismissed] = useState(() => {
- try { return sessionStorage.getItem('promo10_dismissed') === '1' } catch { return false }
- })
 
  return (
  <div style={{ fontFamily: "'Inter',-apple-system,sans-serif", background: '#fff', color: '#0f0f0f' }}>
 
- {/* ── PROMO BANNER ──────────────────────────────────────── */}
- {promoCountdown && !promoBannerDismissed && (
- <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '14px 20px',
- display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18, flexWrap: 'wrap', position: 'relative' }}>
- <p style={{ color: '#e8b96b', fontSize: 14, fontWeight: 500, margin: 0 }}>
- Move forward. Get {PROMO_PCT}% off any plan before the price goes up.
+ {/* ── PROMO BANNER + NAV (stick together as one unit) ────── */}
+ <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
+ {promoCountdown && (
+ <div style={{ background: '#0f0f0f', padding: '12px 20px',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap',
+ borderBottom: '1px solid #2a2a2a' }}>
+ <p style={{ color: '#fff', fontSize: 13.5, fontWeight: 500, margin: 0, letterSpacing: '-0.01em' }}>
+ Move forward. Get <strong style={{ fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan before the price goes up.
  </p>
- <div style={{ display: 'flex', gap: 8 }}>
+ <div style={{ display: 'flex', gap: 6 }}>
  {([['Day', promoCountdown.days], ['Hour', promoCountdown.hours], ['Minute', promoCountdown.minutes], ['Second', promoCountdown.seconds]] as const).map(([label, val]) => (
- <span key={label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(232,185,107,0.4)',
- borderRadius: 99, padding: '5px 12px', fontSize: 13, color: '#e8b96b', fontWeight: 500 }}>
+ <span key={label} style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.18)',
+ borderRadius: 99, padding: '4px 11px', fontSize: 12.5, color: 'rgba(255,255,255,0.7)', fontWeight: 500 }}>
  {label} : <strong style={{ color: '#fff', fontWeight: 700 }}>{pad2(val)}</strong>
  </span>
  ))}
  </div>
- <button onClick={() => { setPromoBannerDismissed(true); try { sessionStorage.setItem('promo10_dismissed', '1') } catch { /* noop */ } }}
- style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)',
- width: 26, height: 26, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.12)',
- color: '#e8b96b', fontSize: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
- aria-label="Dismiss">×</button>
  </div>
  )}
 
-
  {/* ── NAV ───────────────────────────────────────────────── */}
- <nav style={{ position: 'sticky', top: 0, left: 0, right: 0, zIndex: 100,
+ <nav style={{
  background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(16px)',
  borderBottom: '1px solid #f0f0f0' }}>
  <div className="nav-inner" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 24px',
@@ -272,6 +265,7 @@ export default function Landing() {
  </div>
  </div>
  </nav>
+ </div>
 
  {/* ── HERO ──────────────────────────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '56px 24px 80px', textAlign: 'center' }}>
