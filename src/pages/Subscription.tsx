@@ -127,9 +127,6 @@ export default function Subscription() {
  const [selected, setSelected] = useState<SubscriptionPlan>('basic')
  const [trialSelected, setTrialSelected] = useState(false)
  const countdown = usePromoCountdown()
- const [bannerDismissed, setBannerDismissed] = useState(() => {
- try { return sessionStorage.getItem('promo10_dismissed') === '1' } catch { return false }
- })
  const [loading, setLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
  const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string; amountPaid: number; isTrial: boolean } | null>(null)
@@ -332,29 +329,6 @@ export default function Subscription() {
  ))}
  </div>
  </div>
-
- {/* Promo banner */}
- {countdown && !bannerDismissed && (
- <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '14px 20px',
- display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18, flexWrap: 'wrap', position: 'relative' }}>
- <p style={{ color: '#e8b96b', fontSize: 14, fontWeight: 500, margin: 0 }}>
- Move forward. Get {PROMO_PCT}% off any plan before the price goes up.
- </p>
- <div style={{ display: 'flex', gap: 8 }}>
- {([['Day', countdown.days], ['Hour', countdown.hours], ['Minute', countdown.minutes], ['Second', countdown.seconds]] as const).map(([label, val]) => (
- <span key={label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(232,185,107,0.4)',
- borderRadius: 99, padding: '5px 12px', fontSize: 13, color: '#e8b96b', fontWeight: 500 }}>
- {label} : <strong style={{ color: '#fff', fontWeight: 700 }}>{pad2(val)}</strong>
- </span>
- ))}
- </div>
- <button onClick={() => { setBannerDismissed(true); try { sessionStorage.setItem('promo10_dismissed', '1') } catch { /* noop */ } }}
- style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)',
- width: 26, height: 26, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.12)',
- color: '#e8b96b', fontSize: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
- aria-label="Dismiss">×</button>
- </div>
- )}
 
  <div style={{ maxWidth: 700, margin: '0 auto', padding: '48px 24px 80px' }}>
 

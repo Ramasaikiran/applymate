@@ -8,6 +8,30 @@ import inboxProof3 from '../assets/inbox-proof/proof-3.jpg'
 import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
 import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
 import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
+
+// Must match PROMO_PCT / PROMO_END in create-razorpay-order and
+// Subscription.tsx — this is only for display, the server is what
+// actually enforces the discount and the deadline.
+const PROMO_PCT = 10
+const PROMO_END = new Date('2026-09-15T00:00:00+05:30')
+
+function usePromoCountdown() {
+ const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
+ useEffect(() => {
+ const id = setInterval(() => setMsLeft(PROMO_END.getTime() - Date.now()), 1000)
+ return () => clearInterval(id)
+ }, [])
+ if (msLeft <= 0) return null
+ const totalSeconds = Math.floor(msLeft / 1000)
+ return {
+ days: Math.floor(totalSeconds / 86400),
+ hours: Math.floor((totalSeconds % 86400) / 3600),
+ minutes: Math.floor((totalSeconds % 3600) / 60),
+ seconds: totalSeconds % 60,
+ }
+}
+
+function pad2(n: number) { return String(n).padStart(2, '0') }
 import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
 import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
 import inboxProof9 from '../assets/inbox-proof/proof-9.jpg'
@@ -180,8 +204,37 @@ export default function Landing() {
  },
  ]
 
+ const promoCountdown = usePromoCountdown()
+ const [promoBannerDismissed, setPromoBannerDismissed] = useState(() => {
+ try { return sessionStorage.getItem('promo10_dismissed') === '1' } catch { return false }
+ })
+
  return (
  <div style={{ fontFamily: "'Inter',-apple-system,sans-serif", background: '#fff', color: '#0f0f0f' }}>
+
+ {/* ── PROMO BANNER ──────────────────────────────────────── */}
+ {promoCountdown && !promoBannerDismissed && (
+ <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '14px 20px',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18, flexWrap: 'wrap', position: 'relative' }}>
+ <p style={{ color: '#e8b96b', fontSize: 14, fontWeight: 500, margin: 0 }}>
+ Move forward. Get {PROMO_PCT}% off any plan before the price goes up.
+ </p>
+ <div style={{ display: 'flex', gap: 8 }}>
+ {([['Day', promoCountdown.days], ['Hour', promoCountdown.hours], ['Minute', promoCountdown.minutes], ['Second', promoCountdown.seconds]] as const).map(([label, val]) => (
+ <span key={label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(232,185,107,0.4)',
+ borderRadius: 99, padding: '5px 12px', fontSize: 13, color: '#e8b96b', fontWeight: 500 }}>
+ {label} : <strong style={{ color: '#fff', fontWeight: 700 }}>{pad2(val)}</strong>
+ </span>
+ ))}
+ </div>
+ <button onClick={() => { setPromoBannerDismissed(true); try { sessionStorage.setItem('promo10_dismissed', '1') } catch { /* noop */ } }}
+ style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)',
+ width: 26, height: 26, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.12)',
+ color: '#e8b96b', fontSize: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+ aria-label="Dismiss">×</button>
+ </div>
+ )}
+
 
  {/* ── NAV ───────────────────────────────────────────────── */}
  <nav style={{ position: 'sticky', top: 0, left: 0, right: 0, zIndex: 100,
