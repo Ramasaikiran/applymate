@@ -1,7 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase, type SubscriptionPlan } from '../lib/supabase'
+
+// Must match PROMO_PCT / PROMO_END in create-razorpay-order — this is
+// only for display (countdown + strikethrough price); the server is
+// what actually enforces the discount and the deadline.
+const PROMO_PCT = 10
+const PROMO_END = new Date('2026-09-15T00:00:00+05:30')
+
+function usePromoCountdown() {
+ const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
+ useEffect(() => {
+ const id = setInterval(() => setMsLeft(PROMO_END.getTime() - Date.now()), 1000)
+ return () => clearInterval(id)
+ }, [])
+ if (msLeft <= 0) return null
+ const totalSeconds = Math.floor(msLeft / 1000)
+ return {
+ days: Math.floor(totalSeconds / 86400),
+ hours: Math.floor((totalSeconds % 86400) / 3600),
+ minutes: Math.floor((totalSeconds % 3600) / 60),
+ seconds: totalSeconds % 60,
+ }
+}
+
+function pad2(n: number) { return String(n).padStart(2, '0') }
 
 // Razorpay Checkout is a JS modal, not a redirect: we load their script
 // once, open the modal with the order the edge function created, and
@@ -102,6 +126,10 @@ export default function Subscription() {
 
  const [selected, setSelected] = useState<SubscriptionPlan>('basic')
  const [trialSelected, setTrialSelected] = useState(false)
+ const countdown = usePromoCountdown()
+ const [bannerDismissed, setBannerDismissed] = useState(() => {
+ try { return sessionStorage.getItem('promo10_dismissed') === '1' } catch { return false }
+ })
  const [loading, setLoading] = useState(false)
  const [error, setError] = useState<string | null>(null)
  const [success, setSuccess] = useState<{ plan: typeof PLANS[0]; endsAt: string; amountPaid: number; isTrial: boolean } | null>(null)
@@ -249,7 +277,15 @@ export default function Subscription() {
  /* ── Main ────────────────────────────────────────────────────── */
  const selectedPlan = PLANS.find(p => p.id === selected)!
  const isTrialActive = trialSelected && !!selectedPlan.trialPrice
- const effectivePrice = isTrialActive ? selectedPlan.trialPrice! : selectedPlan.price
+ const couponLive = !!couponApplied && selectedPlan.id !== 'free' && !isTrialActive
+ const promoLive = !!countdown && selectedPlan.id !== 'free' && !isTrialActive && !couponLive
+ const effectivePrice = isTrialActive
+ ? selectedPlan.trialPrice!
+ : couponLive
+ ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100))
+ : promoLive
+ ? Math.round(selectedPlan.price * (1 - PROMO_PCT / 100))
+ : selectedPlan.price
 
  return (
  <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: "'Inter',sans-serif" }}>
@@ -295,6 +331,29 @@ export default function Subscription() {
  ))}
  </div>
  </div>
+
+ {/* Promo banner */}
+ {countdown && !bannerDismissed && (
+ <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '14px 20px',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 18, flexWrap: 'wrap', position: 'relative' }}>
+ <p style={{ color: '#e8b96b', fontSize: 14, fontWeight: 500, margin: 0 }}>
+ Move forward. Get {PROMO_PCT}% off any plan before the price goes up.
+ </p>
+ <div style={{ display: 'flex', gap: 8 }}>
+ {([['Day', countdown.days], ['Hour', countdown.hours], ['Minute', countdown.minutes], ['Second', countdown.seconds]] as const).map(([label, val]) => (
+ <span key={label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(232,185,107,0.4)',
+ borderRadius: 99, padding: '5px 12px', fontSize: 13, color: '#e8b96b', fontWeight: 500 }}>
+ {label} : <strong style={{ color: '#fff', fontWeight: 700 }}>{pad2(val)}</strong>
+ </span>
+ ))}
+ </div>
+ <button onClick={() => { setBannerDismissed(true); try { sessionStorage.setItem('promo10_dismissed', '1') } catch { /* noop */ } }}
+ style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)',
+ width: 26, height: 26, borderRadius: '50%', border: 'none', background: 'rgba(255,255,255,0.12)',
+ color: '#e8b96b', fontSize: 15, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+ aria-label="Dismiss">×</button>
+ </div>
+ )}
 
  <div style={{ maxWidth: 700, margin: '0 auto', padding: '48px 24px 80px' }}>
 
@@ -446,12 +505,20 @@ export default function Subscription() {
  <div>
  <p style={{ fontSize: 13, color: '#9b9b9b', marginBottom: 2 }}>Selected</p>
  <p style={{ fontSize: 15, fontWeight: 600, color: '#0f0f0f' }}>
- {selectedPlan.label}{isTrialActive ? ' (7-day trial)' : ''}: {couponApplied && selectedPlan.id !== 'free' && !isTrialActive ? (
+ {selectedPlan.label}{isTrialActive ? ' (7-day trial)' : ''}: {couponLive ? (
  <>
  <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
  ₹{selectedPlan.price.toLocaleString('en-IN')}
  </span>
- ₹{Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100)).toLocaleString('en-IN')}
+ ₹{effectivePrice.toLocaleString('en-IN')}
+ </>
+ ) : promoLive ? (
+ <>
+ <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
+ ₹{selectedPlan.price.toLocaleString('en-IN')}
+ </span>
+ ₹{effectivePrice.toLocaleString('en-IN')}
+ <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: '#dc2626' }}>{PROMO_PCT}% OFF</span>
  </>
  ) : (
  <>₹{effectivePrice.toLocaleString('en-IN')}</>
@@ -527,12 +594,7 @@ export default function Subscription() {
  </>
  ) : (
  selectedPlan.id === 'free' ? 'Continue with Free' :
- `Pay ₹${(isTrialActive
- ? effectivePrice
- : couponApplied
- ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100))
- : selectedPlan.price
- ).toLocaleString('en-IN')} for ${selectedPlan.label}${isTrialActive ? ' (7-day trial)' : ''}`
+ `Pay ₹${effectivePrice.toLocaleString('en-IN')} for ${selectedPlan.label}${isTrialActive ? ' (7-day trial)' : ''}`
  )}
  </button>
 

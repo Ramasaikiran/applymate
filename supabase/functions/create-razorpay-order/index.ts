@@ -23,6 +23,14 @@ const TRIAL_PLANS: Record<string, { amount: number; days: number }> = {
 const COUPONS: Record<string, { pct: number }> = {
 }
 
+// Site-wide 10% off promo, auto-applied (no code needed) to any
+// non-trial paid plan while it's live. Server is the source of truth
+// for both the price and whether the window is still open — the
+// frontend countdown is just a display of this same deadline.
+const PROMO_PCT = 10
+const PROMO_END = new Date('2026-09-15T00:00:00+05:30')
+function promoActive() { return Date.now() < PROMO_END.getTime() }
+
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])
 function corsFor(req: Request) {
   const origin = req.headers.get('origin') ?? ''
@@ -83,8 +91,13 @@ serve(async (req) => {
     // Coupons don't stack with trial pricing — trial is already a
     // steep discount off the real plan price.
     const matchedCoupon = !wantsTrial && normalizedCoupon && COUPONS[normalizedCoupon] ? normalizedCoupon : null
-    const amount = matchedCoupon
-      ? Math.round(originalAmount * (1 - COUPONS[matchedCoupon].pct / 100))
+    // Site-wide promo also doesn't stack with trial or a manual coupon
+    // — whichever discount applies, only one wins, promo takes the
+    // lower priority since a manual coupon is a more deliberate choice.
+    const promoApplies = !wantsTrial && !matchedCoupon && promoActive()
+    const discountPct = matchedCoupon ? COUPONS[matchedCoupon].pct : (promoApplies ? PROMO_PCT : 0)
+    const amount = discountPct
+      ? Math.round(originalAmount * (1 - discountPct / 100))
       : originalAmount
 
     const keyId     = Deno.env.get('RAZORPAY_KEY_ID')!
@@ -104,7 +117,7 @@ serve(async (req) => {
         amount,               // paise
         currency: 'INR',
         receipt,
-        notes: { user_id: user.id, plan, coupon: matchedCoupon || '' },
+        notes: { user_id: user.id, plan, coupon: matchedCoupon || (promoApplies ? 'promo10' : '') },
       }),
     })
     const order = await orderRes.json()
@@ -116,7 +129,7 @@ serve(async (req) => {
       user_id: user.id, plan,
       amount_paise: amount, status: 'pending',
       razorpay_order_id: order.id,
-      coupon_code: matchedCoupon,
+      coupon_code: matchedCoupon || (promoApplies ? 'promo10' : null),
       duration_days: planDays,
       is_trial: wantsTrial,
     })
@@ -127,10 +140,10 @@ serve(async (req) => {
       order_id: order.id,
       amount,
       original_amount: originalAmount,
-      coupon_applied: matchedCoupon,
+      coupon_applied: matchedCoupon || (promoApplies ? 'promo10' : null),
       currency: 'INR',
       name: 'ApplyMate',
-      description: `ApplyMate ${plan} plan${wantsTrial ? ' (7-day trial)' : ''}${matchedCoupon ? ` (${COUPONS[matchedCoupon].pct}% off)` : ''}`,
+      description: `ApplyMate ${plan} plan${wantsTrial ? ' (7-day trial)' : ''}${discountPct ? ` (${discountPct}% off)` : ''}`,
       prefill: {
         name: profile?.full_name || '',
         email: profile?.email || user.email || '',
