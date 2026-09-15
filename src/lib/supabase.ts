@@ -76,7 +76,7 @@ export type UserType      = 'student' | 'professional'
 export type AccountStatus = 'pending_onboarding' | 'active' | 'suspended'
 export type SubscriptionPlan = 'free' | 'basic' | 'pro' | 'maxpro'
 export type SubStatus = 'pending' | 'active' | 'expired' | 'cancelled' | 'failed'
-export type AppStatus = 'applied' | 'assessment' | 'interview' | 'hr_round' | 'rejected' | 'offer' | 'joined'
+export type AppStatus = 'applied' | 'shortlisted' | 'assessment' | 'interview' | 'hr_round' | 'rejected' | 'offer' | 'joined'
   | 'shortlisted' | 'hired' // legacy values, still readable
 export type EmploymentType = 'full-time' | 'internship' | 'contract' | 'part-time'
 export type WorkPreference = 'remote' | 'hybrid' | 'onsite'

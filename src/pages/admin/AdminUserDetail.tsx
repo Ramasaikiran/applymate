@@ -8,7 +8,7 @@ import {
 
 type TabType = 'profile' | 'subscription' | 'jobs' | 'applications'
 
-const STATUS_OPTS: JobApplication['status'][] = ['applied','assessment','interview','hr_round','rejected','offer','joined']
+const STATUS_OPTS: JobApplication['status'][] = ['applied','shortlisted','assessment','interview','hr_round','rejected','offer','joined']
 const STATUS_COLOR: Record<string, string> = {
  applied: '#6b6b6b', assessment: '#0891b2', interview: '#7c3aed', hr_round: '#9333ea',
  rejected: '#dc2626', offer: '#16a34a', joined: '#15803d',
