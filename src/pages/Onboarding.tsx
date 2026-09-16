@@ -93,6 +93,11 @@ const COUNTRIES = ['India','United States','United Kingdom','Canada','Australia'
 // the user left off instead of bouncing them back to step 1.
 const DRAFT_KEY = 'oc_onboarding_draft_v1'
 const RESUME_INFLIGHT_KEY = 'oc_onboarding_resume_inflight_v1'
+// Only treat an abandoned in-flight upload as "worth warning about" if it's
+// from the last few minutes. Anything older is almost certainly a stale
+// leftover from an unrelated past visit, not something the user should be
+// alarmed about right now.
+const RESUME_INFLIGHT_STALE_MS = 10 * 60 * 1000
 
 interface OnboardingDraft {
  step: number; role: UserType | null
@@ -166,10 +171,16 @@ export default function Onboarding() {
  const [resumeUploadErr, setResumeUploadErr] = useState<string | null>(
  (() => {
  try {
- if (sessionStorage.getItem(RESUME_INFLIGHT_KEY)) {
+ const raw = sessionStorage.getItem(RESUME_INFLIGHT_KEY)
  sessionStorage.removeItem(RESUME_INFLIGHT_KEY)
+ if (!raw) return null
+ // A resume already exists (e.g. a retry after the interrupted one
+ // actually succeeded) -- the interruption is moot, don't alarm the user.
+ if (draft.resumePath) return null
+ const startedAt = Number(raw)
+ const isRecent = Number.isFinite(startedAt) && (Date.now() - startedAt) < RESUME_INFLIGHT_STALE_MS
+ if (!isRecent) return null
  return 'Your last upload didn\'t finish, likely a slow or dropped connection. Try again on a stronger connection, or switch to Wi-Fi if possible.'
- }
  } catch { /* noop */ }
  return null
  })()
@@ -197,7 +208,7 @@ export default function Onboarding() {
  if (!nameIsPdf || !mimeOk) { setResumeUploadErr('PDF only. Please upload a .pdf file.'); return }
  if (file.size > 5 * 1024 * 1024) { setResumeUploadErr('Max 5MB.'); return }
  setResumeUploadErr(null); setResumeUploading(true)
- try { sessionStorage.setItem(RESUME_INFLIGHT_KEY, '1') } catch { /* noop */ }
+ try { sessionStorage.setItem(RESUME_INFLIGHT_KEY, String(Date.now())) } catch { /* noop */ }
  try {
  // Auth can lag a beat after an OS file-picker remount, especially on
  // mobile where backgrounding the tab can delay session rehydration.
