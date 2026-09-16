@@ -692,7 +692,16 @@ export default function Dashboard() {
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>
  {app.job_title || 'Role'}
  </p>
- <p style={{ fontSize: 12, color: '#9b9b9b' }}>{app.company || 'N/A'}</p>
+ <p style={{ fontSize: 12, color: '#9b9b9b' }}>
+ {app.company || 'N/A'}
+ {app.job_url && (
+ <a href={app.job_url} target="_blank" rel="noopener noreferrer"
+ onClick={e => e.stopPropagation()}
+ style={{ marginLeft: 8, color: '#2563eb', fontWeight: 500, textDecoration: 'none' }}>
+ job link ↗
+ </a>
+ )}
+ </p>
  </div>
  <p style={{ fontSize: 13, color: '#6b6b6b' }}>
  {new Date(app.applied_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
