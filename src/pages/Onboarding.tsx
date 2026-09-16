@@ -220,6 +220,7 @@ export default function Onboarding() {
  if (!uid) await new Promise(r => setTimeout(r, 400))
  }
  if (!uid) throw new Error('Session expired. Please sign in again.')
+ const oldPath = resumePath
  const path = `${uid}/${Date.now()}-${file.name}`
  setResumeUploadPct(0); setResumeUploadAttempt(1)
  await uploadResumeWithProgress(file, path, (p) => {
@@ -228,6 +229,13 @@ export default function Onboarding() {
  })
  setResumePath(path)
  setResumeName(file.name)
+ // Same file replaced mid-onboarding (picked the wrong one, tried
+ // again) shouldn't leave the earlier upload orphaned in storage.
+ if (oldPath && oldPath !== path) {
+ supabase.storage.from('resumes').remove([oldPath]).then(({ error }) => {
+ if (error) console.error('Failed to remove previous resume upload:', error.message)
+ })
+ }
  } catch (err) {
  console.error('Resume upload error:', err)
  setResumeUploadErr(`Upload failed: ${(err as Error).message}. You can retry or skip and add it later.`)

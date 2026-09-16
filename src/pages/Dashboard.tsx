@@ -175,9 +175,18 @@ export default function Dashboard() {
  setResumeUploadAttempt(pr.attempt)
  })
  const table = p.user_type === 'professional' ? 'professional_details' : 'student_details'
+ const oldPath = resumeUrl
  const { error: dbErr } = await supabase.from(table).update({ resume_url: path }).eq('id', p.id)
  if (dbErr) throw dbErr
  setResumeUrl(path)
+ // Clean up the previous file only after the new one is safely
+ // referenced -- otherwise a resume upload leaves an orphaned PDF
+ // in storage every time someone replaces it.
+ if (oldPath && oldPath !== path) {
+ supabase.storage.from('resumes').remove([oldPath]).then(({ error }) => {
+ if (error) console.error('Failed to remove old resume:', error.message)
+ })
+ }
  } catch (err) {
  setResumeError((err as Error).message)
  } finally {
