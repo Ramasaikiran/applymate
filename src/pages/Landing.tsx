@@ -35,8 +35,10 @@ function pad2(n: number) { return String(n).padStart(2, '0') }
 import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
 import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
 import inboxProof9 from '../assets/inbox-proof/proof-9.jpg'
+import inboxProof10 from '../assets/inbox-proof/proof-10.jpg'
+import inboxProof11 from '../assets/inbox-proof/proof-11.jpg'
 
-const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8, inboxProof9]
+const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8, inboxProof9, inboxProof10, inboxProof11]
 
 /* ── tiny helpers ─────────────────────────────────────────────── */
 const TICK = () => (
