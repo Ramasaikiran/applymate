@@ -44,6 +44,9 @@ export default function Dashboard() {
  const [matched, setMatched] = useState(0)
  const [skipped, setSkipped] = useState<any[]>([])
  const [apps, setApps] = useState<JobApplication[]>([])
+ const [appsPage, setAppsPage] = useState(1)
+ const [appsTotal, setAppsTotal] = useState(0)
+ const APPS_PAGE_SIZE = 20
  const [period, setPeriod] = useState<Period>('30')
  const [loading, setLoading] = useState(true)
  const [resumeUrl, setResumeUrl] = useState<string | null>(null)
@@ -68,7 +71,7 @@ export default function Dashboard() {
  const [hackathonModeFilter, setHackathonModeFilter] = useState<'all' | 'online' | 'offline' | 'hybrid'>('all')
  const [hackathonsLoading, setHackathonsLoading] = useState(true)
 
- useEffect(() => { if (profile) load() }, [profile])
+ useEffect(() => { if (profile) load() }, [profile, appsPage])
  useEffect(() => {
    if (!profile) return
    supabase.rpc('get_my_application_usage').then(({ data }) => { if (data) setUsage(data) })
@@ -207,8 +210,9 @@ export default function Dashboard() {
  const [s, m, a, sk] = await Promise.all([
  supabase.rpc('get_application_stats', { p_user_id: profile.id }),
  supabase.rpc('get_matched_jobs_count', { p_user_id: profile.id }),
- supabase.from('job_applications').select('*')
- .eq('user_id', profile.id).order('applied_at', { ascending: false }).limit(20),
+ supabase.from('job_applications').select('*', { count: 'exact' })
+ .eq('user_id', profile.id).order('applied_at', { ascending: false })
+ .range((appsPage - 1) * APPS_PAGE_SIZE, appsPage * APPS_PAGE_SIZE - 1),
  supabase.from('job_screening_log')
  .select('*, jobs(title, company)')
  .eq('user_id', profile.id).eq('decision', 'rejected')
@@ -217,6 +221,7 @@ export default function Dashboard() {
  if (s.data) setStats(s.data as AppStats)
  if (m.data !== null) setMatched(m.data as number)
  if (a.data) setApps(a.data as JobApplication[])
+ if (a.count != null) setAppsTotal(a.count)
  if (sk.data) setSkipped(sk.data)
  setLoading(false)
  }
@@ -731,6 +736,26 @@ export default function Dashboard() {
  </div>
  )
  })}
+ </div>
+ )}
+ {appsTotal > APPS_PAGE_SIZE && (
+ <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',
+ gap: 14, marginTop: 14 }}>
+ <button disabled={appsPage === 1}
+ onClick={() => setAppsPage(p => Math.max(1, p - 1))}
+ style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #e5e5e5',
+ background: '#fff', fontSize: 12.5, fontWeight: 600,
+ color: appsPage === 1 ? '#c8c8c8' : '#0f0f0f',
+ cursor: appsPage === 1 ? 'not-allowed' : 'pointer' }}>← Prev</button>
+ <p style={{ fontSize: 12.5, color: '#6b6b6b' }}>
+ Page {appsPage} of {Math.ceil(appsTotal / APPS_PAGE_SIZE)}
+ </p>
+ <button disabled={appsPage >= Math.ceil(appsTotal / APPS_PAGE_SIZE)}
+ onClick={() => setAppsPage(p => p + 1)}
+ style={{ padding: '6px 14px', borderRadius: 8, border: '1px solid #e5e5e5',
+ background: '#fff', fontSize: 12.5, fontWeight: 600,
+ color: appsPage >= Math.ceil(appsTotal / APPS_PAGE_SIZE) ? '#c8c8c8' : '#0f0f0f',
+ cursor: appsPage >= Math.ceil(appsTotal / APPS_PAGE_SIZE) ? 'not-allowed' : 'pointer' }}>Next →</button>
  </div>
  )}
 
