@@ -218,6 +218,16 @@ export default function AdminUserDetail() {
  setApps(prev => prev.map(a => a.id === appId ? { ...a, status } : a))
  }
 
+ async function deleteApp(app: JobApplication) {
+ if (!confirm(`Delete the "${app.job_title || 'Role'}" application at ${app.company || 'N/A'}? This can't be undone.`)) return
+ await supabase.from('job_applications').delete().eq('id', app.id)
+ setApps(prev => prev.filter(a => a.id !== app.id))
+ if (id) {
+ const { data, error } = await supabase.rpc('get_user_app_stats', { p_user_id: id })
+ if (!error && data) setStats(data as UserAppStats)
+ }
+ }
+
  if (loading) return (
  <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
  fontFamily: "'Inter',sans-serif", color: '#9b9b9b', fontSize: 14 }}>Loading…</div>
@@ -522,6 +532,7 @@ export default function AdminUserDetail() {
  </p>
  {app.notes && <p style={{ fontSize: 12, color: '#b5b5b5', marginTop: 4 }}>{app.notes}</p>}
  </div>
+ <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
  <select value={app.status}
  onChange={e => updateAppStatus(app.id, e.target.value as JobApplication['status'])}
  style={{
@@ -532,6 +543,12 @@ export default function AdminUserDetail() {
  {(STATUS_OPTS.includes(app.status) ? STATUS_OPTS : [app.status, ...STATUS_OPTS]).map(s =>
  <option key={s} value={s}>{s.replace('_',' ')}</option>)}
  </select>
+ <button onClick={() => deleteApp(app)} style={{
+ fontSize: 13, fontWeight: 600, padding: '5px 10px', borderRadius: 8,
+ border: '1.5px solid #fecaca', background: '#fef2f2', color: '#dc2626',
+ fontFamily: "'Inter',sans-serif", cursor: 'pointer',
+ }}>Delete</button>
+ </div>
  </div>
  ))}
  </div>
