@@ -15,10 +15,20 @@ export default function AdminRecruiters() {
   const [error, setError] = useState<string | null>(null)
 
   async function load() {
-    const { data, error: err } = await supabase.from('recruiters')
-      .select('*, profiles!recruiters_id_fkey(full_name,email)').order('created_at', { ascending: false })
-    if (err) setError(err.message)
-    setRows((data ?? []) as unknown as Row[])
+    // Two plain queries (no embed) so this never depends on FK names.
+    const { data: recs, error: err } = await supabase.from('recruiters')
+      .select('*').order('created_at', { ascending: false })
+    if (err) { setError(err.message); setLoading(false); return }
+    const list = (recs ?? []) as Recruiter[]
+    const ids = list.map(r => r.id)
+    const names = new Map<string, { full_name: string; email: string }>()
+    if (ids.length) {
+      const { data: profs, error: pErr } = await supabase.from('profiles')
+        .select('id, full_name, email').in('id', ids)
+      if (pErr) setError(pErr.message)
+      ;(profs ?? []).forEach(p => names.set(p.id, { full_name: p.full_name, email: p.email }))
+    }
+    setRows(list.map(r => ({ ...r, profiles: names.get(r.id) ?? null })))
     setLoading(false)
   }
   useEffect(() => { load() }, [])
