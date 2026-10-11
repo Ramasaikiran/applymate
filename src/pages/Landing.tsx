@@ -53,57 +53,6 @@ const CROSS = () => (
  </svg>
 )
 
-const STATUS_LABEL: Record<string, string> = {
-  shortlisted: 'got shortlisted at',
-  interview:   'landed an interview at',
-  offer:       'received an offer from',
-  joined:      'joined',
-  hired:       'got hired at',
-}
-
-function timeAgo(daysAgo: number) {
-  if (daysAgo <= 0) return 'today'
-  if (daysAgo === 1) return 'yesterday'
-  if (daysAgo < 7) return `${daysAgo} days ago`
-  return `${Math.floor(daysAgo / 7)}w ago`
-}
-
-function ActivityFeed() {
-  const [items, setItems] = useState<{ first_name: string; company: string; status: string; days_ago: number }[]>([])
-  const [idx, setIdx] = useState(0)
-
-  useEffect(() => {
-    supabase.rpc('get_recent_activity').then(({ data }: { data: any }) => { if (data?.length) setItems(data) })
-  }, [])
-
-  useEffect(() => {
-    if (items.length < 2) return
-    const t = setInterval(() => setIdx(i => (i + 1) % items.length), 4000)
-    return () => clearInterval(t)
-  }, [items.length])
-
-  // Real activity only, no data yet means nothing renders, ever.
-  if (!items.length) return null
-  const item = items[idx]
-
-  return (
-    <div style={{ display: 'flex', justifyContent: 'center', margin: '28px auto 0' }}>
-      <div key={idx} style={{
-        display: 'flex', alignItems: 'center', gap: 10, padding: '10px 18px',
-        background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 999,
-        fontSize: 13, color: '#166534', animation: 'fadeIn 0.4s ease',
-      }}>
-        <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e', flexShrink: 0 }} />
-        <span className="activity-pill-text">
-          <strong>{item.first_name}</strong> {STATUS_LABEL[item.status] ?? 'made progress at'} <strong>{item.company}</strong>
-          <span style={{ color: '#4b7c58' }}> ({timeAgo(item.days_ago)})</span>
-        </span>
-      </div>
-      <style>{`@keyframes fadeIn { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: translateY(0) } }`}</style>
-    </div>
-  )
-}
-
 export default function Landing() {
  const { session, subscription, profile, isRecruiter, recruiter } = useAuth()
  const navigate = useNavigate()
@@ -343,7 +292,7 @@ export default function Landing() {
  </span>
  </a>
 
- <ActivityFeed />
+
 
  {/* ── COMPANIES STRIP ───────────────────────────────────── */}
  <section style={{ maxWidth: '100%', padding: '0 0 64px', overflow: 'hidden' }}>
