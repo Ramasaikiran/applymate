@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { CenterCard, H1, btnDark, btnGhost } from './ui'
@@ -6,11 +6,19 @@ import { CenterCard, H1, btnDark, btnGhost } from './ui'
 export default function RecruiterPending() {
   const { recruiter, refreshProfile, signOut } = useAuth()
   const [checking, setChecking] = useState(false)
+  const [checkedAt, setCheckedAt] = useState<Date | null>(null)
+
+  // While waiting, re-check every 30 seconds so approval shows up without a tap.
+  useEffect(() => {
+    if (recruiter?.status !== 'pending') return
+    const t = setInterval(() => { refreshProfile() }, 30_000)
+    return () => clearInterval(t)
+  }, [recruiter?.status, refreshProfile])
 
   if (!recruiter) return <Navigate to="/recruiter/apply" replace />
   if (recruiter.status === 'approved') return <Navigate to="/recruiter" replace />
 
-  async function check() { setChecking(true); await refreshProfile(); setChecking(false) }
+  async function check() { setChecking(true); await refreshProfile(); setChecking(false); setCheckedAt(new Date()) }
 
   const copy = {
     pending:   { title: 'Application under review', body: 'An admin is verifying your company details. Use Check status to see the decision. You cannot post jobs or view candidates until then.' },
@@ -35,6 +43,11 @@ export default function RecruiterPending() {
         )}
         <button onClick={signOut} style={btnGhost}>Sign out</button>
       </div>
+      {recruiter.status === 'pending' && checkedAt && (
+        <p style={{ fontSize: 12.5, color: '#9b9b9b', marginTop: 14 }}>
+          Checked at {checkedAt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}. Still under review.
+        </p>
+      )}
       {recruiter.status === 'suspended' && (
         <p style={{ fontSize: 12.5, color: '#9b9b9b', marginTop: 18 }}>Questions? Email support@applymate.in</p>
       )}
