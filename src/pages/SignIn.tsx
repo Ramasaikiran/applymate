@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { routePostAuth } from '../lib/routing'
 
-export default function SignIn({ recruiter = false }: { recruiter?: boolean }) {
+export default function SignIn() {
  const { signIn, signInWithGoogle } = useAuth()
  const navigate = useNavigate()
  const [email, setEmail] = useState('')
@@ -53,15 +53,14 @@ export default function SignIn({ recruiter = false }: { recruiter?: boolean }) {
 
  return (
  <AuthLayout
- eyebrow={recruiter ? 'RECRUITER LOGIN' : 'WELCOME BACK'}
+ eyebrow="WELCOME BACK"
  title="Sign in"
- footer={recruiter ? <>New recruiter?{' '}<Link to="/recruiter/sign-up" style={{ color: '#0f0f0f', fontWeight: 600, textDecoration: 'none', borderBottom: '1.5px solid #0f0f0f' }}>Create a recruiter account</Link></> : <>Don't have an account?{' '}
+ footer={<>Don't have an account?{' '}
  <Link to="/sign-up" style={{ color: '#0f0f0f', fontWeight: 600, textDecoration: 'none', borderBottom: '1.5px solid #0f0f0f' }}>
  Sign up
- </Link>{' · '}<Link to="/recruiter/sign-in" style={{ color: '#6b6b6b', textDecoration: 'none' }}>Recruiter login</Link></>}
+ </Link></>}
  >
- {!recruiter && (<>
-<button type="button" onClick={handleGoogle} disabled={gLoading} className="oc-btn-primary" style={{
+ <button type="button" onClick={handleGoogle} disabled={gLoading} className="oc-btn-primary" style={{
  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
  opacity: gLoading ? 0.6 : 1,
  }}>
@@ -77,7 +76,6 @@ export default function SignIn({ recruiter = false }: { recruiter?: boolean }) {
  </p>
 
  <div className="oc-divider" style={{ margin: '24px 0' }}><span>or</span></div>
-</>)}
 
  {error && <div className="oc-error"> {error}</div>}
 

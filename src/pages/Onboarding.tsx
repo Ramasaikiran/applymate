@@ -5,6 +5,7 @@ import { supabase, type UserType } from '../lib/supabase'
 import { pickFile } from '../lib/filePicker'
 import { uploadResumeWithProgress } from '../lib/uploadResume'
 import { routePostAuth } from '../lib/routing'
+import { isWorkEmail } from '../lib/workEmail'
 
 /* ── Shared style helpers ──────────────────────────────────── */
 const inp = (err?: string): React.CSSProperties => ({
@@ -413,8 +414,21 @@ export default function Onboarding() {
  {([
  { type: 'student' as UserType, icon: '', title: "I'm a student", desc: 'Internships or first job after college.' },
  { type: 'professional' as UserType, icon: '', title: 'Working professional', desc: "I've worked before and I'm levelling up." },
+ { type: 'recruiter' as const, icon: '', title: "I'm a recruiter", desc: 'I want to post jobs and find candidates.' },
  ]).map(r => (
- <button key={r.type} onClick={() => { setRole(r.type); setStep(2) }} style={{
+ <button key={r.type} onClick={() => {
+ if (r.type === 'recruiter') {
+ if (!isWorkEmail(user?.email ?? '')) {
+ setError('Recruiter accounts need a company email. You are signed in with a free email address. Sign out and sign up again with your work email.')
+ window.scrollTo({ top: 0, behavior: 'smooth' })
+ return
+ }
+ setError(null)
+ navigate('/recruiter/apply')
+ return
+ }
+ setRole(r.type); setStep(2)
+ }} style={{ ...(r.type === 'recruiter' ? { gridColumn: '1 / -1' } : {}),
  background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 16,
  padding: '24px 20px', textAlign: 'left', cursor: 'pointer',
  boxShadow: '0 1px 3px rgba(0,0,0,0.04)', transition: 'all 0.15s',

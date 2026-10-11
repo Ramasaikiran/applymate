@@ -27,7 +27,6 @@ const AdminUsers          = lazy(() => import('./pages/admin/AdminUsers'))
 const AdminUserDetail     = lazy(() => import('./pages/admin/AdminUserDetail'))
 const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'))
 const AdminRecruiters = lazy(() => import('./pages/admin/AdminRecruiters'))
-const RecruiterSignUp = lazy(() => import('./pages/recruiter/RecruiterSignUp'))
 const RecruiterApply = lazy(() => import('./pages/recruiter/RecruiterApply'))
 const RecruiterPending = lazy(() => import('./pages/recruiter/RecruiterPending'))
 const RecruiterCandidates = lazy(() => import('./pages/recruiter/RecruiterCandidates'))
@@ -60,8 +59,6 @@ export default function App() {
         <Route path="/onboarding"      element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
         <Route path="/dashboard"       element={<ProtectedRoute requireSub><Dashboard /></ProtectedRoute>} />
         <Route path="/profile"         element={<ProtectedRoute requireSub><Profile /></ProtectedRoute>} />
-        <Route path="/recruiter/sign-up" element={<RecruiterSignUp />} />
-        <Route path="/recruiter/sign-in" element={<SignIn recruiter />} />
         <Route path="/recruiter/apply" element={<RecruiterRoute require="applicant"><RecruiterApply /></RecruiterRoute>} />
         <Route path="/recruiter/pending" element={<RecruiterRoute require="applicant"><RecruiterPending /></RecruiterRoute>} />
         <Route path="/recruiter" element={<RecruiterRoute><RecruiterCandidates /></RecruiterRoute>} />

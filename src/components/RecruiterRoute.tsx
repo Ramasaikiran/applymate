@@ -21,9 +21,11 @@ export default function RecruiterRoute({ children, require = 'approved' }: {
   const { loading, profileLoaded, session, profile, isRecruiter, recruiter } = useAuth()
 
   if (loading || !profileLoaded) return <Spinner />
-  if (!session) return <Navigate to="/recruiter/sign-in" replace />
+  if (!session) return <Navigate to="/sign-in" replace />
   if (profile?.is_admin) return <Navigate to="/admin" replace />
-  if (!isRecruiter) return <Navigate to="/dashboard" replace />
+  // A user who chose "I'm a recruiter" in onboarding has no recruiters row yet.
+  const chosePathNotYetPicked = require === 'applicant' && !profile?.user_type
+  if (!isRecruiter && !chosePathNotYetPicked) return <Navigate to="/dashboard" replace />
 
   const status = recruiter?.status ?? null
   if (require === 'approved' && status !== 'approved') {

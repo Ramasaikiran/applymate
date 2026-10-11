@@ -165,8 +165,6 @@ export default function SignUp() {
           <Link to="/sign-in" style={{ color: '#0f0f0f', fontWeight: 600, textDecoration: 'none', borderBottom: '1.5px solid #0f0f0f' }}>
             Sign in
           </Link>
-          {' · '}
-          <Link to="/recruiter/sign-up" style={{ color: '#6b6b6b', textDecoration: 'none' }}>Hiring? Recruiter sign up</Link>
         </>
       }
     >
