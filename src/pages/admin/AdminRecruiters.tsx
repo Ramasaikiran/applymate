@@ -16,7 +16,7 @@ export default function AdminRecruiters() {
 
   async function load() {
     const { data, error: err } = await supabase.from('recruiters')
-      .select('*, profiles(full_name,email)').order('created_at', { ascending: false })
+      .select('*, profiles!recruiters_id_fkey(full_name,email)').order('created_at', { ascending: false })
     if (err) setError(err.message)
     setRows((data ?? []) as unknown as Row[])
     setLoading(false)
