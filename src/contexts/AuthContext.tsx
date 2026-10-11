@@ -2,17 +2,19 @@ import {
   createContext, useContext, useEffect, useState, type ReactNode,
 } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
-import { supabase, signUpDirect, recoverDirect, type Profile, type Subscription } from '../lib/supabase'
+import { supabase, signUpDirect, recoverDirect, type Profile, type Subscription, type Recruiter } from '../lib/supabase'
 
 interface AuthContextValue {
   session:       Session | null
   user:          User | null
   profile:       Profile | null
   subscription:  Subscription | null
+  recruiter:     Recruiter | null
+  isRecruiter:   boolean          // has a recruiters row OR signed up as a recruiter
   loading:       boolean
   profileLoaded: boolean          // ← true once fetchProfile has completed at least once
   isAdmin:       boolean
-  signUp:               (fullName: string, email: string, password: string) => Promise<{ error: string | null }>
+  signUp:               (fullName: string, email: string, password: string, accountType?: 'recruiter') => Promise<{ error: string | null }>
   signIn:               (email: string, password: string)                   => Promise<{ error: string | null }>
   signInWithGoogle:     ()                                                  => Promise<{ error: string | null }>
   resendVerification:   (email: string)                                     => Promise<{ error: string | null }>
@@ -43,12 +45,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session,       setSession]       = useState<Session | null>(null)
   const [profile,       setProfile]       = useState<Profile | null>(null)
   const [subscription,  setSubscription]  = useState<Subscription | null>(null)
+  const [recruiter,     setRecruiter]     = useState<Recruiter | null>(null)
   const [loading,       setLoading]       = useState(true)
   const [profileLoaded, setProfileLoaded] = useState(false)   // ← new
 
   async function fetchProfile(userId: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
     setProfile(data ?? null)
+
+    // Recruiters have no user_type. Only look up the recruiters row for them,
+    // so candidates never pay for the extra query.
+    if (data && !data.user_type && !data.is_admin) {
+      const { data: rec } = await supabase.from('recruiters').select('*').eq('id', userId).maybeSingle()
+      setRecruiter((rec as Recruiter | null) ?? null)
+    } else {
+      setRecruiter(null)
+    }
 
     const { data: sub } = await supabase
       .from('subscriptions')
@@ -104,15 +116,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setProfile(null)
         setSubscription(null)
+        setRecruiter(null)
         setProfileLoaded(true)               // signed out → nothing to load
       }
     })
     return () => sub.unsubscribe()
   }, [])
 
-  async function signUp(fullName: string, email: string, password: string) {
+  async function signUp(fullName: string, email: string, password: string, accountType?: 'recruiter') {
     try {
-      const result = await signUpDirect(email, password, fullName, `${SITE_URL}/auth/callback`)
+      const result = await signUpDirect(
+        email, password, fullName, `${SITE_URL}/auth/callback`,
+        accountType ? { account_type: accountType } : {},
+      )
       if (!result.ok) {
         console.error('[auth] signUp failed', result.status, result.raw)
         return { error: safeErrorMessage(result.message ?? undefined, 'Sign up failed. Please try again.') }
@@ -223,7 +239,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{
-      session, user: session?.user ?? null, profile, subscription,
+      session, user: session?.user ?? null, profile, subscription, recruiter,
+      isRecruiter: !!recruiter || (!profile?.user_type && session?.user?.user_metadata?.account_type === 'recruiter'),
       loading, profileLoaded, isAdmin: profile?.is_admin ?? false,
       signUp, signIn, signInWithGoogle, resendVerification, verifySignupOtp,
       requestPasswordReset, verifyRecoveryOtp, updatePassword, signOut, refreshProfile,

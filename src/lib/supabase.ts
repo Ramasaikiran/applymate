@@ -60,10 +60,13 @@ async function authRequest(path: string, body: unknown, redirectTo?: string) {
   return { ok: false, status: res.status, raw, message }
 }
 
-export async function signUpDirect(email: string, password: string, fullName: string, redirectTo: string) {
+export async function signUpDirect(
+  email: string, password: string, fullName: string, redirectTo: string,
+  extraMetadata: Record<string, string> = {},
+) {
   return authRequest('/signup', {
     email, password,
-    data: { full_name: fullName },
+    data: { full_name: fullName, ...extraMetadata },
   }, redirectTo)
 }
 
@@ -101,6 +104,7 @@ export interface Profile {
   employment_type: EmploymentType | null
   work_preference: WorkPreference | null
   user_type: UserType | null
+  recruiter_visible: boolean
   is_admin: boolean
   account_status: AccountStatus
   created_at: string
@@ -171,6 +175,8 @@ export interface Job {
   apply_url: string | null
   last_date: string | null
   plan_visibility: SubscriptionPlan[]
+  recruiter_id?: string | null     // set by the database for recruiter-posted jobs
+  recruiter_name?: string | null
   status: JobStatus
   is_active: boolean
   posted_at: string
@@ -325,4 +331,57 @@ export const PLANS: Record<SubscriptionPlan, {
     whoApplies: 'admin',
     features: ['Everything in Pro', 'Interview scheduling support', 'Career strategy call'],
   },
+}
+
+// ── Recruiter types ────────────────────────────────────────────────
+export type RecruiterStatus = 'pending' | 'approved' | 'rejected' | 'suspended'
+
+export interface Recruiter {
+  id: string
+  company_name: string
+  company_website: string
+  designation: string
+  linkedin_url: string
+  gstin: string | null
+  cin: string | null
+  work_email: string
+  status: RecruiterStatus
+  review_note: string | null
+  reviewed_at: string | null
+  created_at: string
+}
+
+export interface CandidateCard {
+  candidate_id: string
+  first_name: string | null
+  user_type: UserType
+  country: string | null
+  technical_skills: string[] | null
+  years_experience: number | null
+  previous_job_title: string | null
+  college_name: string | null
+  branch: string | null
+  passout_year: number | null
+  cgpa: number | null
+}
+
+export interface CandidateFull {
+  ok: boolean
+  error?: string
+  candidate: {
+    id: string; full_name: string; user_type: UserType; country: string | null
+    photo_url: string | null; linkedin_url: string | null; github_url: string | null
+    email: string; mobile_number: string | null
+  }
+  student: Omit<StudentDetails, 'id' | 'resume_url' | 'updated_at'> | null
+  professional: Omit<ProfessionalDetails, 'id' | 'previous_salary' | 'resume_url' | 'updated_at'> | null
+}
+
+export interface AppNotification {
+  id: string
+  title: string
+  message: string | null
+  type: string
+  is_read: boolean
+  created_at: string
 }

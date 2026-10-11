@@ -10,6 +10,7 @@ export default function CheckInbox() {
  const { resendVerification, verifySignupOtp } = useAuth()
 
  const initialEmail = (location.state as { email?: string })?.email ?? ''
+ const nextPath = (location.state as { next?: string })?.next ?? '/onboarding'
  const [email, setEmail] = useState(initialEmail)
  const [editing, setEditing] = useState(!initialEmail)
  const [cooldown, setCooldown] = useState(initialEmail ? COOLDOWN : 0)
@@ -41,7 +42,7 @@ export default function CheckInbox() {
  const { error } = await verifySignupOtp(email, code)
  setVerifying(false)
  if (error) { setStatus('error'); setErrMsg(error); return }
- navigate('/onboarding', { replace: true })
+ navigate(nextPath, { replace: true })
  }
 
  return (

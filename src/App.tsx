@@ -1,7 +1,8 @@
 import { Suspense, lazy } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import ProtectedRoute from './components/ProtectedRoute'
-import AdminRoute     from './components/AdminRoute'
+import AdminRoute from './components/AdminRoute'
+import RecruiterRoute from './components/RecruiterRoute'
 import Landing        from './pages/Landing'
 
 const AuthCallback   = lazy(() => import('./pages/AuthCallback'))
@@ -24,7 +25,14 @@ const AdminDashboard      = lazy(() => import('./pages/admin/AdminDashboard'))
 const AdminLogin          = lazy(() => import('./pages/admin/AdminLogin'))
 const AdminUsers          = lazy(() => import('./pages/admin/AdminUsers'))
 const AdminUserDetail     = lazy(() => import('./pages/admin/AdminUserDetail'))
-const AdminJobs           = lazy(() => import('./pages/admin/AdminJobs'))
+const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'))
+const AdminRecruiters = lazy(() => import('./pages/admin/AdminRecruiters'))
+const RecruiterSignUp = lazy(() => import('./pages/recruiter/RecruiterSignUp'))
+const RecruiterApply = lazy(() => import('./pages/recruiter/RecruiterApply'))
+const RecruiterPending = lazy(() => import('./pages/recruiter/RecruiterPending'))
+const RecruiterCandidates = lazy(() => import('./pages/recruiter/RecruiterCandidates'))
+const RecruiterCandidateProfile = lazy(() => import('./pages/recruiter/RecruiterCandidateProfile'))
+const RecruiterJobs = lazy(() => import('./pages/recruiter/RecruiterJobs'))
 const AdminHackathons     = lazy(() => import('./pages/admin/AdminHackathons'))
 const AdminSubscriptions  = lazy(() => import('./pages/admin/AdminSubscriptions'))
 const AdminAnalytics      = lazy(() => import('./pages/admin/AdminAnalytics'))
@@ -52,11 +60,19 @@ export default function App() {
         <Route path="/onboarding"      element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
         <Route path="/dashboard"       element={<ProtectedRoute requireSub><Dashboard /></ProtectedRoute>} />
         <Route path="/profile"         element={<ProtectedRoute requireSub><Profile /></ProtectedRoute>} />
+        <Route path="/recruiter/sign-up" element={<RecruiterSignUp />} />
+        <Route path="/recruiter/sign-in" element={<SignIn recruiter />} />
+        <Route path="/recruiter/apply" element={<RecruiterRoute require="applicant"><RecruiterApply /></RecruiterRoute>} />
+        <Route path="/recruiter/pending" element={<RecruiterRoute require="applicant"><RecruiterPending /></RecruiterRoute>} />
+        <Route path="/recruiter" element={<RecruiterRoute><RecruiterCandidates /></RecruiterRoute>} />
+        <Route path="/recruiter/candidates/:id" element={<RecruiterRoute><RecruiterCandidateProfile /></RecruiterRoute>} />
+        <Route path="/recruiter/jobs" element={<RecruiterRoute><RecruiterJobs /></RecruiterRoute>} />
         <Route path="/admin/login"     element={<AdminLogin />} />
         <Route path="/admin"           element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/users"     element={<AdminRoute><AdminUsers /></AdminRoute>} />
         <Route path="/admin/users/:id" element={<AdminRoute><AdminUserDetail /></AdminRoute>} />
-        <Route path="/admin/jobs"      element={<AdminRoute><AdminJobs /></AdminRoute>} />
+        <Route path="/admin/jobs" element={<AdminRoute><AdminJobs /></AdminRoute>} />
+        <Route path="/admin/recruiters" element={<AdminRoute><AdminRecruiters /></AdminRoute>} />
         <Route path="/admin/hackathons" element={<AdminRoute><AdminHackathons /></AdminRoute>} />
         <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
         <Route path="/admin/analytics"     element={<AdminRoute><AdminAnalytics /></AdminRoute>} />

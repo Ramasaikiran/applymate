@@ -1,8 +1,15 @@
 import { supabase } from './supabase'
 import type { NavigateFunction } from 'react-router-dom'
+import type { RecruiterStatus } from './supabase'
+
+// Where a recruiter belongs, given their application status (null = not applied yet).
+export function recruiterHome(status: RecruiterStatus | null): string {
+  if (!status) return '/recruiter/apply'
+  return status === 'approved' ? '/recruiter' : '/recruiter/pending'
+}
 
 // Where should a signed-in user land? Checked in this order:
-// admin → needs onboarding → needs to pay → dashboard.
+// admin → recruiter → needs onboarding → needs to pay → dashboard.
 // Used right after any sign-in/auth-callback event. Landing.tsx has its own
 // reactive version of this (driven by AuthContext state rather than a fresh
 // one-shot query) — if you change the ordering here, check that one too.
@@ -21,7 +28,21 @@ export async function routePostAuth(userId: string, navigate: NavigateFunction) 
   if (profileErr) throw new Error('Could not load your profile. Please try again.')
 
   if (profile?.is_admin) { navigate('/admin', { replace: true }); return }
-  if (!profile?.user_type) { navigate('/onboarding', { replace: true }); return }
+
+  // Recruiters have no user_type. Check them before sending anyone to onboarding.
+  if (!profile?.user_type) {
+    const { data: rec, error: recErr } = await supabase
+      .from('recruiters').select('status').eq('id', userId).maybeSingle()
+    if (recErr) throw new Error('Could not load your account. Please try again.')
+    const { data: { session } } = await supabase.auth.getSession()
+    const signedUpAsRecruiter = session?.user?.user_metadata?.account_type === 'recruiter'
+    if (rec || signedUpAsRecruiter) {
+      navigate(recruiterHome((rec?.status as RecruiterStatus | undefined) ?? null), { replace: true })
+      return
+    }
+    navigate('/onboarding', { replace: true })
+    return
+  }
 
   const { data: sub, error: subErr } = await supabase
     .from('subscriptions')

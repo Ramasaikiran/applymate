@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import { recruiterHome } from '../lib/routing'
 import inboxProof1 from '../assets/inbox-proof/proof-1.jpg'
 import inboxProof2 from '../assets/inbox-proof/proof-2.jpg'
 import inboxProof3 from '../assets/inbox-proof/proof-3.jpg'
@@ -104,7 +105,7 @@ function ActivityFeed() {
 }
 
 export default function Landing() {
- const { session, subscription, profile } = useAuth()
+ const { session, subscription, profile, isRecruiter, recruiter } = useAuth()
  const navigate = useNavigate()
  const [showSticky, setShowSticky] = useState(false)
  const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -134,10 +135,11 @@ export default function Landing() {
  if (!session) return
  if (profile === null) return
  if (profile?.is_admin) { navigate('/admin', { replace: true }); return }
+ if (isRecruiter) { navigate(recruiterHome(recruiter?.status ?? null), { replace: true }); return }
  if (!profile?.user_type) { navigate('/onboarding', { replace: true }); return }
  if (!subscription) { navigate('/subscription', { replace: true }); return }
  navigate('/dashboard', { replace: true })
- }, [session, profile, subscription])
+ }, [session, profile, subscription, isRecruiter, recruiter])
 
  useEffect(() => {
  const onScroll = () => setShowSticky(window.scrollY > 600)

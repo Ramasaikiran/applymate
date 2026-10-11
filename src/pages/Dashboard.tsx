@@ -1,3 +1,4 @@
+import NotificationBell from '../components/NotificationBell'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -277,6 +278,7 @@ export default function Dashboard() {
  Admin
  </Link>
  )}
+ <NotificationBell />
  <Link to="/profile" style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f',
  background: '#f5f5f5', padding: '6px 12px', borderRadius: 7, textDecoration: 'none' }}>
  My Profile
@@ -476,7 +478,7 @@ export default function Dashboard() {
  <div style={{ flex: 1, minWidth: 0 }}>
  <p style={{ fontSize: 14, fontWeight: 500, color: '#0f0f0f', marginBottom: 2 }}>{job.title}</p>
  <p style={{ fontSize: 12, color: '#9b9b9b', marginBottom: 6 }}>
- {job.company}, {job.location || 'Remote'}, {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+ {job.company}{job.recruiter_name ? ` (recruiter: ${job.recruiter_name})` : ''}, {job.location || 'Remote'}, {new Date(job.posted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
  {job.work_mode && (
  <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 600, padding: '1px 7px',
  background: '#f0f0f0', color: '#6b6b6b', borderRadius: 99, textTransform: 'capitalize' }}>

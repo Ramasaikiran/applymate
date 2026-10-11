@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { recruiterHome } from '../lib/routing'
 
 const Spinner = () => (
   <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center' }}>
@@ -14,7 +15,7 @@ const Spinner = () => (
 export default function ProtectedRoute({ children, requireSub = false }: {
   children: ReactNode; requireSub?: boolean
 }) {
-  const { session, loading, profileLoaded, profile } = useAuth()
+  const { session, loading, profileLoaded, profile, isRecruiter, recruiter } = useAuth()
   const location = useLocation()
 
   if (loading || (session && !profileLoaded)) return <Spinner />
@@ -22,6 +23,9 @@ export default function ProtectedRoute({ children, requireSub = false }: {
 
   // ── ADMIN: always go to admin panel, never user flows ──────────
   if (profile?.is_admin) return <Navigate to="/admin" replace />
+
+  // ── RECRUITER: never use candidate flows ───────────────────────
+  if (isRecruiter) return <Navigate to={recruiterHome(recruiter?.status ?? null)} replace />
 
   // ── Already onboarded → block access to /onboarding ───────────
   // Exception: allow edit mode (e.g. ?edit=resume from Subscription's Back button)

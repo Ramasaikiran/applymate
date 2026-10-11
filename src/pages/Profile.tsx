@@ -30,6 +30,8 @@ export default function Profile() {
   const [passoutYear, setPassoutYear] = useState('')
   const [isStudent, setIsStudent] = useState(false)
 
+  const [recruiterVisible, setRecruiterVisible] = useState(false)
+  const [visSaving, setVisSaving] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -45,6 +47,7 @@ export default function Profile() {
     if (!profile) return
     setFirstName(profile.first_name ?? '')
     setLastName(profile.last_name ?? '')
+    setRecruiterVisible(profile.recruiter_visible ?? false)
     setMobile(profile.mobile_number ?? '')
     setLinkedin(profile.linkedin_url ?? '')
     setGithub(profile.github_url ?? '')
@@ -62,6 +65,17 @@ export default function Profile() {
       .select('status').eq('user_id', profile.id)
       .order('requested_at', { ascending: false }).limit(1).maybeSingle()
     setDeletionStatus(delReq?.status === 'pending' ? 'pending' : delReq?.status === 'rejected' ? 'rejected' : 'none')
+  }
+
+  async function toggleRecruiterVisible() {
+    if (!profile) return
+    const next = !recruiterVisible
+    setVisSaving(true); setError(null)
+    setRecruiterVisible(next)
+    const { error: err } = await supabase.from('profiles').update({ recruiter_visible: next }).eq('id', profile.id)
+    setVisSaving(false)
+    if (err) { setRecruiterVisible(!next); setError(err.message); return }
+    await refreshProfile()
   }
 
   function toggleRole(r: string) {
@@ -217,6 +231,23 @@ export default function Profile() {
             }}>{saving ? 'Saving…' : 'Save changes'}</button>
             {saved && <span style={{ fontSize: 12.5, color: '#16a34a', fontWeight: 600 }}>Saved ✓</span>}
           </div>
+        </div>
+
+        {/* Recruiter visibility: explicit opt-in, off by default */}
+        <div style={{ padding: '16px 20px', background: '#fff', border: '1px solid #f0f0f0', borderRadius: 12,
+          marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: 220 }}>
+            <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f', marginBottom: 2 }}>Let verified recruiters find me</p>
+            <p style={{ fontSize: 12, color: '#9b9b9b', lineHeight: 1.6, margin: 0 }}>
+              Admin-verified recruiters can view your profile, email and phone. You get a notification with their name and company every time. Only paid members can be found. Turn this off any time.
+            </p>
+          </div>
+          <button onClick={toggleRecruiterVisible} disabled={visSaving} role="switch" aria-checked={recruiterVisible} style={{
+            width: 46, height: 26, borderRadius: 99, border: 'none', cursor: visSaving ? 'not-allowed' : 'pointer',
+            background: recruiterVisible ? '#0f0f0f' : '#d9d9d9', position: 'relative', flexShrink: 0 }}>
+            <span style={{ position: 'absolute', top: 3, left: recruiterVisible ? 23 : 3, width: 20, height: 20,
+              borderRadius: '50%', background: '#fff', transition: 'left .15s' }} />
+          </button>
         </div>
 
         {/* Danger zone: delete profile, admin-approved */}
