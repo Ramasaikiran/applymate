@@ -2,7 +2,8 @@
 update public.profiles
    set first_name = split_part(trim(full_name), ' ', 1)
  where coalesce(trim(first_name), '') = ''
-   and coalesce(trim(full_name), '') <> '';
+   and coalesce(trim(full_name), '') <> ''
+   and is_admin is not true;  -- admin rows trip enforce_single_identity
 
 -- 2) Let approved recruiters open a resume, only for a paid candidate
 --    whose profile they viewed in the last 30 days.
