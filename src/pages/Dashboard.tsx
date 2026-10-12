@@ -1,5 +1,4 @@
 import NotificationBell from '../components/NotificationBell'
-import RecruiterVisibilityPrompt from '../components/RecruiterVisibilityPrompt'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -292,8 +291,6 @@ export default function Dashboard() {
  </nav>
 
  <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 24px 80px' }}>
-
- <RecruiterVisibilityPrompt />
 
  {/* Header row */}
  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',

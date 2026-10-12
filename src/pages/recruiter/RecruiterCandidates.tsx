@@ -6,6 +6,7 @@ import { RecruiterShell, Chip, ErrorBox, card, inp, lbl, btnDark, FONT } from '.
 const PAGE = 20
 
 export default function RecruiterCandidates() {
+  const [query, setQuery] = useState('')
   const [skills, setSkills] = useState('')
   const [minExp, setMinExp] = useState('')
   const [passout, setPassout] = useState('')
@@ -18,6 +19,7 @@ export default function RecruiterCandidates() {
   async function run(offset: number) {
     setLoading(true); setError(null)
     const { data, error: err } = await supabase.rpc('recruiter_search_candidates', {
+      p_query: query.trim() || null,
       p_skills: skills.split(',').map(s => s.trim()).filter(Boolean),
       p_min_exp: minExp ? Number(minExp) : null,
       p_passout: passout ? parseInt(passout) : null,
@@ -39,10 +41,12 @@ export default function RecruiterCandidates() {
     <RecruiterShell>
       <h1 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 30, fontWeight: 400, margin: '0 0 6px' }}>Find candidates</h1>
       <p style={{ fontSize: 13.5, color: '#6b6b6b', margin: '0 0 20px', lineHeight: 1.6 }}>
-        Only paid ApplyMate members who opted in appear here. Opening a profile shows contact details and notifies the candidate.
+        All paid ApplyMate members appear here. Search by name, college, role or skill, then filter. Opening a profile shows contact details and notifies the candidate.
       </p>
 
       <form onSubmit={submit} style={{ ...card, display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', alignItems: 'end', marginBottom: 20 }}>
+        <div style={{ gridColumn: '1 / -1' }}><label style={lbl}>Search</label>
+          <input style={inp} value={query} onChange={e => setQuery(e.target.value)} placeholder="Name, college, role, company or skill" /></div>
         <div><label style={lbl}>Skills (comma separated)</label>
           <input style={inp} value={skills} onChange={e => setSkills(e.target.value)} placeholder="React, Java, SQL" /></div>
         <div><label style={lbl}>Min. experience (years)</label>
@@ -80,7 +84,7 @@ export default function RecruiterCandidates() {
 
       {searched && !loading && rows.length === 0 && !error && (
         <p style={{ textAlign: 'center', color: '#9b9b9b', fontSize: 14, padding: '40px 0' }}>
-          No candidates match. Try fewer filters.
+          No paid candidates match. Try fewer filters.
         </p>
       )}
       {more && (

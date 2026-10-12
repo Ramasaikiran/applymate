@@ -104,7 +104,6 @@ export interface Profile {
   employment_type: EmploymentType | null
   work_preference: WorkPreference | null
   user_type: UserType | null
-  recruiter_visible: boolean
   is_admin: boolean
   account_status: AccountStatus
   created_at: string
