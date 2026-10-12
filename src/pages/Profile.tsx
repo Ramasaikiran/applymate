@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import { supabase } from '../lib/supabase'
+import { supabase, type UserType } from '../lib/supabase'
+import CandidateDetailsFields, { EMPTY_DETAILS, validateDetails, detailsToRow, type CandidateDetails } from '../components/CandidateDetailsFields'
 
 const ROLES = ['SDE / Software Engineer','Frontend Engineer','Backend Engineer','Full Stack Engineer',
   'ML / AI Engineer','Data Scientist','Data Analyst','Other']
@@ -29,6 +30,9 @@ export default function Profile() {
   const [currentYear, setCurrentYear] = useState('')
   const [passoutYear, setPassoutYear] = useState('')
   const [isStudent, setIsStudent] = useState(false)
+  const [details, setDetails] = useState<CandidateDetails>(EMPTY_DETAILS)
+  const [detailsDirty, setDetailsDirty] = useState(false)
+  const [detailsErrors, setDetailsErrors] = useState<Record<string, string>>({})
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -57,6 +61,19 @@ export default function Profile() {
       setPassoutYear(data?.passout_year ? String(data.passout_year) : '')
     }
 
+        // Skills and background (what recruiters search on)
+    if (profile.user_type === 'student') {
+      const { data: sd } = await supabase.from('student_details').select('*').eq('id', profile.id).maybeSingle()
+      setDetails({ ...EMPTY_DETAILS, skills: sd?.technical_skills ?? [], college: sd?.college_name ?? '', degree: sd?.degree ?? '',
+        branch: sd?.branch ?? '', cgpa: sd?.cgpa != null ? String(sd.cgpa) : '', projects: sd?.projects ?? '' })
+    } else if (profile.user_type === 'professional') {
+      const { data: pd } = await supabase.from('professional_details').select('*').eq('id', profile.id).maybeSingle()
+      setDetails({ ...EMPTY_DETAILS, skills: pd?.technical_skills ?? [], yearsExp: pd?.years_experience != null ? String(pd.years_experience) : '',
+        jobTitle: pd?.previous_job_title ?? '', company: pd?.previous_company ?? '',
+        noticeDays: pd?.notice_period_days != null ? String(pd.notice_period_days) : '' })
+    }
+    setDetailsDirty(false)
+
     const { data: delReq } = await supabase.from('profile_deletion_requests')
       .select('status').eq('user_id', profile.id)
       .order('requested_at', { ascending: false }).limit(1).maybeSingle()
@@ -69,7 +86,13 @@ export default function Profile() {
 
   async function handleSave() {
     if (!profile) return
-    setSaving(true); setError(null); setSaved(false)
+        setError(null); setSaved(false)
+    if (detailsDirty) {
+      const errs = validateDetails(profile.user_type as UserType, details)
+      setDetailsErrors(errs)
+      if (Object.keys(errs).length) { setError('Please fix the highlighted fields in Skills and background.'); return }
+    }
+    setSaving(true)
     try {
       const { error: profErr } = await supabase.from('profiles').update({
         first_name: firstName.trim(),
@@ -88,6 +111,13 @@ export default function Profile() {
           passout_year: passoutYear ? parseInt(passoutYear) : null,
         }).eq('id', profile.id)
         if (sdErr) throw sdErr
+      }
+
+            if (detailsDirty && profile.user_type) {
+        const table = profile.user_type === 'student' ? 'student_details' : 'professional_details'
+        const { error: dErr } = await supabase.from(table).upsert({ id: profile.id, ...detailsToRow(profile.user_type as UserType, details) })
+        if (dErr) throw dErr
+        setDetailsDirty(false)
       }
 
       await refreshProfile()
@@ -204,6 +234,17 @@ export default function Profile() {
                   Still in an earlier year? Update this any time, it controls which batch-specific jobs you see.
                 </p>
               </div>
+            </div>
+          )}
+
+                    {profile?.user_type && (
+            <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 18, marginTop: 4 }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: '#0f0f0f', margin: '0 0 4px' }}>Skills and background</p>
+              <p style={{ fontSize: 12, color: '#9b9b9b', lineHeight: 1.6, margin: '0 0 14px' }}>
+                Recruiters search and filter by these. Complete profiles get found more.
+              </p>
+              <CandidateDetailsFields role={profile.user_type as UserType} value={details} errors={detailsErrors}
+                onChange={d => { setDetails(d); setDetailsDirty(true); setDetailsErrors({}) }} />
             </div>
           )}
 

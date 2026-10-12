@@ -1,4 +1,5 @@
 import NotificationBell from '../components/NotificationBell'
+import CompleteProfilePrompt from '../components/CompleteProfilePrompt'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -291,6 +292,8 @@ export default function Dashboard() {
  </nav>
 
  <div style={{ maxWidth: 1000, margin: '0 auto', padding: '32px 24px 80px' }}>
+
+ <CompleteProfilePrompt />
 
  {/* Header row */}
  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',

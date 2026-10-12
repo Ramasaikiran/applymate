@@ -6,6 +6,7 @@ import { pickFile } from '../lib/filePicker'
 import { uploadResumeWithProgress } from '../lib/uploadResume'
 import { routePostAuth } from '../lib/routing'
 import { isWorkEmail } from '../lib/workEmail'
+import CandidateDetailsFields, { EMPTY_DETAILS, validateDetails, detailsToRow, type CandidateDetails } from '../components/CandidateDetailsFields'
 
 /* ── Shared style helpers ──────────────────────────────────── */
 const inp = (err?: string): React.CSSProperties => ({
@@ -105,6 +106,7 @@ interface OnboardingDraft {
  firstName: string; lastName: string; mobile: string
  country: string; address: string; roleInts: string[]; otherRole: string; passoutYear: string
  resumePath: string | null; resumeName: string | null
+ details: CandidateDetails
 }
 
 function loadDraft(): Partial<OnboardingDraft> {
@@ -156,6 +158,7 @@ export default function Onboarding() {
  const [roleInts, setRoleInts] = useState<string[]>(draft.roleInts ?? [])
  const [otherRole, setOtherRole] = useState(draft.otherRole ?? '')
  const [passoutYear, setPassoutYear] = useState(draft.passoutYear ?? '')
+ const [details, setDetails] = useState<CandidateDetails>({ ...EMPTY_DETAILS, ...(draft.details ?? {}) })
  const [photoFile, setPhotoFile] = useState<File | null>(null)
  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
@@ -192,11 +195,11 @@ export default function Onboarding() {
  useEffect(() => {
  const d: OnboardingDraft = {
  step, role, firstName, lastName, mobile, country, address,
- roleInts, otherRole, passoutYear, resumePath, resumeName,
+ roleInts, otherRole, passoutYear, resumePath, resumeName, details,
  }
  try { sessionStorage.setItem(DRAFT_KEY, JSON.stringify(d)) } catch { /* noop */ }
  }, [step, role, firstName, lastName, mobile, country, address,
- roleInts, otherRole, passoutYear, resumePath, resumeName])
+ roleInts, otherRole, passoutYear, resumePath, resumeName, details])
 
  async function handleResumeSelect(file: File | null) {
  if (!file) return
@@ -265,6 +268,7 @@ export default function Onboarding() {
  if (!mobile.trim() || !/^\+?[\d\s-]{10,15}$/.test(mobile.trim())) errs.mobile = 'Enter valid mobile number'
  if (roleInts.length === 0) errs.roleInts = 'Select at least one role'
  if (role === 'student' && !passoutYear.trim()) errs.passoutYear = 'Required'
+ Object.assign(errs, validateDetails(role, details))
  setErrors(errs)
  return Object.keys(errs).length === 0
  }
@@ -332,6 +336,7 @@ export default function Onboarding() {
  id: user.id,
  passout_year: passoutYear ? parseInt(passoutYear) : null,
  resume_url: resumeUrl,
+ ...(editMode ? {} : detailsToRow(role, details)),
  })
  if (dErr) { console.error('Student details error:', dErr); detailSaveFailed = true
  setError(`Couldn't save your details: ${dErr.message}. Please try again.`) }
@@ -339,6 +344,7 @@ export default function Onboarding() {
  const { error: dErr } = await supabase.from('professional_details').upsert({
  id: user.id,
  resume_url: resumeUrl,
+ ...(editMode ? {} : detailsToRow(role, details)),
  })
  if (dErr) { console.error('Professional details error:', dErr); detailSaveFailed = true
  setError(`Couldn't save your details: ${dErr.message}. Please try again.`) }
@@ -531,6 +537,9 @@ export default function Onboarding() {
  )}
  {errors.roleInts && <p style={{ marginTop: 5, fontSize: 12, color: '#ef4444' }}>{errors.roleInts}</p>}
  </Field>
+
+ <p style={{ fontSize: 13, fontWeight: 600, color: '#0f0f0f', margin: '6px 0 -4px' }}>Skills and background</p>
+ <CandidateDetailsFields role={role} value={details} onChange={d => { setDetails(d); setErrors(p => ({ ...p, skills: '', college: '', branch: '', cgpa: '', yearsExp: '', jobTitle: '' })) }} errors={errors} />
 
  <button type="submit" style={btn}>Continue →</button>
  </form>
