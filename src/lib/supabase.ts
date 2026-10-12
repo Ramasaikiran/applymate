@@ -376,8 +376,8 @@ export interface CandidateFull {
     photo_url: string | null; linkedin_url: string | null; github_url: string | null
     email: string; mobile_number: string | null
   }
-  student: Omit<StudentDetails, 'id' | 'resume_url' | 'updated_at'> | null
-  professional: Omit<ProfessionalDetails, 'id' | 'previous_salary' | 'resume_url' | 'updated_at'> | null
+    student: Omit<StudentDetails, 'id' | 'updated_at'> | null
+  professional: Omit<ProfessionalDetails, 'id' | 'previous_salary' | 'updated_at'> | null
 }
 
 export interface AppNotification {

@@ -23,7 +23,16 @@ export default function RecruiterCandidateProfile() {
   const [message, setMessage] = useState('')
   const [sending, setSending] = useState(false)
   const [composed, setComposed] = useState<{ subject: string; body: string } | null>(null)
-  const [inviteError, setInviteError] = useState<string | null>(null)
+    const [inviteError, setInviteError] = useState<string | null>(null)
+  const [resumeErr, setResumeErr] = useState<string | null>(null)
+
+  async function openResume(path: string) {
+    setResumeErr(null)
+    const { data: s, error: err } = await supabase.storage.from('resumes').createSignedUrl(path, 600)
+    if (err || !s?.signedUrl) { setResumeErr('Could not open the resume.'); return }
+    window.open(s.signedUrl, '_blank', 'noopener,noreferrer')
+  }
+
 
   useEffect(() => {
     if (!id || startedFor.current === id) return   // one view per mount (view is logged server-side)
@@ -104,7 +113,14 @@ export default function RecruiterCandidateProfile() {
           </div>
 
           <div style={card}>
-            <p style={{ fontSize: 13, fontWeight: 600, margin: '0 0 12px' }}>Background</p>
+                        <p style={{ fontSize: 13, fontWeight: 600, margin: '0 0 12px' }}>Background</p>
+            {(() => {
+              const path = data.student?.resume_url ?? data.professional?.resume_url ?? null
+              return path
+                ? <button onClick={() => openResume(path)} style={{ ...mailBtn, cursor: 'pointer', marginBottom: 12 }}>View resume</button>
+                : <p style={{ fontSize: 13, color: '#9b9b9b', margin: '0 0 12px' }}>No resume uploaded.</p>
+            })()}
+            {resumeErr && <ErrorBox>{resumeErr}</ErrorBox>}
             {data.student && (
               <div style={{ fontSize: 14, lineHeight: 1.9, color: '#3b3b3b' }}>
                 <div>{[data.student.college_name, data.student.degree, data.student.branch].filter(Boolean).join(' · ')}</div>
