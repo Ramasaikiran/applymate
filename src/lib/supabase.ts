@@ -175,7 +175,11 @@ export interface Job {
   last_date: string | null
   plan_visibility: SubscriptionPlan[]
   recruiter_id?: string | null     // set by the database for recruiter-posted jobs
-  recruiter_name?: string | null
+    recruiter_name?: string | null
+  review_status?: 'pending' | 'approved' | 'rejected'
+  review_note?: string | null
+  publish_requested?: boolean
+
   status: JobStatus
   is_active: boolean
   posted_at: string

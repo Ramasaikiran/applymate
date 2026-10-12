@@ -27,6 +27,7 @@ const AdminUsers          = lazy(() => import('./pages/admin/AdminUsers'))
 const AdminUserDetail     = lazy(() => import('./pages/admin/AdminUserDetail'))
 const AdminJobs = lazy(() => import('./pages/admin/AdminJobs'))
 const AdminRecruiters = lazy(() => import('./pages/admin/AdminRecruiters'))
+const AdminJobApprovals = lazy(() => import('./pages/admin/AdminJobApprovals'))
 const RecruiterApply = lazy(() => import('./pages/recruiter/RecruiterApply'))
 const RecruiterPending = lazy(() => import('./pages/recruiter/RecruiterPending'))
 const RecruiterCandidates = lazy(() => import('./pages/recruiter/RecruiterCandidates'))
@@ -70,6 +71,7 @@ export default function App() {
         <Route path="/admin/users/:id" element={<AdminRoute><AdminUserDetail /></AdminRoute>} />
         <Route path="/admin/jobs" element={<AdminRoute><AdminJobs /></AdminRoute>} />
         <Route path="/admin/recruiters" element={<AdminRoute><AdminRecruiters /></AdminRoute>} />
+        <Route path="/admin/job-approvals" element={<AdminRoute><AdminJobApprovals /></AdminRoute>} />
         <Route path="/admin/hackathons" element={<AdminRoute><AdminHackathons /></AdminRoute>} />
         <Route path="/admin/subscriptions" element={<AdminRoute><AdminSubscriptions /></AdminRoute>} />
         <Route path="/admin/analytics"     element={<AdminRoute><AdminAnalytics /></AdminRoute>} />

@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { supabase, type Job, type JobStatus } from '../../lib/supabase'
-import { RecruiterShell, Chip, ErrorBox, card, inp, lbl, btnDark, btnGhost, FONT } from './ui'
+import { RecruiterShell, ErrorBox, card, inp, lbl, btnDark, btnGhost, FONT } from './ui'
+import { jobBadge, TONE_STYLE } from '../../lib/jobReview'
 
 interface Form {
   title: string; description: string; skills: string; expMin: string; expMax: string
@@ -12,7 +13,7 @@ const EMPTY: Form = {
   title: '', description: '', skills: '', expMin: '0', expMax: '', jobType: 'full-time', workMode: 'onsite',
   location: '', salaryMin: '', salaryMax: '', applyUrl: '', lastDate: '', gradYears: '', roleCategory: '',
 }
-const STATUS_LABEL: Record<string, string> = { draft: 'Draft', published: 'Live', inactive: 'Paused' }
+
 
 export default function RecruiterJobs() {
   const { user, recruiter } = useAuth()
@@ -22,7 +23,9 @@ export default function RecruiterJobs() {
   const [editId, setEditId] = useState<string | null>(null)
   const [showForm, setShowForm] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    const [error, setError] = useState<string | null>(null)
+  const [notice, setNotice] = useState<string | null>(null)
+
 
   async function load() {
     const { data, error: err } = await supabase.from('jobs').select('*')
@@ -67,22 +70,27 @@ export default function RecruiterJobs() {
       graduation_years: form.gradYears.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n)),
       status, is_active: true,
     }
-    const { error: err } = editId
-      ? await supabase.from('jobs').update(payload).eq('id', editId)
-      : await supabase.from('jobs').insert(payload)
+        const { data: saved, error: err } = editId
+      ? await supabase.from('jobs').update(payload).eq('id', editId).select('*').single()
+      : await supabase.from('jobs').insert(payload).select('*').single()
     setSaving(false)
     if (err) { setError(err.message); return }
+    const row = saved as Job
+    setNotice(row.review_status === 'pending'
+      ? 'Sent to an admin for approval. It goes live for paid members only after it is approved.'
+      : row.status === 'published' ? 'Your job is live.' : 'Saved.')
     setShowForm(false); setEditId(null); setForm(EMPTY)
     load()
   }
 
   async function setStatus(j: Job, status: JobStatus) {
-    const { error: err } = await supabase.from('jobs').update({ status }).eq('id', j.id)
+        const { data: row, error: err } = await supabase.from('jobs').update({ status }).eq('id', j.id).select('*').single()
     if (err) { setError(err.message); return }
-    setJobs(prev => prev.map(x => x.id === j.id ? { ...x, status } : x))
+    setJobs(prev => prev.map(x => x.id === j.id ? (row as Job) : x))
   }
 
-  async function remove(j: Job) {
+    async function remove(j: Job) {
+    setNotice(null)
     if (!window.confirm(`Delete "${j.title}"?`)) return
     const { error: err } = await supabase.from('jobs').delete().eq('id', j.id)
     if (err) { setError(err.message); return }
@@ -95,13 +103,14 @@ export default function RecruiterJobs() {
         <div>
           <h1 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 30, fontWeight: 400, margin: '0 0 6px' }}>My jobs</h1>
           <p style={{ fontSize: 13.5, color: '#6b6b6b', margin: 0, lineHeight: 1.6, maxWidth: 560 }}>
-            Only paid ApplyMate members can see these jobs. They see your name and company, not your profile.
+                        Every job is verified by an admin before paid ApplyMate members can see it. They see your name and company, not your profile. Editing a job sends it back for approval.
           </p>
         </div>
         {!showForm && <button onClick={() => { setEditId(null); setForm(EMPTY); setShowForm(true) }} style={btnDark()}>+ Post a job</button>}
       </div>
 
-      {error && <ErrorBox>{error}</ErrorBox>}
+            {error && <ErrorBox>{error}</ErrorBox>}
+      {notice && <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 10, padding: '12px 14px', fontSize: 13.5, color: '#16a34a', marginBottom: 14 }}>{notice}</div>}
 
       {showForm && (
         <form style={{ ...card, display: 'grid', gap: 14, marginBottom: 20, fontFamily: FONT }} onSubmit={e => save(e, 'published')}>
@@ -132,7 +141,7 @@ export default function RecruiterJobs() {
             <div><label style={lbl}>Graduation years (optional)</label><input style={inp} value={form.gradYears} onChange={set('gradYears')} placeholder="2025, 2026" /></div>
           </div>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <button type="submit" disabled={saving} style={btnDark(saving)}>{saving ? 'Saving…' : 'Publish'}</button>
+            <button type="submit" disabled={saving} style={btnDark(saving)}>{saving ? 'Saving…' : 'Submit for approval'}</button>
             <button type="button" disabled={saving} onClick={e => save(e, 'draft')} style={btnGhost}>Save as draft</button>
             <button type="button" onClick={() => { setShowForm(false); setEditId(null) }} style={btnGhost}>Cancel</button>
           </div>
@@ -150,12 +159,17 @@ export default function RecruiterJobs() {
                 <p style={{ fontSize: 12.5, color: '#9b9b9b', margin: '0 0 8px' }}>
                   {[j.location, j.work_mode, j.job_type].filter(Boolean).join(' · ')}
                 </p>
-                <Chip>{STATUS_LABEL[j.status] ?? j.status}</Chip>
+                                {(() => { const b = jobBadge(j); const t = TONE_STYLE[b.tone]; return (
+                  <span style={{ fontSize: 11.5, fontWeight: 600, padding: '3px 9px', borderRadius: 99, background: t.bg, color: t.fg }}>{b.label}</span>
+                ) })()}
+                {j.review_status === 'rejected' && j.review_note && (
+                  <p style={{ fontSize: 12.5, color: '#dc2626', margin: '8px 0 0', lineHeight: 1.5 }}>Reason: {j.review_note}</p>
+                )}
               </div>
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                {j.status !== 'published'
+                                {j.review_status === 'approved' && (j.status !== 'published'
                   ? <button style={btnGhost} onClick={() => setStatus(j, 'published')}>Publish</button>
-                  : <button style={btnGhost} onClick={() => setStatus(j, 'inactive')}>Pause</button>}
+                  : <button style={btnGhost} onClick={() => setStatus(j, 'inactive')}>Pause</button>)}
                 <button style={btnGhost} onClick={() => edit(j)}>Edit</button>
                 <button style={{ ...btnGhost, color: '#dc2626', borderColor: '#fecaca' }} onClick={() => remove(j)}>Delete</button>
               </div>

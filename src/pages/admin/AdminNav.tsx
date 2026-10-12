@@ -6,6 +6,7 @@ const LINKS = [
  { to: '/admin/users', label: 'Users' },
  { to: '/admin/jobs', label: 'Jobs' },
   { to: '/admin/recruiters', label: 'Recruiters' },
+  { to: '/admin/job-approvals', label: 'Job approvals' },
  { to: '/admin/hackathons', label: 'Hackathons' },
  { to: '/admin/subscriptions',label: 'Subscriptions' },
  { to: '/admin/analytics', label: 'Analytics' },
