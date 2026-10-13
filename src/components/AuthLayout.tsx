@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { isMisconfigured } from '../lib/supabase'
 
 const STATS = [
- { n: '10–15', label: 'Applications / day' },
+ { n: '10–15', label: 'Target applications / day' },
  { n: '4 min', label: 'Setup time' },
  { n: '₹399', label: 'Starting / month' },
 ]
@@ -50,7 +50,7 @@ export default function AuthLayout({ eyebrow, title, subtitle, children, footer 
  <span style={{ color: 'rgba(255,255,255,0.4)' }}>You interview.</span>
  </h1>
  <p style={{ fontSize: 15, color: 'rgba(255,255,255,0.55)', lineHeight: 1.75, maxWidth: 360, marginBottom: 44 }}>
- Tell us your skills once. We apply to 10–15 matching jobs daily, directly on official career portals.
+ Tell us your skills once. We aim to apply to 10–15 matching jobs a day, directly on official career portals. It is a target, not a guarantee.
  </p>
 
  {/* Stats */}

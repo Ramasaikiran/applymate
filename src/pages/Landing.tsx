@@ -125,7 +125,7 @@ export default function Landing() {
  const FAQS = [
  {
  q: 'What is the 100% money-back program?',
- a: 'The first 10 subscribers who land a job while on ApplyMate get a 100% refund, just do a short podcast episode with us about your job search. Prefer to skip the podcast? You still get 50% back. Once 10 members claim it, the program closes for good.',
+ a: 'A limited offer for the first 10 subscribers who land a job while on ApplyMate, once we verify the job offer. Record a short podcast episode with us about your job search and get a 100% refund of your subscription fee. Prefer to skip the podcast? You get 50% back. Once 10 members claim it, the program closes for good. It is separate from the standard refund policy.',
  },
  {
  q: 'Is this live? How do I know you\'ll actually apply?',
@@ -137,7 +137,7 @@ export default function Landing() {
  },
  {
  q: 'How many applications per day?',
- a: '10–15 applications daily once your profile is active. That\'s 300–450/month while you focus on interview prep and DSA.',
+ a: 'Our target is 10–15 tailored applications a day once your profile is active. It is a target, not a guarantee. The real number depends on how many suitable, open jobs match your profile, and it can be lower on weekends, holidays, or when few good roles are open. We never apply to unsuitable jobs just to hit a number.',
  },
  {
  q: 'Can I cancel anytime?',
@@ -153,7 +153,7 @@ export default function Landing() {
  },
  {
  q: 'What if I get a job, or want out?',
- a: 'Land a job on your plan? We keep applying to find you an even better offer, refunds aren\'t available once an offer is on record. Want out before that happens? We refund unused days, minus days used and Razorpay\'s 2% fee.',
+ a: 'Land a job on your plan? We keep applying to find you an even better offer, and unused days are not refunded once an offer is on record. The only exception is the limited Job Refund Promotion (first 10 members, see the 100% money-back question above). Want out before that happens? We refund unused days, minus days used and Razorpay\'s 2% fee.',
  },
  ]
 
@@ -237,7 +237,7 @@ export default function Landing() {
 
  <p style={{ fontSize: 20, color: '#6b6b6b', lineHeight: 1.65,
  maxWidth: 560, margin: '0 auto 44px', fontWeight: 400 }}>
- Get matched to 10–15 relevant jobs a day. Apply yourself for free,
+ Get matched to relevant jobs every day (target: 10–15). Apply yourself for free,
  or let our team apply for you.
  </p>
 
@@ -383,7 +383,7 @@ export default function Landing() {
  { label: 'Your salary', us: 'Keep 100% of your salary', them1: 'Keep 100% (but wastes your time)', them2: '20–30% salary commission' },
  { label: 'Job selection', us: 'Matched to your skills daily', them1: 'You scroll and guess', them2: 'Manual, slow selection' },
  { label: 'Resume', us: 'Resume rewritten to match each JD', them1: 'Same resume for most jobs', them2: 'Same resume for most jobs' },
- { label: 'Volume', us: '10–15 tailored applications/day', them1: '3–5/day before burnout', them2: 'Limited applications' },
+ { label: 'Volume', us: 'Target: 10–15 tailored applications/day', them1: '3–5/day before burnout', them2: 'Limited applications' },
  { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
  { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
  { label: 'Where we apply', us: 'Official career pages, every time.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
@@ -523,7 +523,7 @@ export default function Landing() {
  What you get
  </p>
  <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
- 10–15 tailored applications daily. WhatsApp update for each one.
+ Target of 10–15 tailored applications a day. WhatsApp update for each one.
  </p>
  </div>
  </div>
@@ -546,7 +546,7 @@ export default function Landing() {
  Land a job. Get your money back.
  </h2>
  <p style={{ fontSize: 15.5, color: '#4b5563', lineHeight: 1.7, marginBottom: 32 }}>
- The first 10 subscribers who land a job while on ApplyMate get a{' '}
+ The first 10 subscribers who land a job while on ApplyMate, once we verify the offer, get a{' '}
  <strong style={{ color: '#0f0f0f' }}>100% refund</strong>, just do a short podcast
  episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
  <strong style={{ color: '#0f0f0f' }}>50% back</strong>.
