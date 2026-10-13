@@ -125,7 +125,7 @@ export default function Landing() {
  const FAQS = [
  {
  q: 'What is the 100% money-back program?',
- a: 'A limited offer for the first 10 subscribers who land a job while on ApplyMate, once we verify the job offer. Record a short podcast episode with us about your job search and get a 100% refund of your subscription fee. Prefer to skip the podcast? You get 50% back. Once 10 members claim it, the program closes for good. It is separate from the standard refund policy.',
+ a: 'A limited offer for the first 10 subscribers who land a job through an ApplyMate application. Send us your offer letter within 7 days of receiving the offer, and we verify it. Record a short podcast episode with us about your job search and get 100% of one month\'s fee back. Prefer to skip the podcast, or decline it later? You get 50%. Once 10 members claim it, the program closes for good. It is separate from the standard refund policy.',
  },
  {
  q: 'Is this live? How do I know you\'ll actually apply?',
@@ -546,10 +546,10 @@ export default function Landing() {
  Land a job. Get your money back.
  </h2>
  <p style={{ fontSize: 15.5, color: '#4b5563', lineHeight: 1.7, marginBottom: 32 }}>
- The first 10 subscribers who land a job while on ApplyMate, once we verify the offer, get a{' '}
- <strong style={{ color: '#0f0f0f' }}>100% refund</strong>, just do a short podcast
- episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
- <strong style={{ color: '#0f0f0f' }}>50% back</strong>.
+ The first 10 subscribers who land a job through an ApplyMate application get a{' '}
+ <strong style={{ color: '#0f0f0f' }}>100% refund</strong> of one month&apos;s fee, just do a short podcast
+                episode with us about your job search. Prefer to skip the podcast? You'll still get{' '}
+ <strong style={{ color: '#0f0f0f' }}>50% back</strong>. Send your offer letter within 7 days of the offer so we can verify it.
  </p>
 
  <div style={{ background: '#fff', border: '1px solid #bbf7d0', borderRadius: 14, padding: '22px 24px' }}>
