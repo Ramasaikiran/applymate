@@ -7,7 +7,7 @@ import { supabase, type SubscriptionPlan } from '../lib/supabase'
 // only for display (countdown + strikethrough price); the server is
 // what actually enforces the discount and the deadline.
 const PROMO_PCT = 10
-const PROMO_END = new Date('2026-09-15T00:00:00+05:30')
+const PROMO_END = new Date('2026-11-01T00:00:00+05:30')
 
 function usePromoCountdown() {
  const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
@@ -287,6 +287,19 @@ export default function Subscription() {
 
  return (
  <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: "'Inter',sans-serif" }}>
+
+ {/* Promo banner */}
+ {countdown && (
+ <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '10px 20px',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
+ <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0 }}>
+ <strong style={{ color: '#fff', fontWeight: 700 }}>{PROMO_PCT}% off</strong> all paid plans. Applied automatically at checkout.
+ </p>
+ <span style={{ fontSize: 12.5, color: '#e8b96b', fontWeight: 500 }}>
+ Ends in <strong style={{ color: '#fff', fontWeight: 700 }}>{countdown.days}d {pad2(countdown.hours)}h {pad2(countdown.minutes)}m {pad2(countdown.seconds)}s</strong>
+ </span>
+ </div>
+ )}
 
  {/* Navbar */}
  <div style={{ height: 60, display: 'flex', alignItems: 'center', padding: '0 28px',

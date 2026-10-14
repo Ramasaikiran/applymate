@@ -14,7 +14,7 @@ import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
 // Subscription.tsx — this is only for display, the server is what
 // actually enforces the discount and the deadline.
 const PROMO_PCT = 10
-const PROMO_END = new Date('2026-09-15T00:00:00+05:30')
+const PROMO_END = new Date('2026-11-01T00:00:00+05:30')
 
 function usePromoCountdown() {
  const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())

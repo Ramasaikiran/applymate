@@ -29,7 +29,7 @@ const COUPONS: Record<string, { pct: number }> = {
 // for both the price and whether the window is still open — the
 // frontend countdown is just a display of this same deadline.
 const PROMO_PCT = 10
-const PROMO_END = new Date('2026-09-15T00:00:00+05:30')
+const PROMO_END = new Date('2026-11-01T00:00:00+05:30')
 function promoActive() { return Date.now() < PROMO_END.getTime() }
 
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])
