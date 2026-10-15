@@ -37,11 +37,25 @@ function StatCard({ value, label, sub, accent }: { value: number | string; label
  )
 }
 
+function Linkified({ text }: { text: string }) {
+  const parts = text.split(/(https?:\/\/[^\s]+)/g)
+  return (
+    <>
+      {parts.map((part, i) =>
+        /^https?:\/\//.test(part)
+          ? <a key={i} href={part} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', wordBreak: 'break-all' }}>{part}</a>
+          : <span key={i}>{part}</span>
+      )}
+    </>
+  )
+}
+
 export default function Dashboard() {
  const { profile, subscription, signOut } = useAuth()
  const navigate = useNavigate()
  const [showRefund, setShowRefund] = useState(false)
 
+ const [openDesc, setOpenDesc] = useState<Set<string>>(new Set())
  const [stats, setStats] = useState<AppStats | null>(null)
  const [matched, setMatched] = useState(0)
  const [skipped, setSkipped] = useState<any[]>([])
@@ -501,6 +515,24 @@ export default function Dashboard() {
  color: '#6b6b6b', borderRadius: 99 }}>{s}</span>
  ))}
  </div>
+ {job.description?.trim() && (
+ <div style={{ marginTop: 8 }}>
+ <button onClick={() => setOpenDesc(prev => {
+ const next = new Set(prev)
+ next.has(job.id) ? next.delete(job.id) : next.add(job.id)
+ return next
+ })} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+ fontSize: 12, fontWeight: 600, color: '#6b6b6b', fontFamily: "'Inter',sans-serif" }}>
+ {openDesc.has(job.id) ? 'Hide details ▲' : 'View details ▼'}
+ </button>
+ {openDesc.has(job.id) && (
+ <div style={{ marginTop: 6, fontSize: 12.5, lineHeight: 1.6, color: '#4a4a4a',
+ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+ <Linkified text={job.description} />
+ </div>
+ )}
+ </div>
+ )}
  </div>
  <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
  <button onClick={() => toggleSave(job.id)} style={{
