@@ -44,3 +44,9 @@ and "Forgot password" → `/reset-password`.
 - No OTP anywhere — verification and password reset are both link-based.
 - `ProtectedRoute` guards `/onboarding` and `/dashboard`.
 - Swap the `Dashboard` stub for the real application-tracker UI next.
+
+## Proof
+
+Real application outcome: ANZ Operations Analyst assessment invitation.
+
+![ANZ assessment invitation](docs/proof/anz-assessment-invitation.jpg)
