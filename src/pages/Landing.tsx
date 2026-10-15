@@ -14,7 +14,9 @@ import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
 // Subscription.tsx — this is only for display, the server is what
 // actually enforces the discount and the deadline.
 const PROMO_PCT = 10
-const PROMO_END = new Date('2026-11-01T00:00:00+05:30')
+const PROMO_END = new Date('2026-10-21T00:00:00+05:30')
+// applymate10 is valid through 20-10-2026 (IST); keep in sync with server.
+const COUPON_END = new Date('2026-10-21T00:00:00+05:30')
 
 function usePromoCountdown() {
  const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
@@ -169,7 +171,7 @@ export default function Landing() {
  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap',
  borderBottom: '1px solid #2a2a2a' }}>
  <p style={{ color: '#e8b96b', fontSize: 13.5, fontWeight: 500, margin: 0, letterSpacing: '-0.01em' }}>
- Limited time offer. Get <strong style={{ color: '#fff', fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan. Use code <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong> at checkout, or it's applied automatically before this timer runs out.
+ Limited time offer. Get <strong style={{ color: '#fff', fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan. {Date.now() < COUPON_END.getTime() ? (<>Use code <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong> at checkout (valid till 20 Oct), or it's applied automatically before this timer runs out.</>) : <>Applied automatically at checkout before this timer runs out.</>}
  </p>
  <div style={{ display: 'flex', gap: 6 }}>
  {([['Day', promoCountdown.days], ['Hour', promoCountdown.hours], ['Minute', promoCountdown.minutes], ['Second', promoCountdown.seconds]] as const).map(([label, val]) => (

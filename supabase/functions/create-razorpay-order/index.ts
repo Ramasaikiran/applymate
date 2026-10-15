@@ -20,8 +20,13 @@ const TRIAL_PLANS: Record<string, { amount: number; days: number }> = {
 // Coupon codes are validated here only — never trust a discount amount
 // sent from the client, since that's editable in the browser before
 // the request is sent.
-const COUPONS: Record<string, { pct: number }> = {
-  applymate10: { pct: 10 },
+// `end` is exclusive: applymate10 is valid through 20-10-2026 (IST).
+const COUPONS: Record<string, { pct: number; end: Date }> = {
+  applymate10: { pct: 10, end: new Date('2026-10-21T00:00:00+05:30') },
+}
+function couponActive(code: string) {
+  const c = COUPONS[code]
+  return !!c && Date.now() < c.end.getTime()
 }
 
 // Site-wide 10% off promo, auto-applied (no code needed) to any
@@ -29,7 +34,7 @@ const COUPONS: Record<string, { pct: number }> = {
 // for both the price and whether the window is still open — the
 // frontend countdown is just a display of this same deadline.
 const PROMO_PCT = 10
-const PROMO_END = new Date('2026-11-01T00:00:00+05:30')
+const PROMO_END = new Date('2026-10-21T00:00:00+05:30')
 function promoActive() { return Date.now() < PROMO_END.getTime() }
 
 const ALLOWED_ORIGINS = new Set(['https://applymate.in'])
@@ -91,7 +96,7 @@ serve(async (req) => {
     const normalizedCoupon = typeof coupon === 'string' ? coupon.trim().toLowerCase() : ''
     // Coupons don't stack with trial pricing — trial is already a
     // steep discount off the real plan price.
-    const matchedCoupon = !wantsTrial && normalizedCoupon && COUPONS[normalizedCoupon] ? normalizedCoupon : null
+    const matchedCoupon = !wantsTrial && normalizedCoupon && couponActive(normalizedCoupon) ? normalizedCoupon : null
     // Site-wide promo also doesn't stack with trial or a manual coupon
     // — whichever discount applies, only one wins, promo takes the
     // lower priority since a manual coupon is a more deliberate choice.

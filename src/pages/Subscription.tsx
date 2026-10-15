@@ -7,7 +7,7 @@ import { supabase, type SubscriptionPlan } from '../lib/supabase'
 // only for display (countdown + strikethrough price); the server is
 // what actually enforces the discount and the deadline.
 const PROMO_PCT = 10
-const PROMO_END = new Date('2026-11-01T00:00:00+05:30')
+const PROMO_END = new Date('2026-10-21T00:00:00+05:30')
 
 function usePromoCountdown() {
  const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
@@ -141,9 +141,16 @@ export default function Subscription() {
  const COUPON_DISCOUNTS: Record<string, number> = {
  applymate10: 10,
  }
+ // applymate10 valid through 20-10-2026 (IST). Keep in sync with server.
+ const COUPON_END: Record<string, Date> = {
+ applymate10: new Date('2026-10-21T00:00:00+05:30'),
+ }
  function applyCoupon() {
  const code = couponInput.trim().toLowerCase()
- if (COUPON_DISCOUNTS[code]) {
+ if (COUPON_DISCOUNTS[code] && COUPON_END[code] && Date.now() >= COUPON_END[code].getTime()) {
+ setCouponApplied(null)
+ setCouponError('This coupon has expired.')
+ } else if (COUPON_DISCOUNTS[code]) {
  setCouponApplied(code)
  setCouponError(null)
  } else {
