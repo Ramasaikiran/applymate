@@ -40,8 +40,9 @@ import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
 import inboxProof9 from '../assets/inbox-proof/proof-9.jpg'
 import inboxProof10 from '../assets/inbox-proof/proof-10.jpg'
 import inboxProof11 from '../assets/inbox-proof/proof-11.jpg'
+import inboxProof12 from '../assets/inbox-proof/proof-12.jpg'
 
-const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8, inboxProof9, inboxProof10, inboxProof11]
+const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8, inboxProof9, inboxProof10, inboxProof11, inboxProof12]
 
 /* ── tiny helpers ─────────────────────────────────────────────── */
 const TICK = () => (
