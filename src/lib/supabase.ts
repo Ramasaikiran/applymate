@@ -96,6 +96,7 @@ export interface Profile {
   avatar_url: string | null
   photo_url: string | null
   country: string | null
+  pricing_country: string | null
   address: string | null
   role_interests: string[]
   portfolio_url: string | null
@@ -143,7 +144,8 @@ export interface Subscription {
   id: string
   user_id: string
   plan: SubscriptionPlan
-  amount_paise: number
+  amount_paise: number // minor units of `currency`
+  currency?: string
   status: SubStatus
   razorpay_order_id: string | null
   razorpay_payment_id: string | null

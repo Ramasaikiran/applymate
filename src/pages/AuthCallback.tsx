@@ -49,6 +49,16 @@ export default function AuthCallback() {
  profile = refetched
  }
 
+ // Google sign-up: apply the country picked on the signup page.
+ // The DB trigger only lets it be set once (while still empty).
+ try {
+ const pc = localStorage.getItem('am_pricing_country')
+ if (pc) {
+ await supabase.from('profiles').update({ pricing_country: pc }).eq('id', userId).is('pricing_country', null)
+ localStorage.removeItem('am_pricing_country')
+ }
+ } catch { /* non-fatal: user is asked again on the payment page */ }
+
  // ── Routing (admin / onboarding / subscription / dashboard) ──
  // Shared with SignIn so every entry point makes the same decision.
  await routePostAuth(userId, navigate)

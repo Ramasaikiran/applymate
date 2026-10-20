@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase, type SubscriptionPlan } from '../lib/supabase'
+import { COUNTRIES, getCountry, planPrice, formatMoney, type PaidPlanId } from '../lib/pricing'
 
 // Must match PROMO_PCT / PROMO_END in create-razorpay-order — this is
 // only for display (countdown + strikethrough price); the server is
@@ -125,6 +126,16 @@ export default function Subscription() {
  const isExpired = params.get('reason') === 'expired'
 
  const [selected, setSelected] = useState<SubscriptionPlan>('basic')
+ const [pickCountry, setPickCountry] = useState('')
+ const [savingCountry, setSavingCountry] = useState(false)
+ const [countryErr, setCountryErr] = useState<string | null>(null)
+ // Pricing country is chosen once (at signup) and locked by the database.
+ const country = getCountry(profile?.pricing_country)
+ const priceCountry = country ?? getCountry('IN')!
+ const money = (n: number) => formatMoney(n, priceCountry)
+ const plans = useMemo(() => PLANS.map(p =>
+ p.id === 'free' ? p : { ...p, price: planPrice(priceCountry, p.id as PaidPlanId).price, trialPrice: planPrice(priceCountry, p.id as PaidPlanId).trial }
+ ), [priceCountry])
  const [trialSelected, setTrialSelected] = useState(false)
  const countdown = usePromoCountdown()
  const [loading, setLoading] = useState(false)
@@ -212,10 +223,10 @@ export default function Subscription() {
  const result = await verifyRes.json()
  if (!verifyRes.ok || !result.success) throw new Error(result.error || 'Payment verification failed.')
 
- const plan = PLANS.find(p => p.id === result.plan)
+ const plan = plans.find(p => p.id === result.plan)
  if (plan) {
  refreshProfile()
- setSuccess({ plan, endsAt: result.ends_at, amountPaid: (result.amount_paise ?? plan.price * 100) / 100, isTrial: trialSelected })
+ setSuccess({ plan, endsAt: result.ends_at, amountPaid: (result.amount_paise ?? Math.round(plan.price * 100)) / 100, isTrial: trialSelected })
  }
  } catch (err) {
  setError((err as Error).message)
@@ -250,7 +261,7 @@ export default function Subscription() {
  <div style={{ background: '#f7f7f7', borderRadius: 16, padding: '24px', marginBottom: 28, textAlign: 'left' }}>
  {[
  { label: 'Plan', value: plan.label },
- { label: 'Amount paid', value: `₹${amountPaid.toLocaleString('en-IN')}` },
+ { label: 'Amount paid', value: money(amountPaid) },
  { label: 'Duration', value: isTrial ? '7 days (trial)' : plan.duration },
  ].map(({ label, value }) => (
  <div key={label} style={{ display: 'flex', justifyContent: 'space-between',
@@ -279,17 +290,52 @@ export default function Subscription() {
  )
  }
 
+ /* ── Country gate (existing users who never picked one) ─────── */
+ if (!country) {
+ async function saveCountry() {
+ if (!user || !getCountry(pickCountry)) { setCountryErr('Select your country.'); return }
+ setSavingCountry(true); setCountryErr(null)
+ const { error: e } = await supabase.from('profiles')
+ .update({ pricing_country: pickCountry }).eq('id', user.id).is('pricing_country', null)
+ if (e) { setCountryErr('Could not save. Try again.'); setSavingCountry(false); return }
+ await refreshProfile()
+ setSavingCountry(false)
+ }
+ return (
+ <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+ fontFamily: "'Inter',sans-serif", background: '#fafafa', padding: '0 24px' }}>
+ <div style={{ background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 16, padding: 28, maxWidth: 420, width: '100%' }}>
+ <h1 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 28, fontWeight: 400, marginBottom: 8 }}>
+ Select your country
+ </h1>
+ <p style={{ fontSize: 14, color: '#6b6b6b', marginBottom: 18 }}>
+ Your plan price is shown in your local currency. This cannot be changed later.
+ </p>
+ <select className="oc-input" value={pickCountry} onChange={e => { setPickCountry(e.target.value); setCountryErr(null) }}>
+ <option value="">Select your country</option>
+ {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+ </select>
+ {countryErr && <p style={{ fontSize: 12.5, color: '#dc2626', marginTop: 8 }}>{countryErr}</p>}
+ <button onClick={saveCountry} disabled={savingCountry} style={{
+ width: '100%', height: 48, marginTop: 16, background: '#0f0f0f', color: '#fff', border: 'none',
+ borderRadius: 12, fontSize: 15, fontWeight: 600, cursor: 'pointer', opacity: savingCountry ? 0.6 : 1,
+ }}>{savingCountry ? 'Saving…' : 'Confirm country'}</button>
+ </div>
+ </div>
+ )
+ }
+
  /* ── Main ────────────────────────────────────────────────────── */
- const selectedPlan = PLANS.find(p => p.id === selected)!
+ const selectedPlan = plans.find(p => p.id === selected)!
  const isTrialActive = trialSelected && !!selectedPlan.trialPrice
  const couponLive = !!couponApplied && selectedPlan.id !== 'free' && !isTrialActive
  const promoLive = !!countdown && selectedPlan.id !== 'free' && !isTrialActive && !couponLive
  const effectivePrice = isTrialActive
  ? selectedPlan.trialPrice!
  : couponLive
- ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100))
+ ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100) * 100) / 100
  : promoLive
- ? Math.round(selectedPlan.price * (1 - PROMO_PCT / 100))
+ ? Math.round(selectedPlan.price * (1 - PROMO_PCT / 100) * 100) / 100
  : selectedPlan.price
 
  return (
@@ -376,7 +422,7 @@ export default function Subscription() {
  Choose your plan
  </h1>
  <p style={{ fontSize: 15, color: '#9b9b9b', marginBottom: 36 }}>
- All plans run 30 days. The difference is who does the applying.
+ All plans run 30 days. The difference is who does the applying.{' '}Billing in {priceCountry.currency} ({priceCountry.name}).
  </p>
 
  <div style={{ marginBottom: 20 }}>
@@ -391,7 +437,7 @@ export default function Subscription() {
  </div>
 
  <div className="sub-pricing-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 28 }}>
- {PLANS.map(plan => {
+ {plans.map(plan => {
  const isSelected = selected === plan.id
  return (
  <button key={plan.id} type="button" className="sub-pricing-card" onClick={() => {
@@ -430,7 +476,7 @@ export default function Subscription() {
  {/* Price */}
  <p style={{ fontSize: 28, fontWeight: 800,
  color: isSelected ? '#fff' : '#0f0f0f', marginBottom: 2, lineHeight: 1 }}>
- ₹{((isSelected && trialSelected && plan.trialPrice) ? plan.trialPrice : plan.price).toLocaleString('en-IN')}
+ {money((isSelected && trialSelected && plan.trialPrice) ? plan.trialPrice : plan.price)}
  {isSelected && trialSelected && plan.trialPrice && (
  <span style={{ fontSize: 13, fontWeight: 500, marginLeft: 6, color: 'rgba(255,255,255,0.6)' }}>/ 7 days</span>
  )}
@@ -450,7 +496,7 @@ export default function Subscription() {
  background: isSelected && trialSelected ? 'rgba(255,255,255,0.22)' : (isSelected ? 'rgba(255,255,255,0.12)' : '#f3f4f6'),
  color: isSelected ? '#fff' : '#374151',
  }}>
- {isSelected && trialSelected ? '✓ 7-day trial selected' : `Try 7 days for ₹${plan.trialPrice}`}
+ {isSelected && trialSelected ? '✓ 7-day trial selected' : `Try 7 days for ${money(plan.trialPrice)}`}
  </span>
  )}
 
@@ -503,20 +549,20 @@ export default function Subscription() {
  {selectedPlan.label}{isTrialActive ? ' (7-day trial)' : ''}: {couponLive ? (
  <>
  <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
- ₹{selectedPlan.price.toLocaleString('en-IN')}
+ {money(selectedPlan.price)}
  </span>
- ₹{effectivePrice.toLocaleString('en-IN')}
+ {money(effectivePrice)}
  </>
  ) : promoLive ? (
  <>
  <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
- ₹{selectedPlan.price.toLocaleString('en-IN')}
+ {money(selectedPlan.price)}
  </span>
- ₹{effectivePrice.toLocaleString('en-IN')}
+ {money(effectivePrice)}
  <span style={{ marginLeft: 6, fontSize: 11, fontWeight: 700, color: '#dc2626' }}>{PROMO_PCT}% OFF</span>
  </>
  ) : (
- <>₹{effectivePrice.toLocaleString('en-IN')}</>
+ <>{money(effectivePrice)}</>
  )}
  </p>
  </div>
@@ -589,7 +635,7 @@ export default function Subscription() {
  </>
  ) : (
  selectedPlan.id === 'free' ? 'Continue with Free' :
- `Pay ₹${effectivePrice.toLocaleString('en-IN')} for ${selectedPlan.label}${isTrialActive ? ' (7-day trial)' : ''}`
+ `Pay ${money(effectivePrice)} for ${selectedPlan.label}${isTrialActive ? ' (7-day trial)' : ''}`
  )}
  </button>
 

@@ -14,7 +14,7 @@ interface AuthContextValue {
   loading:       boolean
   profileLoaded: boolean          // ← true once fetchProfile has completed at least once
   isAdmin:       boolean
-  signUp:               (fullName: string, email: string, password: string, accountType?: 'recruiter') => Promise<{ error: string | null }>
+  signUp:               (fullName: string, email: string, password: string, accountType?: 'recruiter', pricingCountry?: string) => Promise<{ error: string | null }>
   signIn:               (email: string, password: string)                   => Promise<{ error: string | null }>
   signInWithGoogle:     ()                                                  => Promise<{ error: string | null }>
   resendVerification:   (email: string)                                     => Promise<{ error: string | null }>
@@ -123,11 +123,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => sub.unsubscribe()
   }, [])
 
-  async function signUp(fullName: string, email: string, password: string, accountType?: 'recruiter') {
+  async function signUp(fullName: string, email: string, password: string, accountType?: 'recruiter', pricingCountry?: string) {
     try {
       const result = await signUpDirect(
         email, password, fullName, `${SITE_URL}/auth/callback`,
-        accountType ? { account_type: accountType } : {},
+        { ...(accountType ? { account_type: accountType } : {}), ...(pricingCountry ? { pricing_country: pricingCountry } : {}) },
       )
       if (!result.ok) {
         console.error('[auth] signUp failed', result.status, result.raw)

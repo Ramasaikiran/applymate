@@ -6,13 +6,14 @@ import PasswordStrength, { passwordRequirementsMet } from '../components/Passwor
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { useRateLimit } from '../hooks/useRateLimit'
+import { COUNTRIES, getCountry } from '../lib/pricing'
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 function TrustStrip() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 16 }}>
-      {['Plans from ₹399/mo', 'Cancel anytime', 'Secure payment'].map((t, i) => (
+      {['Cancel anytime', 'Secure payment'].map((t, i) => (
         <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#b5b5b5' }}>
           
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -44,6 +45,7 @@ export default function SignUp() {
     email.trim() ? `oc_su_rl:${email.trim().toLowerCase()}` : 'oc_su_rl:pending'
   )
   const [fullName, setFullName]   = useState('')
+  const [country, setCountry]     = useState('')
   const [password, setPassword]   = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPwd, setShowPwd]     = useState(false)
@@ -91,6 +93,7 @@ export default function SignUp() {
     const next: Record<string, string> = {}
     if (!fullName.trim() || fullName.trim().length < 2) next.fullName = 'Enter your full name.'
     if (!EMAIL_RE.test(email)) next.email = 'Enter a valid email address.'
+    if (!getCountry(country)) next.country = 'Select your country.'
     if (Object.keys(next).length > 0) { setErrors(next); return }
     setStep('details')
     setTimeout(() => document.getElementById('password-input')?.focus(), 100)
@@ -122,7 +125,7 @@ export default function SignUp() {
       // Non-2xx (e.g. misconfigured function) -> fail open, don't block real users
     } catch { /* fail-open if edge function unreachable */ }
 
-    const { error } = await signUp(fullName.trim(), email.trim().toLowerCase(), password)
+    const { error } = await signUp(fullName.trim(), email.trim().toLowerCase(), password, undefined, country)
     setLoading(false)
     if (error) { setFormError(error); return }
     recordAttempt()
@@ -148,7 +151,10 @@ export default function SignUp() {
   }
 
   async function handleGoogle() {
+    if (!getCountry(country)) { setErrors(p => ({ ...p, country: 'Select your country first.' })); return }
     if (!agreed) { setAgreedErr(true); return }
+    // Applied to the profile in AuthCallback once Google sign-in returns.
+    try { localStorage.setItem('am_pricing_country', country) } catch { /* storage blocked */ }
     setGLoading(true)
     const { error } = await signInWithGoogle()
     if (error) { setFormError(error); setGLoading(false) }
@@ -168,6 +174,20 @@ export default function SignUp() {
         </>
       }
     >
+      {/* Country: sets pricing currency, locked after signup */}
+      <div style={{ marginBottom: 16 }}>
+        <label className="oc-label">Country</label>
+        <select className={`oc-input${errors.country ? ' error' : ''}`} value={country}
+          onChange={(e) => { setCountry(e.target.value); setErrors(p => ({ ...p, country: '' })) }}>
+          <option value="">Select your country</option>
+          {COUNTRIES.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+        </select>
+        {errors.country && <p className="oc-field-error">{errors.country}</p>}
+        <p style={{ fontSize: 11.5, color: '#9b9b9b', marginTop: 6 }}>
+          Sets your plan currency. Cannot be changed later.
+        </p>
+      </div>
+
       {/* Google: Primary CTA */}
       <button type="button" onClick={handleGoogle} disabled={gLoading} className="oc-btn-primary" style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,

@@ -1,20 +1,39 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
-const PLANS: Record<string, { amount: number; days: number }> = {
+// Country pricing. Keep in sync with src/lib/pricing.ts (display only).
+// Amounts are minor units (paise / cents / pence). India pays INR; every
+// other country pays the same number in its own currency.
+const COUNTRY_CURRENCY: Record<string, string> = {
+  IN: 'INR', US: 'USD', GB: 'GBP', CA: 'CAD', AU: 'AUD', NZ: 'NZD', SG: 'SGD',
+  DE: 'EUR', FR: 'EUR', IE: 'EUR', NL: 'EUR', ES: 'EUR', IT: 'EUR',
+}
+const PLANS_INDIA: Record<string, { amount: number; days: number }> = {
   basic:  { amount: 39900,  days: 30 },
   pro:    { amount: 199900, days: 30 },
   maxpro: { amount: 299900, days: 30 },
 }
+const PLANS_INTL: Record<string, { amount: number; days: number }> = {
+  basic:  { amount: 1000, days: 30 },
+  pro:    { amount: 5000, days: 30 },
+  maxpro: { amount: 7500, days: 30 },
+}
+// Only used to validate the plan id.
+const PLANS = PLANS_INDIA
 
 // 7-day trial pricing. Same three plans, far lower price, far shorter
 // duration_days -- everything else (features unlocked, plan_visibility
 // on jobs) is identical to the full plan since it's still the same
 // `plan` value under the hood.
-const TRIAL_PLANS: Record<string, { amount: number; days: number }> = {
+const TRIAL_PLANS_INDIA: Record<string, { amount: number; days: number }> = {
   basic:  { amount: 9900,  days: 7 },
   pro:    { amount: 50000, days: 7 },
   maxpro: { amount: 99900, days: 7 },
+}
+const TRIAL_PLANS_INTL: Record<string, { amount: number; days: number }> = {
+  basic:  { amount: 300,  days: 7 },
+  pro:    { amount: 1200, days: 7 },
+  maxpro: { amount: 2500, days: 7 },
 }
 
 // Coupon codes are validated here only — never trust a discount amount
@@ -79,7 +98,16 @@ serve(async (req) => {
     }
 
     const { data: profile } = await supabase.from('profiles')
-      .select('full_name, email, mobile_number').eq('id', user.id).single()
+      .select('full_name, email, mobile_number, pricing_country').eq('id', user.id).single()
+
+    // Currency and price come only from the locked country on the
+    // profile, never from anything the client sends.
+    const countryCode = profile?.pricing_country as string | null | undefined
+    const currency = countryCode ? COUNTRY_CURRENCY[countryCode] : undefined
+    if (!countryCode || !currency) {
+      return new Response(JSON.stringify({ error: 'Select your country before paying.' }), { status: 400, headers: cors })
+    }
+    const isIndia = countryCode === 'IN'
 
     // One trial ever, across any plan — checked server-side against
     // subscriptions.is_trial, never trusted from the client's `trial`
@@ -92,7 +120,9 @@ serve(async (req) => {
       }
     }
 
-    const { amount: originalAmount, days: planDays } = wantsTrial ? TRIAL_PLANS[plan] : PLANS[plan]
+    const { amount: originalAmount, days: planDays } = wantsTrial
+      ? (isIndia ? TRIAL_PLANS_INDIA : TRIAL_PLANS_INTL)[plan]
+      : (isIndia ? PLANS_INDIA : PLANS_INTL)[plan]
     const normalizedCoupon = typeof coupon === 'string' ? coupon.trim().toLowerCase() : ''
     // Coupons don't stack with trial pricing — trial is already a
     // steep discount off the real plan price.
@@ -121,7 +151,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         amount,               // paise
-        currency: 'INR',
+        currency,
         receipt,
         notes: { user_id: user.id, plan, coupon: matchedCoupon || (promoApplies ? 'promo10' : '') },
       }),
@@ -133,7 +163,7 @@ serve(async (req) => {
 
     const { error: insertErr } = await supabase.from('subscriptions').insert({
       user_id: user.id, plan,
-      amount_paise: amount, status: 'pending',
+      amount_paise: amount, currency, status: 'pending',
       razorpay_order_id: order.id,
       coupon_code: matchedCoupon || (promoApplies ? 'promo10' : null),
       duration_days: planDays,
@@ -147,7 +177,7 @@ serve(async (req) => {
       amount,
       original_amount: originalAmount,
       coupon_applied: matchedCoupon || (promoApplies ? 'promo10' : null),
-      currency: 'INR',
+      currency,
       name: 'ApplyMate',
       description: `ApplyMate ${plan} plan${wantsTrial ? ' (7-day trial)' : ''}${discountPct ? ` (${discountPct}% off)` : ''}`,
       prefill: {
