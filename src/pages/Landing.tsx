@@ -179,7 +179,7 @@ export default function Landing() {
  </div>
 
  {/* ── HERO ──────────────────────────────────────────────── */}
- <section style={{ maxWidth: 780, margin: '0 auto', padding: '56px 24px 80px', textAlign: 'center' }}>
+ <section style={{ maxWidth: 780, margin: '0 auto', padding: '40px 24px 56px', textAlign: 'center' }}>
 
  <h1 style={{
  fontFamily: "'Instrument Serif',Georgia,serif",
@@ -188,15 +188,15 @@ export default function Landing() {
  letterSpacing: '-0.03em', color: '#0f0f0f',
  marginBottom: 28,
  }}>
- Job applications for<br />
- job seekers everywhere<br />
- <span style={{ color: '#9b9b9b' }}>Done daily, for you</span>
+ Stop applying.<br />
+ Start interviewing.<br />
+ <span style={{ color: '#9b9b9b' }}>We apply for you, daily</span>
  </h1>
 
  <p style={{ fontSize: 20, color: '#6b6b6b', lineHeight: 1.65,
  maxWidth: 560, margin: '0 auto 44px', fontWeight: 400 }}>
- Get matched to relevant jobs every day (target: 8–10). Apply yourself for free,
- or let our team apply for you.
+ ApplyMate matches you to 8–10 relevant jobs a day and applies on official
+ career portals. Start free, or let our team apply for you.
  </p>
 
  {/* Primary CTA */}
@@ -211,13 +211,19 @@ export default function Landing() {
  Get started for free
  </button>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
- {['No card required to start free', 'Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
+ {['Free to start', 'No card required', 'Official career portals only', 'Cancel anytime'].map((t, i) => (
  <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5, color: '#9b9b9b' }}>
  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
  {t}
  </span>
  ))}
  </div>
+ <button onClick={() => document.getElementById('inbox-proof')?.scrollIntoView({ behavior: 'smooth' })} style={{
+ background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+ textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 6,
+ }}>
+ See real interview invites from members ↓
+ </button>
  </div>
  </section>
 
@@ -289,6 +295,52 @@ export default function Landing() {
  </div>
  ))}
  </div>
+ </div>
+ </section>
+
+ {/* ── STRAIGHT FROM THEIR INBOXES ──────────────────────── */}
+ <section id="inbox-proof" style={{ background: '#0f0f0f', padding: '88px 0', overflow: 'hidden', scrollMarginTop: 72 }}>
+ <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 48px', textAlign: 'center' }}>
+ <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', color: '#22c55e',
+ textTransform: 'uppercase', marginBottom: 14 }}>
+ Straight from members' inboxes
+ </p>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
+ fontSize: 'clamp(30px,5vw,44px)', color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>
+ 20+ interview calls
+ </h2>
+ <p style={{ fontSize: 15.5, color: '#a8a8a8', lineHeight: 1.6 }}>
+ Screening-call invites, interview confirmations, recruiter replies. Every screenshot
+ below came straight from a member's own inbox.
+ </p>
+ </div>
+
+ <div style={{ width: '100%', overflow: 'hidden' }}>
+ <div className="inbox-marquee-track" style={{ display: 'flex', gap: 20, width: 'max-content' }}>
+ {[...INBOX_PROOFS, ...INBOX_PROOFS].map((src, i) => (
+ <div key={i} style={{
+ flexShrink: 0, width: 260, borderRadius: 18, overflow: 'hidden',
+ border: '1px solid #262626', boxShadow: '0 20px 40px -20px rgba(0,0,0,0.7)',
+ background: '#1a1a1a',
+ }}>
+ <img src={src} width={260} height={400} loading="lazy" decoding="async"
+ alt={i < INBOX_PROOFS.length ? 'Recruiter reply to an ApplyMate job application' : ''}
+ aria-hidden={i >= INBOX_PROOFS.length ? true : undefined} style={{
+ display: 'block', width: '100%', height: 400, objectFit: 'cover', objectPosition: 'top',
+ }} />
+ </div>
+ ))}
+ </div>
+ </div>
+
+ <div style={{ textAlign: 'center', marginTop: 48, padding: '0 24px' }}>
+ <button onClick={goSignUp} style={{
+ background: '#fff', color: '#0f0f0f', border: 'none',
+ padding: '15px 36px', borderRadius: 12, fontSize: 15, fontWeight: 700,
+ cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ }}>
+ Get your own inbox proof →
+ </button>
  </div>
  </section>
 
@@ -556,55 +608,6 @@ export default function Landing() {
  Claim your spot →
  </button>
  </div>
- </div>
- </section>
-
- {/* ── STRAIGHT FROM THEIR INBOXES ──────────────────────── */}
- <section style={{ background: '#0f0f0f', padding: '88px 0', overflow: 'hidden' }}>
- <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 48px', textAlign: 'center' }}>
- <p style={{ fontSize: 13, fontWeight: 700, letterSpacing: '0.06em', color: '#22c55e',
- textTransform: 'uppercase', marginBottom: 14 }}>
- Straight from members' inboxes
- </p>
- <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontWeight: 400,
- fontSize: 'clamp(30px,5vw,44px)', color: '#fff', marginBottom: 16, letterSpacing: '-0.01em' }}>
- 20+ interview calls
- </h2>
- <p style={{ fontSize: 15.5, color: '#a8a8a8', lineHeight: 1.6 }}>
- Screening-call invites, interview confirmations, recruiter replies. Every screenshot
- below came straight from a member's own inbox.
- </p>
- <p style={{ fontSize: 12.5, color: '#6b6b6b', marginTop: 10 }}>
- Hover over a screenshot to pause.
- </p>
- </div>
-
- <div style={{ width: '100%', overflow: 'hidden' }}>
- <div className="inbox-marquee-track" style={{ display: 'flex', gap: 20, width: 'max-content' }}>
- {[...INBOX_PROOFS, ...INBOX_PROOFS].map((src, i) => (
- <div key={i} style={{
- flexShrink: 0, width: 260, borderRadius: 18, overflow: 'hidden',
- border: '1px solid #262626', boxShadow: '0 20px 40px -20px rgba(0,0,0,0.7)',
- background: '#1a1a1a',
- }}>
- <img src={src} width={260} height={400} loading="lazy" decoding="async"
- alt={i < INBOX_PROOFS.length ? 'Recruiter reply to an ApplyMate job application' : ''}
- aria-hidden={i >= INBOX_PROOFS.length ? true : undefined} style={{
- display: 'block', width: '100%', height: 400, objectFit: 'cover', objectPosition: 'top',
- }} />
- </div>
- ))}
- </div>
- </div>
-
- <div style={{ textAlign: 'center', marginTop: 48, padding: '0 24px' }}>
- <button onClick={goSignUp} style={{
- background: '#fff', color: '#0f0f0f', border: 'none',
- padding: '15px 36px', borderRadius: 12, fontSize: 15, fontWeight: 700,
- cursor: 'pointer', fontFamily: "'Inter',sans-serif",
- }}>
- Get your own inbox proof →
- </button>
  </div>
  </section>
 
