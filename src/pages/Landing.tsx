@@ -10,31 +10,6 @@ import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
 import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
 import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
 
-// Must match PROMO_PCT / PROMO_END in create-razorpay-order and
-// Subscription.tsx — this is only for display, the server is what
-// actually enforces the discount and the deadline.
-const PROMO_PCT = 10
-const PROMO_END = new Date('2026-10-21T00:00:00+05:30')
-// applymate10 is valid through 20-10-2026 (IST); keep in sync with server.
-const COUPON_END = new Date('2026-10-21T00:00:00+05:30')
-
-function usePromoCountdown() {
- const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
- useEffect(() => {
- const id = setInterval(() => setMsLeft(PROMO_END.getTime() - Date.now()), 1000)
- return () => clearInterval(id)
- }, [])
- if (msLeft <= 0) return null
- const totalSeconds = Math.floor(msLeft / 1000)
- return {
- days: Math.floor(totalSeconds / 86400),
- hours: Math.floor((totalSeconds % 86400) / 3600),
- minutes: Math.floor((totalSeconds % 3600) / 60),
- seconds: totalSeconds % 60,
- }
-}
-
-function pad2(n: number) { return String(n).padStart(2, '0') }
 import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
 import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
 import inboxProof9 from '../assets/inbox-proof/proof-9.jpg'
@@ -160,30 +135,11 @@ export default function Landing() {
  },
  ]
 
- const promoCountdown = usePromoCountdown()
-
  return (
  <div style={{ fontFamily: "'Inter',-apple-system,sans-serif", background: '#fff', color: '#0f0f0f' }}>
 
- {/* ── PROMO BANNER + NAV (stick together as one unit) ────── */}
+ {/* ── NAV ────── */}
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
- {promoCountdown && (
- <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '12px 20px',
- display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap',
- borderBottom: '1px solid #2a2a2a' }}>
- <p style={{ color: '#e8b96b', fontSize: 13.5, fontWeight: 500, margin: 0, letterSpacing: '-0.01em' }}>
- Limited time offer. Get <strong style={{ color: '#fff', fontWeight: 700 }}>{PROMO_PCT}% off</strong> any plan. {Date.now() < COUPON_END.getTime() ? (<>Use code <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong> at checkout (valid till 20 Oct), or it's applied automatically before this timer runs out.</>) : <>Applied automatically at checkout before this timer runs out.</>}
- </p>
- <div style={{ display: 'flex', gap: 6 }}>
- {([['Day', promoCountdown.days], ['Hour', promoCountdown.hours], ['Minute', promoCountdown.minutes], ['Second', promoCountdown.seconds]] as const).map(([label, val]) => (
- <span key={label} style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(232,185,107,0.4)',
- borderRadius: 99, padding: '4px 11px', fontSize: 12.5, color: '#e8b96b', fontWeight: 500 }}>
- {label} : <strong style={{ color: '#fff', fontWeight: 700 }}>{pad2(val)}</strong>
- </span>
- ))}
- </div>
- </div>
- )}
 
  {/* ── NAV ───────────────────────────────────────────────── */}
  <nav style={{
