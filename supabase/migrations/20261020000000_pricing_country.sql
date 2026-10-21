@@ -71,3 +71,7 @@ begin
   return new;
 end;
 $function$;
+
+-- Existing users signed up before country selection existed and were
+-- all billed in INR: lock them to India so they never see a picker.
+update public.profiles set pricing_country = 'IN' where pricing_country is null;
