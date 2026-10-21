@@ -4,6 +4,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/AdminRoute'
 import RecruiterRoute from './components/RecruiterRoute'
 import Landing        from './pages/Landing'
+import RouteMeta      from './components/RouteMeta'
 
 const AuthCallback   = lazy(() => import('./pages/AuthCallback'))
 const CheckInbox     = lazy(() => import('./pages/CheckInbox'))
@@ -42,6 +43,7 @@ const AdminStatus         = lazy(() => import('./pages/admin/AdminStatus'))
 export default function App() {
   return (
     <Suspense fallback={null}>
+      <RouteMeta />
       <Routes>
         <Route path="/"                element={<Landing />} />
         <Route path="/about"           element={<About />} />

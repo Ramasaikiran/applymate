@@ -49,4 +49,4 @@ and "Forgot password" → `/reset-password`.
 
 Real application outcome: ANZ Operations Analyst assessment invitation.
 
-![ANZ assessment invitation](src/assets/inbox-proof/proof-12.jpg)
+![ANZ assessment invitation](src/assets/inbox-proof/proof-12.webp)

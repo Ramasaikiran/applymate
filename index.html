@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LNCR9S2WWD"></script>
@@ -14,8 +15,8 @@
       gtag('config', 'G-LNCR9S2WWD');
     </script>
 
-    <title>ApplyMate - Your career, applied for</title>
-    <meta name="description" content="ApplyMate matches job seekers worldwide to 8–10 relevant jobs a day. Apply yourself for free, or let our team apply on your behalf. Built for students and early-career professionals." />
+    <title>ApplyMate: We Apply to Jobs for You, Every Day</title>
+    <meta name="description" content="Get matched to 8–10 relevant jobs a day and let ApplyMate apply for you on official career portals. Free to start. For job seekers worldwide." />
     <link rel="canonical" href="https://applymate.in/" />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 
@@ -30,15 +31,15 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="ApplyMate" />
     <meta property="og:locale" content="en" />
-    <meta property="og:title" content="ApplyMate - Your career, applied for" />
-    <meta property="og:description" content="Get matched to 8–10 relevant jobs a day. Apply yourself for free, or let our team apply for you." />
+    <meta property="og:title" content="ApplyMate: We Apply to Jobs for You, Every Day" />
+    <meta property="og:description" content="Get matched to 8–10 relevant jobs a day and let ApplyMate apply for you. Free to start." />
     <meta property="og:url" content="https://applymate.in/" />
     <meta property="og:image" content="https://applymate.in/logo-mark.png" />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ApplyMate - Your career, applied for" />
-    <meta name="twitter:description" content="Get matched to 8–10 relevant jobs a day. Apply yourself for free, or let our team apply for you." />
+    <meta name="twitter:title" content="ApplyMate: We Apply to Jobs for You, Every Day" />
+    <meta name="twitter:description" content="Get matched to 8–10 relevant jobs a day and let ApplyMate apply for you. Free to start." />
     <meta name="twitter:image" content="https://applymate.in/logo-mark.png" />
 
     <script type="application/ld+json">
@@ -74,7 +75,9 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <!-- Non-blocking font CSS: text paints right away with the fallback font, then swaps -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" /></noscript>
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
       html, body, #root { height: 100%; }
@@ -83,6 +86,10 @@
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <h1>ApplyMate: We Apply to Jobs for You, Every Day</h1>
+      <p>ApplyMate matches job seekers worldwide to 8–10 relevant jobs a day and applies on official company career portals. Free to start. Enable JavaScript to use the app.</p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -3,19 +3,19 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { recruiterHome } from '../lib/routing'
-import inboxProof1 from '../assets/inbox-proof/proof-1.jpg'
-import inboxProof2 from '../assets/inbox-proof/proof-2.jpg'
-import inboxProof3 from '../assets/inbox-proof/proof-3.jpg'
-import inboxProof4 from '../assets/inbox-proof/proof-4.jpg'
-import inboxProof5 from '../assets/inbox-proof/proof-5.jpg'
-import inboxProof6 from '../assets/inbox-proof/proof-6.jpg'
+import inboxProof1 from '../assets/inbox-proof/proof-1.webp'
+import inboxProof2 from '../assets/inbox-proof/proof-2.webp'
+import inboxProof3 from '../assets/inbox-proof/proof-3.webp'
+import inboxProof4 from '../assets/inbox-proof/proof-4.webp'
+import inboxProof5 from '../assets/inbox-proof/proof-5.webp'
+import inboxProof6 from '../assets/inbox-proof/proof-6.webp'
 
-import inboxProof7 from '../assets/inbox-proof/proof-7.jpg'
-import inboxProof8 from '../assets/inbox-proof/proof-8.jpg'
-import inboxProof9 from '../assets/inbox-proof/proof-9.jpg'
-import inboxProof10 from '../assets/inbox-proof/proof-10.jpg'
-import inboxProof11 from '../assets/inbox-proof/proof-11.jpg'
-import inboxProof12 from '../assets/inbox-proof/proof-12.jpg'
+import inboxProof7 from '../assets/inbox-proof/proof-7.webp'
+import inboxProof8 from '../assets/inbox-proof/proof-8.webp'
+import inboxProof9 from '../assets/inbox-proof/proof-9.webp'
+import inboxProof10 from '../assets/inbox-proof/proof-10.webp'
+import inboxProof11 from '../assets/inbox-proof/proof-11.webp'
+import inboxProof12 from '../assets/inbox-proof/proof-12.webp'
 
 const INBOX_PROOFS = [inboxProof1, inboxProof2, inboxProof3, inboxProof4, inboxProof5, inboxProof6, inboxProof7, inboxProof8, inboxProof9, inboxProof10, inboxProof11, inboxProof12]
 
@@ -587,7 +587,9 @@ export default function Landing() {
  border: '1px solid #262626', boxShadow: '0 20px 40px -20px rgba(0,0,0,0.7)',
  background: '#1a1a1a',
  }}>
- <img src={src} alt="Real recruiter email screenshot" style={{
+ <img src={src} width={260} height={400} loading="lazy" decoding="async"
+ alt={i < INBOX_PROOFS.length ? 'Recruiter reply to an ApplyMate job application' : ''}
+ aria-hidden={i >= INBOX_PROOFS.length ? true : undefined} style={{
  display: 'block', width: '100%', height: 400, objectFit: 'cover', objectPosition: 'top',
  }} />
  </div>
