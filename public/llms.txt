@@ -1,6 +1,6 @@
 # ApplyMate
 
-> ApplyMate is a job-application delegation platform for job seekers in India. Instead of manually filling out application forms, ApplyMate applies to relevant jobs on the user's behalf every day.
+> ApplyMate is a job-application delegation platform for job seekers worldwide. Instead of manually filling out application forms, ApplyMate applies to relevant jobs on the user's behalf every day.
 
 ## What it does
 

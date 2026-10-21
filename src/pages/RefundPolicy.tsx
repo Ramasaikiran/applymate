@@ -7,11 +7,11 @@ export default function RefundPolicy() {
       <P>By purchasing any paid plan, you agree to this Policy along with our Terms and Privacy Policy.</P>
 
       <H2>1. Overview</H2>
-      <P>ApplyMate is a subscription job application platform for job seekers in India.</P>
+      <P>ApplyMate is a subscription job application platform for job seekers around the world.</P>
       <Ul>
-        <li><strong>Basic (₹399/month):</strong> You apply. We surface a daily matched job feed.</li>
-        <li><strong>Pro (₹1,999/month):</strong> Our team applies for you, official career portals only.</li>
-        <li><strong>Max Pro (₹2,999/month):</strong> Everything in Pro, plus resume rewrite and interview support.</li>
+        <li><strong>Basic:</strong> You apply. We surface a daily matched job feed.</li>
+        <li><strong>Pro:</strong> Our team applies for you, official career portals only.</li>
+        <li><strong>Max Pro:</strong> Everything in Pro, plus resume rewrite and interview support.</li>
       </Ul>
       <P>All payments are processed via Razorpay. We never store your card or bank details.</P>
 
@@ -19,14 +19,14 @@ export default function RefundPolicy() {
       <Ul>
         <li>Prices may change. Existing subscribers are notified before any increase.</li>
         <li>Payment is collected upfront for a 30-day cycle.</li>
-        <li>All prices are in Indian Rupees (INR).</li>
+        <li>Prices are set by the country you select at signup and charged in that country's currency (INR for India; USD, GBP, EUR and others elsewhere). The country cannot be changed after signup.</li>
       </Ul>
 
       <H2>3. Refund Policy</H2>
       <H3>A. Withdrawal Mid-Plan</H3>
       <P>Refund = (Amount Paid ÷ 30) × Remaining Days − Razorpay's 2% fee.</P>
       <P>Days used are billed and non-refundable. Razorpay's 2% fee is never refundable.</P>
-      <P>Example: ₹399 plan, 15 days used → ₹199.50 refundable, minus ₹7.98 fee → ₹191.52 refunded.</P>
+      <P>Example: a plan that costs 399, 15 days used → 199.50 refundable, minus 7.98 fee → 191.52 refunded (in your currency).</P>
 
       <H3>B. Landed a Job Before Plan Ends</H3>
       <P>We don't refund remaining days. We keep applying for a better offer instead. Refund access is blocked for the rest of your plan once you've landed a job. The only exception is the limited Job Refund Promotion in our Terms of Service (first 10 qualifying subscribers). The job must come from an ApplyMate application. You must send your offer letter within 7 days of receiving the offer. The refund is one month's fee: 100% with a podcast, 50% without.</P>

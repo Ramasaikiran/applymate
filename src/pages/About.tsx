@@ -6,7 +6,7 @@ export default function About() {
       <P>ApplyMate is operated by Rama Sai Kiran Medam, based in Hyderabad, India.</P>
 
       <H2>What We Do</H2>
-      <P>ApplyMate helps job seekers in India apply to relevant jobs faster.</P>
+      <P>ApplyMate helps job seekers around the world apply to relevant jobs faster.</P>
       <P>We match candidates to jobs on skills, industry, and experience, and apply on their behalf through official career portals only.</P>
 
       <H2>Our Mission</H2>

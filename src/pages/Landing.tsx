@@ -190,7 +190,7 @@ export default function Landing() {
  marginBottom: 28,
  }}>
  Job applications for<br />
- Indian job seekers<br />
+ job seekers everywhere<br />
  <span style={{ color: '#9b9b9b' }}>Done daily, for you</span>
  </h1>
 
@@ -346,7 +346,7 @@ export default function Landing() {
  { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
  { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
  { label: 'Where we apply', us: 'Official career pages, every time.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
- { label: 'Pricing', us: 'From ₹399/month, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
+ { label: 'Pricing', us: 'Affordable monthly plans, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
  ].map((row, i) => (
  <>
  <div key={row.label + 'l'} style={{ padding: '16px 12px', display: 'flex', alignItems: 'center',
@@ -415,7 +415,7 @@ export default function Landing() {
  },
  {
  step: '02', title: 'Pick a plan', time: '2 min',
- desc: 'From ₹399/month. No hidden charges. Cancel any time instantly.',
+ desc: 'Affordable monthly plans in your local currency. No hidden charges. Cancel any time instantly.',
  },
  {
  step: '03', title: 'We apply daily', time: 'Ongoing',

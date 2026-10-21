@@ -9,6 +9,7 @@ export default function Privacy() {
       <H2>1. Information We Collect</H2>
       <Ul>
         <li>Profile data: name, email, phone, skills, role preference, location.</li>
+        <li>Country you select at signup, used to set your plan currency.</li>
         <li>Resume and application history.</li>
         <li>Payment data via Razorpay. We never see your full card details.</li>
         <li>Usage data: pages visited, actions taken on the dashboard.</li>
@@ -31,12 +32,14 @@ export default function Privacy() {
 
       <H2>4. Data Storage and Security</H2>
       <P>Your data is stored securely with encryption and access controls. No system is 100% secure.</P>
+      <P>ApplyMate is operated from India. If you use the Service from another country, your data is transferred to and processed in India and in the countries where our service providers operate. By using the Service you agree to this transfer.</P>
 
       <H2>5. Your Rights</H2>
       <Ul>
         <li>Request a copy of your data anytime.</li>
         <li>Request correction of inaccurate data.</li>
         <li>Request account and data deletion. We process this within 2 days.</li>
+        <li>If you live in the EU, UK or another region with data protection laws, you may have additional rights, such as objecting to or restricting processing. Contact us to exercise them.</li>
       </Ul>
 
       <H2>6. Children's Privacy</H2>

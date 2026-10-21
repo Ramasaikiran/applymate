@@ -7,7 +7,7 @@ export default function Terms() {
       <P>By using ApplyMate, you agree to these Terms, our Privacy Policy, and Refund Policy.</P>
 
       <H2>1. Overview of Service</H2>
-      <P>We help job seekers in India apply to relevant jobs faster.</P>
+      <P>We help job seekers around the world apply to relevant jobs faster.</P>
       <Ul>
         <li><strong>Basic:</strong> Daily job feed matched to your skills. You apply yourself.</li>
         <li><strong>Pro:</strong> We apply for you, official career portals only. No bots.</li>
@@ -73,7 +73,7 @@ export default function Terms() {
       <P>We're not liable for indirect damages, including missed job opportunities.</P>
 
       <H2>14. Governing Law</H2>
-      <P>Governed by Indian law. Disputes subject to Hyderabad, Telangana courts.</P>
+      <P>Governed by the laws of India, regardless of where you live. Disputes are subject to the courts of Hyderabad, Telangana.</P>
     </LegalPage>
   )
 }
