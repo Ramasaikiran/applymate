@@ -36,7 +36,6 @@ export default function Landing() {
  const navigate = useNavigate()
  const [showSticky, setShowSticky] = useState(false)
  const [openFaq, setOpenFaq] = useState<number | null>(null)
- const [selectedPlan, setSelectedPlan] = useState<{ label: string; price: string } | null>(null)
  const [howItWorksInView, setHowItWorksInView] = useState(false)
  const [jobRefundClaimed, setJobRefundClaimed] = useState(0)
  const [jobRefundTotal, setJobRefundTotal] = useState(10)
@@ -127,7 +126,7 @@ export default function Landing() {
  },
  {
  q: 'Why join now instead of waiting?',
- a: 'Founding member pricing is locked for early sign-ups and we\'re limiting our first batch so every profile gets proper attention from our team. Once a batch fills, pricing moves to standard rates.',
+ a: 'We\'re limiting our first batch so every profile gets proper attention from our team.',
  },
  {
  q: 'What if I get a job, or want out?',
@@ -156,7 +155,7 @@ export default function Landing() {
  <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>ApplyMate</span>
  </div>
  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
- <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} className="nav-free-pill" style={{
+ <button onClick={goSignUp} className="nav-free-pill" style={{
  fontSize: 13, color: '#22c55e', fontWeight: 600,
  background: '#f0fdf4', padding: '4px 12px', borderRadius: 999,
  border: '1px solid #bbf7d0', cursor: 'pointer', fontFamily: "'Inter',sans-serif",
@@ -210,13 +209,6 @@ export default function Landing() {
  boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
  }}>
  Get started for free
- </button>
- <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{
- background: 'none', border: 'none', fontSize: 13, color: '#9b9b9b',
- cursor: 'pointer', fontFamily: "'Inter',sans-serif", textDecoration: 'underline',
- textUnderlineOffset: 3,
- }}>
- or see founding member plans where we apply for you →
  </button>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
  {['No card required to start free', 'Official career portals only', 'Cancel anytime', 'Secured by Razorpay'].map((t, i) => (
@@ -346,7 +338,7 @@ export default function Landing() {
  { label: 'The work', us: 'We apply. You just interview.', them1: 'You do everything, alone', them2: 'Manual process, slow' },
  { label: 'Tracking', us: 'Live dashboard, every application', them1: 'A messy spreadsheet, maybe', them2: 'Little or no transparency' },
  { label: 'Where we apply', us: 'Official career pages, every time.', them1: 'Mostly job boards, Easy Apply', them2: 'Mostly job boards & Easy Apply' },
- { label: 'Pricing', us: 'Affordable monthly plans, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
+ { label: 'Cost', us: 'Free to start, cancel anytime', them1: 'Free, but costs your time', them2: 'High upfront fees ($1,200+)' },
  ].map((row, i) => (
  <>
  <div key={row.label + 'l'} style={{ padding: '16px 12px', display: 'flex', alignItems: 'center',
@@ -415,7 +407,7 @@ export default function Landing() {
  },
  {
  step: '02', title: 'Pick a plan', time: '2 min',
- desc: 'Affordable monthly plans in your local currency. No hidden charges. Cancel any time instantly.',
+ desc: 'Free to start. No hidden charges. Cancel any time instantly.',
  },
  {
  step: '03', title: 'We apply daily', time: 'Ongoing',
@@ -614,87 +606,34 @@ export default function Landing() {
  </div>
  </section>
 
- {/* ── PRICING ───────────────────────────────────────────── */}
- <section id="pricing" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
- <div style={{ maxWidth: 960, margin: '0 auto' }}>
- <p className="eyebrow-label" style={{ textAlign: 'center', marginBottom: 12 }}>
- FOUNDING MEMBER PRICING
- </p>
+ {/* ── FOR RECRUITERS ────────────────────────────────────── */}
+ <section id="recruiters" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
+ <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
+ <p className="eyebrow-label" style={{ marginBottom: 12 }}>FOR RECRUITERS</p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
- fontWeight: 400, textAlign: 'center', letterSpacing: '-0.025em',
- color: '#0f0f0f', marginBottom: 8 }}>
-          One plan for how you want to job hunt.
+ fontWeight: 400, letterSpacing: '-0.025em', color: '#0f0f0f', marginBottom: 12 }}>
+ Hiring? Meet candidates who are ready to interview.
  </h2>
- <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', marginBottom: 56 }}>
-          All plans run 30 days. Pick how much of the work you want off your plate.
+ <p style={{ fontSize: 16, color: '#6b6b6b', lineHeight: 1.6, marginBottom: 32 }}>
+ Browse candidate profiles, post jobs and connect with job seekers from around the world.
  </p>
-
-        <div className="pricing-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, maxWidth: 1080, margin: '0 auto' }}>
- {[
-            { label: 'Free', tagline: 'Get discovered. Apply yourself.', price: '₹0', sub: 'Up to 30 applications / month', highlight: false, popular: false, saving: null, color: '#6b7280' },
-            { label: 'Basic', tagline: 'You apply. We surface the jobs.', price: '₹399', sub: 'Daily job feed for you', highlight: false, popular: false, saving: null, color: '#0f0f0f' },
-            { label: 'Pro', tagline: 'We apply for you.', price: '₹1,999', sub: 'Admin applies + tracker', highlight: true, popular: true, saving: null, color: '#1d4ed8' },
-            { label: 'Max Pro', tagline: 'We apply + get you interview-ready.', price: '₹2,999', sub: 'Interview prep + strategy call', highlight: false, popular: false, saving: null, color: '#7c3aed' },
- ].map(p => (
- <div key={p.label} className="pricing-card" onClick={() => setSelectedPlan({ label: p.label, price: p.price })} style={{
- background: p.highlight ? p.color : '#fff',
- border: selectedPlan?.label === p.label
- ? '2px solid #22c55e'
- : `2px solid ${p.highlight ? p.color : '#e8e8e8'}`,
- borderRadius: 16, padding: '28px 20px', position: 'relative', textAlign: 'center',
- boxShadow: selectedPlan?.label === p.label
- ? '0 0 0 4px rgba(34,197,94,0.15)'
- : p.highlight ? `0 16px 48px ${p.color}33` : '0 1px 4px rgba(0,0,0,0.04)',
- transform: p.highlight ? 'scale(1.04)' : 'none',
- cursor: 'pointer', transition: 'border 0.2s, box-shadow 0.2s',
- }}>
- {selectedPlan?.label === p.label && (
- <span style={{ position: 'absolute', top: -10, right: 12,
- width: 22, height: 22, borderRadius: '50%', background: '#22c55e',
- display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
- <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3">
- <polyline points="20 6 9 17 4 12" />
- </svg>
+ <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 32 }}>
+ {['Browse candidate profiles', 'Post jobs for review', 'Company email required'].map(t => (
+ <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: '#4a4a4a',
+ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 999, padding: '8px 16px' }}>
+ <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+ {t}
  </span>
- )}
- {p.popular && (
- <span style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)',
- fontSize: 11, fontWeight: 700, padding: '4px 12px',
- background: '#f59e0b', color: '#fff', borderRadius: 999, whiteSpace: 'nowrap' }}>
- MOST POPULAR
- </span>
- )}
- {p.saving && !p.popular && (
- <span style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)',
- fontSize: 11, fontWeight: 700, padding: '3px 10px',
- background: '#fef9c3', color: '#92400e', borderRadius: 999, whiteSpace: 'nowrap' }}>
- {p.saving}
- </span>
- )}
- <p className="price-label" style={{ fontSize: 13, fontWeight: 600, color: p.highlight ? '#fff' : '#0f0f0f', marginBottom: 6 }}>
- {p.label}
- </p>
- <p className="price-tagline" style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.7)' : '#9b9b9b', marginBottom: 14, lineHeight: 1.4, minHeight: 32 }}>
- {p.tagline}
- </p>
- <p className="price-amount" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 32,
- color: p.highlight ? '#fff' : '#0f0f0f', marginBottom: 4 }}>{p.price}</p>
- <p className="price-sub" style={{ fontSize: 12, color: p.highlight ? 'rgba(255,255,255,0.55)' : '#8a8a8a', marginBottom: 20 }}>{p.sub}</p>
- <button onClick={(e) => { e.stopPropagation(); setSelectedPlan({ label: p.label, price: p.price }); goSignUp() }} style={{
- width: '100%', padding: '10px 0', borderRadius: 8,
- border: p.highlight ? '1px solid rgba(255,255,255,0.25)' : '1px solid #e8e8e8',
- background: p.highlight ? 'rgba(255,255,255,0.15)' : '#f5f5f5',
- color: p.highlight ? '#fff' : '#0f0f0f',
- fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif",
- }}>
- Get started →
- </button>
- </div>
  ))}
  </div>
-
- <p style={{ textAlign: 'center', fontSize: 13, color: '#8a8a8a', marginTop: 28 }}>
- Secured by Razorpay, UPI, Cards, Net banking, No auto-renewal
+ <button onClick={goSignUp} style={{
+ background: '#0f0f0f', color: '#fff', border: 'none', borderRadius: 12,
+ padding: '14px 32px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ }}>
+ Join as a recruiter →
+ </button>
+ <p style={{ fontSize: 12.5, color: '#8a8a8a', marginTop: 14 }}>
+ Recruiter accounts are reviewed before access.
  </p>
  </div>
  </section>
@@ -776,7 +715,7 @@ export default function Landing() {
  gets the role you wanted.
  </h2>
  <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.55)', marginBottom: 48, maxWidth: 480, margin: '0 auto 48px' }}>
- Free to start. Founding member pricing on paid plans, locked in before it moves to standard rates.
+ Free to start. Paid plans apply for you.
  </p>
  <button onClick={goSignUp} style={{
  background: '#fff', color: '#0f0f0f', border: 'none',
@@ -830,11 +769,7 @@ export default function Landing() {
  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e',
  display: 'block', boxShadow: '0 0 0 3px rgba(34,197,94,0.25)' }} />
  <span className="sticky-bar-text" style={{ fontSize: 14, color: '#fff', fontWeight: 500 }}>
- {selectedPlan ? (
- <><strong>{selectedPlan.label} selected.</strong> {selectedPlan.price}/mo</>
- ) : (
  <><strong>Free to start.</strong> Paid plans apply for you.</>
- )}
  </span>
  </div>
  <button onClick={goSignUp} style={{
@@ -842,7 +777,7 @@ export default function Landing() {
  padding: '10px 28px', borderRadius: 8, fontSize: 14, fontWeight: 700,
  cursor: 'pointer', fontFamily: "'Inter',sans-serif", whiteSpace: 'nowrap',
  }}>
- {selectedPlan ? 'Continue →' : 'Get started →'}
+ Get started →
  </button>
  </div>
 
