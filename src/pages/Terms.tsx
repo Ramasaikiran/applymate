@@ -38,7 +38,7 @@ export default function Terms() {
       </Ul>
 
       <H2>6. Subscription, Billing, Cancellation</H2>
-      <P>Billed monthly, in advance, in INR, via Razorpay. Cancel anytime, no lock-in.</P>
+      <P>Billed monthly, in advance, in the currency of your country (INR for India), via Razorpay. Cancel anytime, no lock-in.</P>
       <P>Refunds are governed entirely by our Refund and Cancellation Policy.</P>
       <P><strong>Job Refund Promotion (limited offer):</strong> The first 10 paying subscribers who land a job while subscribed to ApplyMate are eligible for a refund of one month's subscription fee, subject to verification of the job offer at our discretion. To qualify, the job must come from an application made through ApplyMate, you must send us your offer letter as proof, and you must claim within 7 days of receiving the offer.</P>
       <Ul>

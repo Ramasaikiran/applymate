@@ -16,10 +16,10 @@
 
 ## Plans
 
-- Free: user applies themselves, up to 30 applications/month, ₹0
-- Basic: ApplyMate surfaces a daily job feed for the user to apply to, ₹399/30 days
-- Pro (most popular): ApplyMate's team applies on the user's behalf, with application tracking, ₹1,999/30 days
-- Max Pro: same as Pro, plus interview prep and a strategy call, ₹2,999/30 days
+- Free: user applies themselves, up to 30 applications/month. Paid plans are billed in the user's local currency, shown at checkout.
+- Basic: ApplyMate surfaces a daily job feed for the user to apply to, 30 days
+- Pro (most popular): ApplyMate's team applies on the user's behalf, with application tracking, 30 days
+- Max Pro: same as Pro, plus interview prep and a strategy call, 30 days
 
 All paid plans run 30 days, one-time payment, no auto-renewal, cancel anytime.
 
