@@ -5,7 +5,7 @@
 ## What it does
 
 - Matches a user's profile (skills, projects, college, experience) to relevant open job roles
-- Submits tailored applications daily (10-15/day) through official company career portals only, with a cover letter written for each specific job
+- Submits tailored applications daily (8-10/day) through official company career portals only, with a cover letter written for each specific job
 - Built for both freshers/students and working professionals
 - Users can track every application (company, role, date, matched skills, status) from their dashboard
 

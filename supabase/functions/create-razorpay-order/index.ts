@@ -31,8 +31,8 @@ const TRIAL_PLANS_INDIA: Record<string, { amount: number; days: number }> = {
   maxpro: { amount: 99900, days: 7 },
 }
 const TRIAL_PLANS_INTL: Record<string, { amount: number; days: number }> = {
-  basic:  { amount: 300,  days: 7 },
-  pro:    { amount: 1200, days: 7 },
+  basic:  { amount: 600,  days: 7 },
+  pro:    { amount: 1400, days: 7 },
   maxpro: { amount: 2500, days: 7 },
 }
 

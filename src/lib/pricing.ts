@@ -40,8 +40,8 @@ const INDIA: Record<PaidPlanId, PriceRow> = {
   maxpro: { price: 2999, trial: 999 },
 }
 const INTERNATIONAL: Record<PaidPlanId, PriceRow> = {
-  basic:  { price: 10, trial: 3 },
-  pro:    { price: 50, trial: 12 },
+  basic:  { price: 10, trial: 6 },
+  pro:    { price: 50, trial: 14 },
   maxpro: { price: 75, trial: 25 },
 }
 
