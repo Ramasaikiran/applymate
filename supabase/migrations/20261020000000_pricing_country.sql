@@ -74,4 +74,6 @@ $function$;
 
 -- Existing users signed up before country selection existed and were
 -- all billed in INR: lock them to India so they never see a picker.
-update public.profiles set pricing_country = 'IN' where pricing_country is null;
+-- Admin rows are skipped: they trip enforce_single_identity and never pay.
+update public.profiles set pricing_country = 'IN'
+ where pricing_country is null and is_admin is not true;
