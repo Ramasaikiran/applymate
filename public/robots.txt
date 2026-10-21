@@ -1,4 +1,14 @@
+# Open to all countries and all search engines.
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
 
 Sitemap: https://applymate.in/sitemap.xml
