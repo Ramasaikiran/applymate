@@ -63,7 +63,7 @@ serve(async (req) => {
     }
 
     const { data: sub } = await supabase.from('subscriptions')
-      .select('*').eq('razorpay_order_id', razorpay_order_id).single()
+      .select('*').eq('razorpay_order_id', razorpay_order_id).maybeSingle()
     if (!sub) return new Response(JSON.stringify({ error: 'Order not found' }), { status: 404, headers: cors })
     if (sub.user_id !== user.id) return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: cors })
 
@@ -74,19 +74,40 @@ serve(async (req) => {
       })
     }
 
+    // The signature triple is static, so a user can replay it forever. Only an
+    // order still waiting for payment may be activated; an expired, cancelled
+    // or refunded order must never come back to life from a replayed call.
+    if (sub.status !== 'pending' && sub.status !== 'failed') {
+      return new Response(JSON.stringify({ error: 'This order can no longer be activated.' }), {
+        status: 409, headers: { ...cors, 'Content-Type': 'application/json' },
+      })
+    }
+
     const now = new Date()
     const ends = new Date(now)
     ends.setDate(ends.getDate() + (sub.duration_days || PLAN_DAYS[sub.plan] || 30))
 
-    const { error: updateErr } = await supabase.from('subscriptions').update({
+    // Conditional update: if the webhook activated it a moment ago, this
+    // matches 0 rows instead of overwriting starts_at / ends_at.
+    const { data: activated, error: updateErr } = await supabase.from('subscriptions').update({
       status: 'active',
       razorpay_payment_id,
       razorpay_signature,
       starts_at: now.toISOString(),
       ends_at: ends.toISOString(),
-    }).eq('id', sub.id)
+    }).eq('id', sub.id).in('status', ['pending', 'failed']).select('id')
     if (updateErr) {
       return new Response(JSON.stringify({ error: `Failed to activate subscription: ${updateErr.message}` }), { status: 500, headers: cors })
+    }
+    if (!activated || activated.length === 0) {
+      const { data: fresh } = await supabase.from('subscriptions')
+        .select('plan, ends_at, amount_paise, coupon_code, status').eq('id', sub.id).single()
+      if (fresh?.status === 'active') {
+        return new Response(JSON.stringify({ success: true, plan: fresh.plan, ends_at: fresh.ends_at, amount_paise: fresh.amount_paise, coupon_code: fresh.coupon_code }), {
+          headers: { ...cors, 'Content-Type': 'application/json' },
+        })
+      }
+      return new Response(JSON.stringify({ error: 'This order can no longer be activated.' }), { status: 409, headers: cors })
     }
 
     const { error: profileErr } = await supabase.from('profiles').update({ account_status: 'active' }).eq('id', sub.user_id)

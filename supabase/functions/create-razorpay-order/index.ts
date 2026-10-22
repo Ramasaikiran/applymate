@@ -113,8 +113,13 @@ serve(async (req) => {
     // subscriptions.is_trial, never trusted from the client's `trial`
     // flag alone.
     if (wantsTrial) {
+      // Only a trial that was actually paid for counts. Counting 'pending'
+      // (abandoned checkout) or 'failed' rows locked users out of their one
+      // trial after simply closing the Razorpay modal once.
       const { data: priorTrial } = await supabase.from('subscriptions')
-        .select('id').eq('user_id', user.id).eq('is_trial', true).limit(1).maybeSingle()
+        .select('id').eq('user_id', user.id).eq('is_trial', true)
+        .in('status', ['active', 'expired', 'cancelled', 'refunded', 'refund_processing'])
+        .limit(1).maybeSingle()
       if (priorTrial) {
         return new Response(JSON.stringify({ error: "You've already used your trial period." }), { status: 400, headers: cors })
       }

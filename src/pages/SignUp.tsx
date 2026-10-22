@@ -75,7 +75,7 @@ export default function SignUp() {
  }
 
   function validateEmail() {
-    if (!EMAIL_RE.test(email)) { setErrors({ email: 'Enter a valid email address.' }); return false }
+    if (!EMAIL_RE.test(email.trim())) { setErrors({ email: 'Enter a valid email address.' }); return false }
     setErrors({}); return true
   }
 
@@ -92,7 +92,7 @@ export default function SignUp() {
     e.preventDefault()
     const next: Record<string, string> = {}
     if (!fullName.trim() || fullName.trim().length < 2) next.fullName = 'Enter your full name.'
-    if (!EMAIL_RE.test(email)) next.email = 'Enter a valid email address.'
+    if (!EMAIL_RE.test(email.trim())) next.email = 'Enter a valid email address.'
     if (!getCountry(country)) next.country = 'Select your country.'
     if (Object.keys(next).length > 0) { setErrors(next); return }
     setStep('details')
@@ -113,16 +113,18 @@ export default function SignUp() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY },
       })
-      if (res.ok) {
-        const data = await res.json()
-        if (data.allowed === false) {
+      // The function answers 429 (not 200) when the IP is over the limit, so a
+      // `res.ok` guard here would skip exactly the case we need to handle.
+      if (res.ok || res.status === 429) {
+        const data = await res.json().catch(() => null)
+        if (data && data.allowed === false) {
           const secs = Math.max(data.retry_after_seconds ?? 0, 1)
           setBlockedUntil(Date.now() + secs * 1000)
           setLoading(false)
           return
         }
       }
-      // Non-2xx (e.g. misconfigured function) -> fail open, don't block real users
+      // Other non-2xx (e.g. misconfigured function) -> fail open, don't block real users
     } catch { /* fail-open if edge function unreachable */ }
 
     const { error } = await signUp(fullName.trim(), email.trim().toLowerCase(), password, undefined, country)

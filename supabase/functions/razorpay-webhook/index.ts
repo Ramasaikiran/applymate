@@ -14,6 +14,13 @@ async function hmacSha256Hex(key: string, message: string): Promise<string> {
   return Array.from(new Uint8Array(sig)).map(b => b.toString(16).padStart(2, '0')).join('')
 }
 
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false
+  let diff = 0
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i)
+  return diff === 0
+}
+
 // Razorpay calls this server-to-server after a payment, independent of
 // whether the customer's browser is still open. This is the source of
 // truth for activating a subscription — verify-razorpay-payment is only
@@ -34,9 +41,15 @@ serve(async (req) => {
     const signature = req.headers.get('x-razorpay-signature')
     if (!signature) return new Response('Missing signature', { status: 400 })
 
-    const webhookSecret = Deno.env.get('RAZORPAY_WEBHOOK_SECRET')!
+    const webhookSecret = Deno.env.get('RAZORPAY_WEBHOOK_SECRET')
+    if (!webhookSecret) {
+      // Misconfiguration: fail loudly (Razorpay will retry) instead of
+      // verifying against an empty key.
+      console.error('RAZORPAY_WEBHOOK_SECRET is not set')
+      return new Response('Webhook not configured', { status: 500 })
+    }
     const expected = await hmacSha256Hex(webhookSecret, rawBody)
-    if (expected !== signature) {
+    if (!timingSafeEqual(expected, signature)) {
       return new Response('Invalid signature', { status: 400 })
     }
 
@@ -61,21 +74,31 @@ serve(async (req) => {
       if (!orderId) return new Response('ok', { status: 200 })
 
       const { data: sub } = await supabase.from('subscriptions')
-        .select('*').eq('razorpay_order_id', orderId).single()
+        .select('*').eq('razorpay_order_id', orderId).maybeSingle()
 
-      if (sub && sub.status !== 'active') {
+      // Razorpay redelivers events (retries, manual replays). Only an order that
+      // is still unpaid may be activated: re-running a captured event must not
+      // revive an expired, cancelled or refunded subscription.
+      if (sub && (sub.status === 'pending' || sub.status === 'failed')) {
         const now = new Date()
         const ends = new Date(now)
         ends.setDate(ends.getDate() + (sub.duration_days || PLAN_DAYS[sub.plan] || 30))
 
-        await supabase.from('subscriptions').update({
+        const { error: subErr } = await supabase.from('subscriptions').update({
           status: 'active',
           razorpay_payment_id: payment.id,
           starts_at: now.toISOString(),
           ends_at: ends.toISOString(),
-        }).eq('id', sub.id)
+        }).eq('id', sub.id).in('status', ['pending', 'failed'])
+        // Non-2xx makes Razorpay retry. Swallowing this left a paid customer
+        // unactivated whenever the browser-side verify call never happened.
+        if (subErr) {
+          console.error('webhook: failed to activate subscription', subErr.message)
+          return new Response(JSON.stringify({ error: subErr.message }), { status: 500 })
+        }
 
-        await supabase.from('profiles').update({ account_status: 'active' }).eq('id', sub.user_id)
+        const { error: profErr } = await supabase.from('profiles').update({ account_status: 'active' }).eq('id', sub.user_id)
+        if (profErr) console.error('webhook: failed to update profile status', profErr.message)
       }
     }
 

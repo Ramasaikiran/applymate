@@ -50,6 +50,7 @@ export async function routePostAuth(userId: string, navigate: NavigateFunction) 
     .eq('user_id', userId)
     .eq('status', 'active')
     .gt('ends_at', new Date().toISOString())
+    .limit(1)
     .maybeSingle()
   if (subErr) throw new Error('Could not load your subscription. Please try again.')
 

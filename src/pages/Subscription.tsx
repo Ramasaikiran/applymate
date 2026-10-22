@@ -193,7 +193,7 @@ export default function Subscription() {
  }
  )
  } catch {
- throw new Error('Payment server unreachable. Edge function not deployed or Razorpay keys missing.')
+ throw new Error('Could not reach the payment server. Check your connection and try again.')
  }
  const order = await res.json()
  if (!res.ok) throw new Error(order.error || 'Could not create order.')
@@ -224,11 +224,17 @@ export default function Subscription() {
  if (!verifyRes.ok || !result.success) throw new Error(result.error || 'Payment verification failed.')
 
  const plan = plans.find(p => p.id === result.plan)
- if (plan) {
  refreshProfile()
+ if (plan) {
  setSuccess({ plan, endsAt: result.ends_at, amountPaid: (result.amount_paise ?? Math.round(plan.price * 100)) / 100, isTrial: trialSelected })
+ } else {
+ // Paid and verified, but the plan id is unknown to this page: don't leave the user on a silent screen.
+ navigate('/dashboard')
  }
  } catch (err) {
+ // The payment may still have gone through (the webhook activates it server-side),
+ // so re-sync the account instead of leaving a stale "unpaid" state on screen.
+ refreshProfile()
  setError((err as Error).message)
  } finally {
  setLoading(false)

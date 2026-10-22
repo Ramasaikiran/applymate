@@ -78,7 +78,7 @@ export async function recoverDirect(email: string, redirectTo: string) {
 export type UserType      = 'student' | 'professional'
 export type AccountStatus = 'pending_onboarding' | 'active' | 'suspended'
 export type SubscriptionPlan = 'free' | 'basic' | 'pro' | 'maxpro'
-export type SubStatus = 'pending' | 'active' | 'expired' | 'cancelled' | 'failed'
+export type SubStatus = 'pending' | 'active' | 'expired' | 'cancelled' | 'failed' | 'refunded' | 'refund_processing'
 export type AppStatus = 'applied' | 'shortlisted' | 'assessment' | 'interview' | 'hr_round' | 'rejected' | 'offer' | 'joined'
   | 'shortlisted' | 'hired' // legacy values, still readable
 export type EmploymentType = 'full-time' | 'internship' | 'contract' | 'part-time'

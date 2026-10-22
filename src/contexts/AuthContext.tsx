@@ -1,5 +1,5 @@
 import {
-  createContext, useContext, useEffect, useState, type ReactNode,
+  createContext, useContext, useEffect, useRef, useState, type ReactNode,
 } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase, signUpDirect, recoverDirect, type Profile, type Subscription, type Recruiter } from '../lib/supabase'
@@ -48,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [recruiter,     setRecruiter]     = useState<Recruiter | null>(null)
   const [loading,       setLoading]       = useState(true)
   const [profileLoaded, setProfileLoaded] = useState(false)   // ← new
+  const currentUserId = useRef<string | null>(null)
 
   async function fetchProfile(userId: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
@@ -92,6 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setSession(session)
+      currentUserId.current = session?.user?.id ?? null
       if (session?.user) {
         await fetchProfile(session.user.id)
       } else {
@@ -102,18 +104,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: { subscription: sub } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
+      // getSession() above already loads the initial profile; handling
+      // INITIAL_SESSION too fetched it twice and flipped profileLoaded back to
+      // false mid-load, flashing the spinner on every first page view.
+      if (event === 'INITIAL_SESSION') return
       if (session?.user) {
+        const sameUser = currentUserId.current === session.user.id
+        currentUserId.current = session.user.id
         // Only block the UI with a fresh-fetch spinner for events that actually
         // change *who* is signed in. A routine TOKEN_REFRESHED (fires on tab
         // refocus — e.g. right after picking a file from the OS file picker)
         // must NOT reset profileLoaded, or every protected page remounts and
         // any in-progress local state (like a multi-step form) is wiped.
+        // supabase-js also re-emits SIGNED_IN when a tab regains focus. For the
+        // already-signed-in user that must refresh quietly, not unmount the page.
         if (event !== 'TOKEN_REFRESHED') {
-          setProfileLoaded(false)
+          if (!(event === 'SIGNED_IN' && sameUser)) setProfileLoaded(false)
           fetchProfile(session.user.id)
         }
         if (event === 'SIGNED_IN') supabase.rpc('touch_last_login')
       } else {
+        currentUserId.current = null
         setProfile(null)
         setSubscription(null)
         setRecruiter(null)

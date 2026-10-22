@@ -22,6 +22,7 @@ describe('routePostAuth', () => {
         select: () => builder,
         eq: () => builder,
         gt: () => builder,
+        limit: () => builder,
         maybeSingle: () => Promise.resolve(response),
       }
       return builder
@@ -66,7 +67,7 @@ describe('routePostAuth: recruiters', () => {
   function mockFrom(responses: Record<string, any>) {
     vi.spyOn(supabase, 'from').mockImplementation((table: string) => {
       const response = responses[table]
-      const builder: any = { select: () => builder, eq: () => builder, gt: () => builder, maybeSingle: () => Promise.resolve(response) }
+      const builder: any = { select: () => builder, eq: () => builder, gt: () => builder, limit: () => builder, maybeSingle: () => Promise.resolve(response) }
       return builder
     })
   }

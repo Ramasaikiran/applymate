@@ -94,3 +94,12 @@ describe('useRateLimit', () => {
     expect(result.current.blockMessage).toBeNull()
   })
 })
+
+describe('useRateLimit with blocked storage', () => {
+  it('recordAttempt does not throw when localStorage.setItem throws', () => {
+    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked') })
+    const { result } = renderHook(() => useRateLimit('oc_test_blocked_storage'))
+    expect(() => act(() => result.current.recordAttempt())).not.toThrow()
+    spy.mockRestore()
+  })
+})

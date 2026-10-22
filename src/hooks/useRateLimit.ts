@@ -32,7 +32,7 @@ function load(key: string): RateLimitState {
 }
 
 function save(key: string, state: RateLimitState) {
-  localStorage.setItem(key, JSON.stringify(state))
+  try { localStorage.setItem(key, JSON.stringify(state)) } catch { /* storage blocked: lockout just won't persist */ }
 }
 
 export function useRateLimit(storageKey: string) {
@@ -91,7 +91,7 @@ export function useRateLimit(storageKey: string) {
   const reset = useCallback(() => {
     const next: RateLimitState = { attempts: 0, lastAttemptAt: 0, cooledAt: null }
     setState(next)
-    localStorage.removeItem(storageKey)
+    try { localStorage.removeItem(storageKey) } catch { /* storage blocked */ }
   }, [storageKey])
 
   return { blocked, blockMessage, recordAttempt, reset, attempts: state.attempts }
