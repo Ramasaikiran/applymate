@@ -1,14 +1,8 @@
-/**
- * expire-subscriptions
- * Runs daily (via Supabase cron or external cron) to:
- *  1. Mark subscriptions as expired when ends_at < now()
- *  2. Suspend the user's account
- *
- * Schedule in Supabase Dashboard → Edge Functions → Schedules
- * Cron: 0 0 * * *  (daily midnight IST)
- *
- * Or call manually: supabase functions invoke expire-subscriptions
- */
+// expire-subscriptions
+// Runs daily (Supabase cron or external cron):
+//   1. Mark subscriptions as expired when ends_at < now()
+//   2. Suspend the user's account if no other active subscription
+// Cron: 0 0 * * *  (daily midnight IST). Needs the CRON_SECRET env var.
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
