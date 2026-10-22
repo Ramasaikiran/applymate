@@ -383,6 +383,7 @@ export default function AdminUserDetail() {
  <Field label="LinkedIn" value={profile.linkedin_url} />
  <Field label="GitHub" value={profile.github_url} />
  <Field label="Portfolio" value={profile.portfolio_url} />
+ <Field label="Heard about us" value={profile.referral_source} />
  <div style={{ gridColumn: '1 / -1', background: '#fff', border: '1.5px solid #f0f0f0',
  borderRadius: 12, padding: '16px 18px' }}>
  <p style={{ fontSize: 11, fontWeight: 600, color: '#b5b5b5', letterSpacing: '0.08em', marginBottom: 10 }}>SKILLS</p>

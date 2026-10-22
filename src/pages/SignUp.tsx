@@ -46,6 +46,7 @@ export default function SignUp() {
   )
   const [fullName, setFullName]   = useState('')
   const [country, setCountry]     = useState('')
+  const [referralSource, setReferralSource] = useState('')
   const [password, setPassword]   = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPwd, setShowPwd]     = useState(false)
@@ -127,7 +128,7 @@ export default function SignUp() {
       // Other non-2xx (e.g. misconfigured function) -> fail open, don't block real users
     } catch { /* fail-open if edge function unreachable */ }
 
-    const { error } = await signUp(fullName.trim(), email.trim().toLowerCase(), password, undefined, country)
+    const { error } = await signUp(fullName.trim(), email.trim().toLowerCase(), password, undefined, country, referralSource)
     setLoading(false)
     if (error) { setFormError(error); return }
     recordAttempt()
@@ -156,7 +157,10 @@ export default function SignUp() {
     if (!getCountry(country)) { setErrors(p => ({ ...p, country: 'Select your country first.' })); return }
     if (!agreed) { setAgreedErr(true); return }
     // Applied to the profile in AuthCallback once Google sign-in returns.
-    try { localStorage.setItem('am_pricing_country', country) } catch { /* storage blocked */ }
+    try {
+      localStorage.setItem('am_pricing_country', country)
+      if (referralSource.trim()) localStorage.setItem('am_referral_source', referralSource.trim().slice(0, 200))
+    } catch { /* storage blocked */ }
     setGLoading(true)
     const { error } = await signInWithGoogle()
     if (error) { setFormError(error); setGLoading(false) }
@@ -188,6 +192,14 @@ export default function SignUp() {
         <p style={{ fontSize: 11.5, color: '#9b9b9b', marginTop: 6 }}>
           Sets your plan currency. Cannot be changed later.
         </p>
+      </div>
+
+      {/* Optional: how the user found us (shown to admins) */}
+      <div style={{ marginBottom: 16 }}>
+        <label className="oc-label" htmlFor="referral-source">How did you hear about us? <span style={{ color: '#9b9b9b', fontWeight: 400 }}>(optional)</span></label>
+        <input id="referral-source" className="oc-input" type="text" maxLength={200}
+          value={referralSource} onChange={(e) => setReferralSource(e.target.value)}
+          placeholder="e.g. LinkedIn, a friend, Google" />
       </div>
 
       {/* Google: Primary CTA */}

@@ -97,6 +97,7 @@ export interface Profile {
   photo_url: string | null
   country: string | null
   pricing_country: string | null
+  referral_source: string | null
   address: string | null
   role_interests: string[]
   portfolio_url: string | null

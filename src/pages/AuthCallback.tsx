@@ -59,6 +59,15 @@ export default function AuthCallback() {
  }
  } catch { /* non-fatal: user is asked again on the payment page */ }
 
+ // Google sign-up: apply the "how did you hear about us" answer (set once).
+ try {
+ const rs = localStorage.getItem('am_referral_source')
+ if (rs) {
+ await supabase.from('profiles').update({ referral_source: rs.slice(0, 200) }).eq('id', userId).is('referral_source', null)
+ localStorage.removeItem('am_referral_source')
+ }
+ } catch { /* non-fatal */ }
+
  // ── Routing (admin / onboarding / subscription / dashboard) ──
  // Shared with SignIn so every entry point makes the same decision.
  await routePostAuth(userId, navigate)
