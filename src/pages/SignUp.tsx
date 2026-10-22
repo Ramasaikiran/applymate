@@ -95,6 +95,7 @@ export default function SignUp() {
     if (!fullName.trim() || fullName.trim().length < 2) next.fullName = 'Enter your full name.'
     if (!EMAIL_RE.test(email.trim())) next.email = 'Enter a valid email address.'
     if (!getCountry(country)) next.country = 'Select your country.'
+    if (referralSource.trim().length < 2) next.referralSource = 'Tell us how you heard about us.'
     if (Object.keys(next).length > 0) { setErrors(next); return }
     setStep('details')
     setTimeout(() => document.getElementById('password-input')?.focus(), 100)
@@ -104,6 +105,7 @@ export default function SignUp() {
     e.preventDefault()
     setFormError(null)
     if (!validateDetails()) return
+    if (referralSource.trim().length < 2) { setStep('email'); setErrors({ referralSource: 'Tell us how you heard about us.' }); return }
     if (!agreed) { setAgreedErr(true); return }
     if (blocked || secsLeft > 0) return
     setLoading(true)
@@ -155,6 +157,7 @@ export default function SignUp() {
 
   async function handleGoogle() {
     if (!getCountry(country)) { setErrors(p => ({ ...p, country: 'Select your country first.' })); return }
+    if (referralSource.trim().length < 2) { setErrors(p => ({ ...p, referralSource: 'Tell us how you heard about us.' })); return }
     if (!agreed) { setAgreedErr(true); return }
     // Applied to the profile in AuthCallback once Google sign-in returns.
     try {
@@ -194,12 +197,14 @@ export default function SignUp() {
         </p>
       </div>
 
-      {/* Optional: how the user found us (shown to admins) */}
+      {/* Required: how the user found us (shown to admins) */}
       <div style={{ marginBottom: 16 }}>
-        <label className="oc-label" htmlFor="referral-source">How did you hear about us? <span style={{ color: '#9b9b9b', fontWeight: 400 }}>(optional)</span></label>
-        <input id="referral-source" className="oc-input" type="text" maxLength={200}
-          value={referralSource} onChange={(e) => setReferralSource(e.target.value)}
+        <label className="oc-label" htmlFor="referral-source">How did you hear about us?</label>
+        <input id="referral-source" className={`oc-input${errors.referralSource ? ' error' : ''}`} type="text" maxLength={200} required
+          value={referralSource}
+          onChange={(e) => { setReferralSource(e.target.value); setErrors(p => ({ ...p, referralSource: '' })) }}
           placeholder="e.g. LinkedIn, a friend, Google" />
+        {errors.referralSource && <p className="oc-field-error">{errors.referralSource}</p>}
       </div>
 
       {/* Google: Primary CTA */}
