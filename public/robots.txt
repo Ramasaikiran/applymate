@@ -11,4 +11,103 @@ Disallow: /auth/
 Disallow: /reset-password
 Disallow: /check-inbox
 
+# AI search / retrieval crawlers: explicitly allowed so ApplyMate can be cited in AI answers.
+# A bot with its own group ignores the '*' group, so the private-path rules are repeated.
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /onboarding
+Disallow: /subscription
+Disallow: /profile
+Disallow: /recruiter
+Disallow: /auth/
+Disallow: /reset-password
+Disallow: /check-inbox
+
 Sitemap: https://applymate.in/sitemap.xml

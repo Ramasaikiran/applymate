@@ -23,9 +23,24 @@
 
 All paid plans run 30 days, one-time payment, no auto-renewal, cancel anytime.
 
+## How matching and applying work
+
+- A job is applied to only when it matches the user on industry, skills and experience; skipped jobs are logged with the missing metric
+- No bots or bulk-apply tools; official company career portals only; ApplyMate never asks for job-portal or email passwords
+- 8-10 applications a day is a target, not a guarantee; ApplyMate does not guarantee interviews or offers
+
+## Pricing (India, INR; other countries pay the same number in local currency)
+
+- Basic 399, Pro 1999, Max Pro 2999 per 30 days; 7-day trial once per account (99 / 500 / 999)
+- Supported countries: India, US, UK, Canada, Australia, New Zealand, Singapore, Germany, France, Ireland, Netherlands, Spain, Italy
+
 ## Key pages
 
-- Homepage / pricing: https://applymate.in/
+- Homepage: https://applymate.in/
+- Pricing: https://applymate.in/pricing.html
+- How it works: https://applymate.in/how-it-works.html
+- FAQ: https://applymate.in/faq.html
+- Comparison of ways to apply: https://applymate.in/compare-ways-to-apply.html
 - Live status page: https://applymate.in/status
 - About: https://applymate.in/about
 - Contact: https://applymate.in/contact
