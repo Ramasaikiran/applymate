@@ -593,6 +593,17 @@ export default function Landing() {
  <p style={{ fontSize: 13, color: '#4b5563', marginTop: 6 }}>
  <strong style={{ color: '#0f0f0f' }}>{jobRefundClaimed} of {jobRefundTotal}</strong> spots claimed so far
  </p>
+
+ {/* Verified placement */}
+ <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 18, paddingTop: 16,
+ borderTop: '1px solid #dcfce7' }}>
+ <img src="/nestack-logo.png" alt="Nestack Technologies logo" width={44} height={44}
+ style={{ width: 44, height: 44, borderRadius: '50%', flexShrink: 0, border: '1px solid #e5e7eb' }} />
+ <p style={{ fontSize: 13.5, color: '#4b5563', lineHeight: 1.5, margin: 0 }}>
+ <strong style={{ color: '#0f0f0f' }}>1 member has landed a job</strong> at{' '}
+ <strong style={{ color: '#0f0f0f' }}>Nestack Technologies</strong> through an ApplyMate application.
+ </p>
+ </div>
  </div>
 
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
