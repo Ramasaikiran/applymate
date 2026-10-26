@@ -88,6 +88,7 @@ export default function Landing() {
  const goSignUp = () => navigate('/sign-up')
 
  const COMPANIES = [
+ { name: 'Nestack Technologies', logo: '/logos/nestack.png' },
  { name: 'Google', logo: '/logos/google.svg', color: '#4285F4' },
  { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true, logoW: 114 },
  { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true, logoW: 56 },
@@ -257,7 +258,7 @@ export default function Landing() {
  Companies our users interviewed at
  </h2>
  <p style={{ fontSize: 13, color: '#c2c2c2', textAlign: 'center', margin: '0 0 24px', padding: '0 24px' }}>
- Google, Amazon, Salesforce, Wipro, Turing, micro1, Growth School &amp; Moodle
+ Nestack Technologies, Google, Amazon, Salesforce, Wipro, Turing, micro1, Growth School &amp; Moodle
  </p>
  <div style={{ width: '100%', overflow: 'hidden' }}>
  <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 20,
