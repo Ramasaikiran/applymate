@@ -182,6 +182,11 @@ export default function Landing() {
  {/* ── HERO ──────────────────────────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '40px 24px 56px', textAlign: 'center' }}>
 
+ <p style={{ display: 'inline-block', fontSize: 13, fontWeight: 600, color: '#4a4a4a', background: '#f4f4f4',
+ borderRadius: 999, padding: '7px 16px', margin: '0 0 22px', letterSpacing: '-0.005em' }}>
+ Job application service · for freshers and working professionals
+ </p>
+
  <h1 style={{
  fontFamily: "'Instrument Serif',Georgia,serif",
  fontSize: 'clamp(48px, 9vw, 84px)',
@@ -197,7 +202,7 @@ export default function Landing() {
  <p style={{ fontSize: 20, color: '#6b6b6b', lineHeight: 1.65,
  maxWidth: 560, margin: '0 auto 44px', fontWeight: 400 }}>
  ApplyMate matches you to 8–10 relevant jobs a day and applies on official
- career portals. Start free, or let our team apply for you.
+ career portals. Fill a 4-minute profile, start free, or let our team apply for you.
  </p>
 
  {/* Primary CTA */}
@@ -211,6 +216,9 @@ export default function Landing() {
  }}>
  Get started for free
  </button>
+ <p style={{ fontSize: 14.5, color: '#0f0f0f', fontWeight: 600, margin: '6px 0 0', lineHeight: 1.5 }}>
+ 50+ interview calls for members · 1 member hired at Nestack Technologies
+ </p>
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, flexWrap: 'wrap', marginTop: 4 }}>
  {['Free to start', 'No card required', 'Official career portals only', 'Cancel anytime'].map((t, i) => (
  <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12.5, color: '#9b9b9b' }}>
@@ -219,6 +227,14 @@ export default function Landing() {
  </span>
  ))}
  </div>
+ <ol style={{ listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+ flexWrap: 'wrap', padding: 0, margin: '14px 0 0', fontSize: 13, color: '#6b6b6b' }}>
+ <li><strong style={{ color: '#0f0f0f' }}>1.</strong> Fill your profile (4 min)</li>
+ <li aria-hidden="true">→</li>
+ <li><strong style={{ color: '#0f0f0f' }}>2.</strong> Pick a plan</li>
+ <li aria-hidden="true">→</li>
+ <li><strong style={{ color: '#0f0f0f' }}>3.</strong> We apply daily</li>
+ </ol>
  <button onClick={() => document.getElementById('inbox-proof')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
  textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 6,
