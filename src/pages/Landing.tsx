@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { recruiterHome } from '../lib/routing'
+import { getCountry, planPrice, formatMoney, type PaidPlanId } from '../lib/pricing'
 import inboxProof1 from '../assets/inbox-proof/proof-1.webp'
 import inboxProof2 from '../assets/inbox-proof/proof-2.webp'
 import inboxProof3 from '../assets/inbox-proof/proof-3.webp'
@@ -240,6 +241,12 @@ export default function Landing() {
  textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 6,
  }}>
  See real interview invites from members ↓
+ </button>
+ <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{
+ background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
+ textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 2,
+ }}>
+ See pricing ↓
  </button>
  </div>
  </section>
@@ -518,6 +525,61 @@ export default function Landing() {
  </div>
  </section>
 
+ {/* ── PRICING (visible before sign-up: price is the top objection) ───────── */}
+ <section id="pricing" style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 96px', scrollMarginTop: 72 }}>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40, fontWeight: 400,
+ textAlign: 'center', letterSpacing: '-0.025em', color: '#0f0f0f', marginBottom: 12 }}>
+ Simple pricing. No auto-renewal.
+ </h2>
+ <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', maxWidth: 520, margin: '0 auto 40px', lineHeight: 1.6 }}>
+ Start free and apply yourself, or let our team apply for you.
+ </p>
+ <div className="pricing-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }}>
+ {(() => {
+ const IN = getCountry('IN')!
+ const cards: { name: string; price: string; per: string; tag?: string; points: string[]; cta: string; dark?: boolean }[] = [
+ { name: 'Free', price: formatMoney(0, IN), per: 'always free', points: ['Daily matched job feed', 'You apply yourself', 'Up to 30 applications a month'], cta: 'Start free' },
+ ...([['Basic', 'basic', ['Daily matched job feed', 'You apply yourself', 'Save and track jobs']],
+ ['Pro', 'pro', ['Our team applies for you', 'Tailored cover letter per job', 'Live application tracker']],
+ ['Max Pro', 'maxpro', ['Everything in Pro', 'Interview support']]] as [string, PaidPlanId, string[]][]).map(([name, id, points]) => ({
+ name, price: formatMoney(planPrice(IN, id).price, IN), per: 'for 30 days', points,
+ tag: id === 'basic' ? undefined : 'We apply for you', cta: 'Get started', dark: id === 'pro',
+ })),
+ ]
+ return cards.map(c => (
+ <div key={c.name} className="pricing-card" style={{ border: c.dark ? '2px solid #0f0f0f' : '1px solid #e5e5e5', borderRadius: 16,
+ padding: '24px 20px', background: '#fff', display: 'flex', flexDirection: 'column' }}>
+ <div style={{ minHeight: 22, marginBottom: 6 }}>
+ {c.tag && <span style={{ fontSize: 11, fontWeight: 700, color: '#15803d', background: '#f0fdf4', border: '1px solid #bbf7d0',
+ borderRadius: 999, padding: '3px 10px' }}>{c.tag}</span>}
+ </div>
+ <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f', margin: '0 0 4px' }}>{c.name}</p>
+ <p style={{ margin: '0 0 16px' }}>
+ <span style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 38, color: '#0f0f0f', letterSpacing: '-0.02em' }}>{c.price}</span>
+ <span style={{ fontSize: 13, color: '#9b9b9b' }}> {c.per}</span>
+ </p>
+ <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', flex: 1 }}>
+ {c.points.map(pt => (
+ <li key={pt} style={{ fontSize: 13.5, color: '#4a4a4a', lineHeight: 1.5, marginBottom: 8, display: 'flex', gap: 8 }}>
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" style={{ flexShrink: 0, marginTop: 3 }}><polyline points="20 6 9 17 4 12"/></svg>
+ {pt}
+ </li>
+ ))}
+ </ul>
+ <button onClick={goSignUp} style={{ background: c.dark ? '#0f0f0f' : '#fff', color: c.dark ? '#fff' : '#0f0f0f',
+ border: '1px solid #0f0f0f', padding: '12px 16px', borderRadius: 10, fontSize: 14, fontWeight: 700,
+ cursor: 'pointer', fontFamily: "'Inter',sans-serif" }}>{c.cta}</button>
+ </div>
+ ))
+ })()}
+ </div>
+ <p style={{ fontSize: 13, color: '#9b9b9b', textAlign: 'center', margin: '24px auto 0', maxWidth: 620, lineHeight: 1.6 }}>
+ Prices shown for India. Other countries pay the same number in their local currency, for example $50 for Pro in the US.
+ 7-day trial available once per account. One-time payment, no auto-renewal.{' '}
+ <a href="/pricing.html" style={{ color: '#4a4a4a' }}>Full pricing and countries</a>
+ </p>
+ </section>
+
  {/* ── TRUST / PROOF ─────────────────────────────────────── */}
  <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 96px' }}>
  <div style={{ background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 16,
@@ -639,38 +701,6 @@ export default function Landing() {
  </div>
  </section>
 
- {/* ── FOR RECRUITERS ────────────────────────────────────── */}
- <section id="recruiters" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
- <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
- <p className="eyebrow-label" style={{ marginBottom: 12 }}>FOR RECRUITERS</p>
- <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
- fontWeight: 400, letterSpacing: '-0.025em', color: '#0f0f0f', marginBottom: 12 }}>
- Hiring? Meet candidates who are ready to interview.
- </h2>
- <p style={{ fontSize: 16, color: '#6b6b6b', lineHeight: 1.6, marginBottom: 32 }}>
- Browse candidate profiles, post jobs and connect with job seekers from around the world.
- </p>
- <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 32 }}>
- {['Browse candidate profiles', 'Post jobs for review', 'Company email required'].map(t => (
- <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: '#4a4a4a',
- background: '#fff', border: '1px solid #e8e8e8', borderRadius: 999, padding: '8px 16px' }}>
- <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
- {t}
- </span>
- ))}
- </div>
- <button onClick={goSignUp} style={{
- background: '#0f0f0f', color: '#fff', border: 'none', borderRadius: 12,
- padding: '14px 32px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif",
- }}>
- Join as a recruiter →
- </button>
- <p style={{ fontSize: 12.5, color: '#8a8a8a', marginTop: 14 }}>
- Recruiter accounts are reviewed before access.
- </p>
- </div>
- </section>
-
  {/* ── FAQ ───────────────────────────────────────────────── */}
  <section style={{ background: '#fff', padding: '96px 24px' }}>
  <div style={{ maxWidth: 680, margin: '0 auto' }}>
@@ -761,6 +791,38 @@ export default function Landing() {
  <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.3)', marginTop: 18 }}>
  Setup in 4 min, Free to start, No auto-renewal, Cancel anytime
  </p>
+ </section>
+
+ {/* ── FOR RECRUITERS ────────────────────────────────────── */}
+ <section id="recruiters" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
+ <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
+ <p className="eyebrow-label" style={{ marginBottom: 12 }}>FOR RECRUITERS</p>
+ <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
+ fontWeight: 400, letterSpacing: '-0.025em', color: '#0f0f0f', marginBottom: 12 }}>
+ Hiring? Meet candidates who are ready to interview.
+ </h2>
+ <p style={{ fontSize: 16, color: '#6b6b6b', lineHeight: 1.6, marginBottom: 32 }}>
+ Browse candidate profiles, post jobs and connect with job seekers from around the world.
+ </p>
+ <div style={{ display: 'flex', justifyContent: 'center', gap: 12, flexWrap: 'wrap', marginBottom: 32 }}>
+ {['Browse candidate profiles', 'Post jobs for review', 'Company email required'].map(t => (
+ <span key={t} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13.5, color: '#4a4a4a',
+ background: '#fff', border: '1px solid #e8e8e8', borderRadius: 999, padding: '8px 16px' }}>
+ <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+ {t}
+ </span>
+ ))}
+ </div>
+ <button onClick={goSignUp} style={{
+ background: '#0f0f0f', color: '#fff', border: 'none', borderRadius: 12,
+ padding: '14px 32px', fontSize: 15, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+ }}>
+ Join as a recruiter →
+ </button>
+ <p style={{ fontSize: 12.5, color: '#8a8a8a', marginTop: 14 }}>
+ Recruiter accounts are reviewed before access.
+ </p>
+ </div>
  </section>
 
  {/* ── FOOTER ────────────────────────────────────────────── */}
