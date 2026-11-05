@@ -40,9 +40,9 @@ const TRIAL_PLANS_INTL: Record<string, { amount: number; days: number }> = {
 // sent from the client, since that's editable in the browser before
 // the request is sent.
 // `end` is exclusive. `cap` = max paid redemptions, counted server-side.
-// applymate10: Diwali offer, first 500 paid members (end date is only a ceiling).
+// applymate10: Diwali offer, first 300 paid members, valid through 9-11-2026 (IST).
 const COUPONS: Record<string, { pct: number; end: Date; cap?: number }> = {
-  applymate10: { pct: 10, end: new Date('2026-12-01T00:00:00+05:30'), cap: 500 },
+  applymate10: { pct: 10, end: new Date('2026-11-10T00:00:00+05:30'), cap: 300 },
 }
 function couponActive(code: string) {
   const c = COUPONS[code]
@@ -142,7 +142,7 @@ serve(async (req) => {
         .eq('coupon_code', matchedCoupon)
         .not('status', 'in', '(pending,failed)')
       if ((count ?? 0) >= COUPONS[matchedCoupon].cap!) {
-        throw new Error('This offer is fully redeemed (first 500 members only).')
+        throw new Error('This offer is fully redeemed (first 300 members only).')
       }
     }
     const promoApplies = !wantsTrial && !matchedCoupon && promoActive()

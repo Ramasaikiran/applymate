@@ -152,9 +152,9 @@ export default function Subscription() {
  const COUPON_DISCOUNTS: Record<string, number> = {
  applymate10: 10,
  }
- // applymate10: Diwali offer, first 500 members (cap enforced on server).
+ // applymate10: Diwali offer, first 300 members, through 9-11-2026 (cap enforced on server).
  const COUPON_END: Record<string, Date> = {
- applymate10: new Date('2026-12-01T00:00:00+05:30'),
+ applymate10: new Date('2026-11-10T00:00:00+05:30'),
  }
  function applyCoupon() {
  const code = couponInput.trim().toLowerCase()
@@ -352,7 +352,7 @@ export default function Subscription() {
    <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '10px 20px', textAlign: 'center' }}>
      <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0 }}>
        <strong style={{ color: '#fff', fontWeight: 700 }}>Diwali offer: 10% off</strong> all plans. Use code{' '}
-       <strong style={{ color: '#fff', fontWeight: 700 }}>APPLYMATE10</strong>. First 500 members only.
+       <strong style={{ color: '#fff', fontWeight: 700 }}>APPLYMATE10</strong>. First 300 members only.
      </p>
    </div>
  )}
