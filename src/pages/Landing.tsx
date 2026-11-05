@@ -35,6 +35,22 @@ const CROSS = () => (
  </svg>
 )
 
+// Eager-loaded (lazy images inside the scrolling marquee never fetched in time)
+// and falls back to the company name if the file fails to load.
+function CompanyImg({ name, src, width, wordmark, dark }: { name: string; src: string; width: number; wordmark?: boolean; dark?: boolean }) {
+  const [failed, setFailed] = useState(false)
+  if (failed) {
+    return <span style={{ fontSize: 15, fontWeight: 600, color: dark ? '#fff' : '#2b2b2b', whiteSpace: 'nowrap' }}>{wordmark ? name : ''}</span>
+  }
+  return wordmark ? (
+    <img src={src} alt={`${name} logo`} loading="eager" decoding="async" width={width} height={28} onError={() => setFailed(true)}
+      style={{ height: 28, width: 'auto', maxWidth: 150, flexShrink: 0, objectFit: 'contain' }} />
+  ) : (
+    <img src={src} alt={`${name} logo`} loading="eager" decoding="async" width={32} height={32} onError={() => setFailed(true)}
+      style={{ width: 32, height: 32, flexShrink: 0, objectFit: 'contain' }} />
+  )
+}
+
 export default function Landing() {
  const { session, subscription, profile, isRecruiter, recruiter } = useAuth()
  const navigate = useNavigate()
@@ -97,6 +113,7 @@ export default function Landing() {
  { name: 'Amazon', logo: '/logos/amazon.png', wordmark: true, logoW: 114 },
  { name: 'Salesforce', logo: '/logos/salesforce.png', wordmark: true, logoW: 56 },
  { name: 'Wipro', logo: '/logos/wipro.svg', color: '#341C53' },
+ { name: 'Stripe', logo: '/logos/stripe.svg', color: '#635BFF' },
  { name: 'Turing', logo: '/logos/turing.png', wordmark: true, dark: true, logoW: 200 },
  { name: 'micro1', logo: '/logos/micro1.png', wordmark: true, dark: true, logoW: 178 },
  { name: 'Growth School', logo: '/logos/growthschool.png', wordmark: true, logoW: 92 },
@@ -271,7 +288,7 @@ export default function Landing() {
  Companies our users interviewed at
  </h2>
  <p style={{ fontSize: 12.5, color: '#b5b5b5', textAlign: 'center', margin: '0 0 28px', padding: '0 24px' }}>
- Nestack Technologies, Google, Amazon, Salesforce, Wipro, Turing, micro1, Growth School &amp; Moodle
+ Nestack Technologies, Google, Amazon, Salesforce, Wipro, Stripe, Turing, micro1, Growth School &amp; Moodle
  </p>
  <div style={{ width: '100%', overflow: 'hidden',
  WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)',
@@ -286,12 +303,10 @@ export default function Landing() {
  border: c.dark ? '1px solid #0f0f0f' : '1px solid #ececec',
  }}>
  {c.wordmark ? (
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={Math.round((c.logoW ?? 180) * 0.7)} height={28}
- style={{ height: 28, width: 'auto', maxWidth: 150, flexShrink: 0, objectFit: 'contain' }} />
+ <CompanyImg name={c.name} src={c.logo} wordmark width={Math.round((c.logoW ?? 180) * 0.7)} dark={c.dark} />
  ) : c.logo ? (
  <>
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={32} height={32}
- style={{ width: 32, height: 32, flexShrink: 0, objectFit: 'contain' }} />
+ <CompanyImg name={c.name} src={c.logo} width={32} />
  <span style={{ fontSize: 16, fontWeight: 600, color: '#2b2b2b', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
  </>
  ) : (
