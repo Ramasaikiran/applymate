@@ -39,9 +39,10 @@ const TRIAL_PLANS_INTL: Record<string, { amount: number; days: number }> = {
 // Coupon codes are validated here only — never trust a discount amount
 // sent from the client, since that's editable in the browser before
 // the request is sent.
-// `end` is exclusive: applymate10 is valid through 20-10-2026 (IST).
-const COUPONS: Record<string, { pct: number; end: Date }> = {
-  applymate10: { pct: 10, end: new Date('2026-10-21T00:00:00+05:30') },
+// `end` is exclusive. `cap` = max paid redemptions, counted server-side.
+// applymate10: Diwali offer, first 500 paid members (end date is only a ceiling).
+const COUPONS: Record<string, { pct: number; end: Date; cap?: number }> = {
+  applymate10: { pct: 10, end: new Date('2026-12-01T00:00:00+05:30'), cap: 500 },
 }
 function couponActive(code: string) {
   const c = COUPONS[code]
@@ -135,6 +136,15 @@ serve(async (req) => {
     // Site-wide promo also doesn't stack with trial or a manual coupon
     // — whichever discount applies, only one wins, promo takes the
     // lower priority since a manual coupon is a more deliberate choice.
+    if (matchedCoupon && COUPONS[matchedCoupon].cap) {
+      const { count } = await supabase.from('subscriptions')
+        .select('id', { count: 'exact', head: true })
+        .eq('coupon_code', matchedCoupon)
+        .not('status', 'in', '(pending,failed)')
+      if ((count ?? 0) >= COUPONS[matchedCoupon].cap!) {
+        throw new Error('This offer is fully redeemed (first 500 members only).')
+      }
+    }
     const promoApplies = !wantsTrial && !matchedCoupon && promoActive()
     const discountPct = matchedCoupon ? COUPONS[matchedCoupon].pct : (promoApplies ? PROMO_PCT : 0)
     const amount = discountPct

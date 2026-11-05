@@ -152,9 +152,9 @@ export default function Subscription() {
  const COUPON_DISCOUNTS: Record<string, number> = {
  applymate10: 10,
  }
- // applymate10 valid through 20-10-2026 (IST). Keep in sync with server.
+ // applymate10: Diwali offer, first 500 members (cap enforced on server).
  const COUPON_END: Record<string, Date> = {
- applymate10: new Date('2026-10-21T00:00:00+05:30'),
+ applymate10: new Date('2026-12-01T00:00:00+05:30'),
  }
  function applyCoupon() {
  const code = couponInput.trim().toLowerCase()
@@ -346,6 +346,16 @@ export default function Subscription() {
 
  return (
  <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: "'Inter',sans-serif" }}>
+
+ {/* Diwali coupon banner (shown once the site-wide countdown promo is over) */}
+ {!countdown && Date.now() < COUPON_END.applymate10.getTime() && (
+   <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '10px 20px', textAlign: 'center' }}>
+     <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0 }}>
+       <strong style={{ color: '#fff', fontWeight: 700 }}>Diwali offer: 10% off</strong> all plans. Use code{' '}
+       <strong style={{ color: '#fff', fontWeight: 700 }}>APPLYMATE10</strong>. First 500 members only.
+     </p>
+   </div>
+ )}
 
  {/* Promo banner */}
  {countdown && (
