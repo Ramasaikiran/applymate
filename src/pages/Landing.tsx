@@ -283,40 +283,40 @@ export default function Landing() {
  <h2 className="eyebrow-label" style={{ textAlign: 'center', margin: '0 0 8px', padding: '0 24px' }}>
  Companies our users interviewed at
  </h2>
- <p style={{ fontSize: 13, color: '#c2c2c2', textAlign: 'center', margin: '0 0 24px', padding: '0 24px' }}>
+ <p style={{ fontSize: 12.5, color: '#b5b5b5', textAlign: 'center', margin: '0 0 28px', padding: '0 24px' }}>
  Nestack Technologies, Google, Amazon, Salesforce, Wipro, Turing, micro1, Growth School &amp; Moodle
  </p>
- <div style={{ width: '100%', overflow: 'hidden' }}>
- <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 20,
- animationDuration: '30s' }}>
+ <div style={{ width: '100%', overflow: 'hidden',
+ WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)',
+ maskImage: 'linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)' }}>
+ <div className="inbox-marquee-track" role="list" aria-label="Companies our users interviewed at" style={{ display: 'flex', width: 'max-content', gap: 14,
+ animationDuration: '42s', padding: '4px 0' }}>
  {[...COMPANIES, ...COMPANIES].map((c, i) => (
  <div key={c.name + i} role="listitem" aria-hidden={i >= COMPANIES.length} style={{
- display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0,
- background: c.dark ? '#0f0f0f' : '#fff',
- border: c.dark ? '1px solid #0f0f0f' : '1px solid #f0f0f0',
- borderRadius: 22,
- padding: c.wordmark ? '18px 28px' : '16px 28px',
- boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, flexShrink: 0,
+ height: 64, padding: '0 26px', borderRadius: 14,
+ background: c.dark ? '#0f0f0f' : '#fafafa',
+ border: c.dark ? '1px solid #0f0f0f' : '1px solid #ececec',
  }}>
  {c.wordmark ? (
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={c.logoW ?? 180} height={40}
- style={{ height: 40, width: 'auto', flexShrink: 0 }} />
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={Math.round((c.logoW ?? 180) * 0.7)} height={28}
+ style={{ height: 28, width: 'auto', maxWidth: 150, flexShrink: 0, objectFit: 'contain' }} />
  ) : c.logo ? (
  <>
- <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={44} height={44}
- style={{ width: 44, height: 44, flexShrink: 0 }} />
- <span style={{ fontSize: 22, fontWeight: 700, color: '#0f0f0f', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
+ <img src={c.logo} alt={`${c.name} logo`} loading="lazy" width={32} height={32}
+ style={{ width: 32, height: 32, flexShrink: 0, objectFit: 'contain' }} />
+ <span style={{ fontSize: 16, fontWeight: 600, color: '#2b2b2b', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
  </>
  ) : (
  <>
  <span aria-hidden="true" style={{
- width: 44, height: 44, borderRadius: '50%', background: c.color,
- color: '#fff', fontSize: 20, fontWeight: 700,
+ width: 32, height: 32, borderRadius: '50%', background: c.color,
+ color: '#fff', fontSize: 15, fontWeight: 700,
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
  }}>
  {c.name[0]}
  </span>
- <span style={{ fontSize: 22, fontWeight: 700, color: '#0f0f0f', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
+ <span style={{ fontSize: 16, fontWeight: 600, color: '#2b2b2b', whiteSpace: 'nowrap', letterSpacing: '-0.01em' }}>{c.name}</span>
  </>
  )}
  </div>
