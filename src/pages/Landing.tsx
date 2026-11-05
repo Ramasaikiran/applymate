@@ -444,78 +444,71 @@ export default function Landing() {
  </section>
 
  {/* ── HOW IT WORKS ──────────────────────────────────────── */}
- <section style={{ maxWidth: 900, margin: '0 auto', padding: '96px 24px' }}>
- <p className="eyebrow-label" style={{ textAlign: 'center', marginBottom: 12 }}>
- HOW IT WORKS
- </p>
- <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
- fontWeight: 400, textAlign: 'center', letterSpacing: '-0.025em',
- color: '#0f0f0f', marginBottom: 16 }}>
- 4 minutes setup. Applications for months.
- </h2>
- <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', marginBottom: 56, maxWidth: 500, margin: '0 auto 56px' }}>
- You set up once. We do the grind. You focus on being ready when they call.
- </p>
+      <section aria-labelledby="how-title" style={{ margin: '0 0 96px' }}>
+        <div style={{ background: '#0f0f0f', padding: '64px 24px 56px', textAlign: 'center' }}>
+          <h2 id="how-title" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 'clamp(38px,8vw,60px)',
+            fontWeight: 400, letterSpacing: '-0.02em', color: '#22c55e', textTransform: 'uppercase', margin: '0 0 18px' }}>
+            How it works?
+          </h2>
+          <p style={{ fontSize: 17, lineHeight: 1.65, color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
+            4 minutes setup. Applications for months. You set up once, we do the grind,
+            and you focus on being ready when they call.
+          </p>
+        </div>
 
- <div ref={howItWorksRef} style={{ position: 'relative' }}>
- <div className="steps-progress-track" style={{ position: 'absolute', top: 0, left: '16.5%', right: '16.5%', height: 2,
- background: '#e5e5e5', zIndex: 1 }} />
- <div className="steps-progress-fill" style={{ position: 'absolute', top: 0, left: '16.5%', height: 2,
- background: '#22c55e', zIndex: 2,
- width: howItWorksInView ? '67%' : '0%',
- transition: 'width 1.1s cubic-bezier(0.65,0,0.35,1)' }} />
- <div className="steps-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 2,
- background: '#f0f0f0', borderRadius: 16, overflow: 'hidden' }}>
- {[
- {
- step: '01', title: 'Fill your profile', time: '4 min',
- desc: 'Skills, resume, preferred roles, location. One time. Never repeat.',
- },
- {
- step: '02', title: 'Pick a plan', time: '2 min',
- desc: 'Free to start. No hidden charges. Cancel any time instantly.',
- },
- {
- step: '03', title: 'We apply daily', time: 'Ongoing',
- desc: 'Our team finds matches and applies with tailored cover letters. You get notified of every single one.',
- },
- ].map((s, i) => (
- <div key={s.step} className="steps-card" style={{
- background: i === 1 ? '#0f0f0f' : '#fff', padding: '36px 30px',
- opacity: howItWorksInView ? 1 : 0,
- transform: howItWorksInView ? 'translateY(0)' : 'translateY(14px)',
- transition: `opacity 0.5s ease ${i * 0.15}s, transform 0.5s ease ${i * 0.15}s`,
- }}>
- <div style={{ display: 'flex', justifyContent: 'space-between',
- alignItems: 'flex-start', marginBottom: 16 }}>
- <span style={{ fontSize: 11, fontWeight: 700,
- color: i === 1 ? 'rgba(255,255,255,0.4)' : '#b5b5b5',
- letterSpacing: '0.08em' }}>{s.step}</span>
- <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 999,
- background: i === 1 ? 'rgba(255,255,255,0.1)' : '#f5f5f5',
- color: i === 1 ? 'rgba(255,255,255,0.6)' : '#9b9b9b' }}>{s.time}</span>
- </div>
- <p className="step-title" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 22,
- color: i === 1 ? '#fff' : '#0f0f0f', marginBottom: 10 }}>{s.title}</p>
- <p className="step-desc" style={{ fontSize: 14, color: i === 1 ? 'rgba(255,255,255,0.55)' : '#9b9b9b',
- lineHeight: 1.65 }}>{s.desc}</p>
- </div>
- ))}
- </div>
- </div>
+        <div style={{ maxWidth: 580, margin: '0 auto', padding: '40px 20px 0' }}>
+          <div ref={howItWorksRef} style={{ background: '#0f0f0f', borderRadius: 28, overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.14)' }}>
+            {[
+              { step: '1', title: 'Fill your profile', time: '4 min',
+                desc: 'Skills, resume, preferred roles, location. One time. Never repeat.' },
+              { step: '2', title: 'Pick a plan', time: '2 min',
+                desc: 'Free to start. No hidden charges. Cancel any time instantly.' },
+              { step: '3', title: 'We apply daily', time: 'Ongoing',
+                desc: 'Our team finds matches and applies with tailored cover letters. You get notified of every single one.' },
+            ].map((s, i, arr) => (
+              <div key={s.step} style={{
+                position: 'relative', display: 'flex', gap: 20, alignItems: 'flex-start', padding: '32px 24px',
+                borderTop: i ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                opacity: howItWorksInView ? 1 : 0,
+                transform: howItWorksInView ? 'translateY(0)' : 'translateY(14px)',
+                transition: `opacity 0.5s ease ${i * 0.15}s, transform 0.5s ease ${i * 0.15}s`,
+              }}>
+                {i < arr.length - 1 && (
+                  <span aria-hidden="true" style={{ position: 'absolute', left: 49, top: 86, bottom: 0, width: 4,
+                    background: 'rgba(255,255,255,0.85)', borderRadius: 2 }} />
+                )}
+                {i > 0 && (
+                  <span aria-hidden="true" style={{ position: 'absolute', left: 49, top: 0, height: 32, width: 4,
+                    background: 'rgba(255,255,255,0.85)', borderRadius: 2 }} />
+                )}
+                <span style={{ position: 'relative', zIndex: 1, flexShrink: 0, width: 54, height: 54, borderRadius: '50%',
+                  background: '#fff', color: '#0f0f0f', fontSize: 22, fontWeight: 700,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.step}</span>
+                <div>
+                  <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 28, lineHeight: 1.15,
+                    color: '#fff', margin: '4px 0 8px' }}>{s.title}</p>
+                  <p style={{ fontSize: 15, lineHeight: 1.65, color: 'rgba(255,255,255,0.7)', margin: '0 0 10px' }}>{s.desc}</p>
+                  <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 999,
+                    background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)' }}>{s.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
 
- <div style={{ textAlign: 'center', marginTop: 32 }}>
- <button onClick={goSignUp} style={{
- background: '#0f0f0f', color: '#fff', border: 'none',
- padding: '14px 36px', borderRadius: 10, fontSize: 15, fontWeight: 600,
- cursor: 'pointer', fontFamily: "'Inter',sans-serif",
- }}>
- Start today →
- </button>
- </div>
- </section>
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <button onClick={goSignUp} style={{
+              background: '#0f0f0f', color: '#fff', border: 'none',
+              padding: '14px 36px', borderRadius: 10, fontSize: 15, fontWeight: 600,
+              cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+            }}>
+              Start today →
+            </button>
+          </div>
+        </div>
+      </section>
 
- {/* ── CALLBACK STATS (live, aggregate-only) ───────────── */}
+      {/* ── CALLBACK STATS (live, aggregate-only) ───────────── */}
  <CallbackStats />
 
  {/* ── PRICING (visible before sign-up: price is the top objection) ───────── */}
