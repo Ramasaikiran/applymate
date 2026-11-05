@@ -161,6 +161,19 @@ export default function Landing() {
 
  {/* ── NAV ────── */}
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
+        {/* Diwali offer banner: applymate10, through 9 Nov 2026 IST, first 300 paid members (cap enforced server-side) */}
+        {Date.now() < new Date('2026-11-10T00:00:00+05:30').getTime() && (
+          <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '9px 16px', textAlign: 'center' }}>
+            <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5 }}>
+              <strong style={{ color: '#fff', fontWeight: 700 }}>Diwali offer: 10% off</strong> all plans. Code{' '}
+              <strong style={{ color: '#fff', fontWeight: 700, letterSpacing: '0.04em' }}>APPLYMATE10</strong>
+              . First 300 members only. Ends 9 Nov.{' '}
+              <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
+                style={{ color: '#fff', fontWeight: 600, textDecoration: 'underline', whiteSpace: 'nowrap' }}>Claim it →</a>
+            </p>
+          </div>
+        )}
+
 
  {/* ── NAV ───────────────────────────────────────────────── */}
  <nav style={{
