@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { recruiterHome } from '../lib/routing'
+import CallbackStats from '../components/CallbackStats'
+import Testimonials from '../components/Testimonials'
 import inboxProof1 from '../assets/inbox-proof/proof-1.webp'
 import inboxProof2 from '../assets/inbox-proof/proof-2.webp'
 import inboxProof3 from '../assets/inbox-proof/proof-3.webp'
@@ -502,6 +504,9 @@ export default function Landing() {
  </div>
  </section>
 
+ {/* ── CALLBACK STATS (live, aggregate-only) ───────────── */}
+ <CallbackStats />
+
  {/* ── TRUST / PROOF ─────────────────────────────────────── */}
  <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 96px' }}>
  <div style={{ background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 16,
@@ -532,6 +537,9 @@ export default function Landing() {
  </div>
  </div>
  </section>
+
+ {/* ── TESTIMONIALS (hidden until real ones are added) ─── */}
+ <Testimonials />
 
  {/* ── 100% MONEY BACK PROGRAM ──────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 96px' }}>
