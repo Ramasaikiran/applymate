@@ -23,7 +23,9 @@ as $$
     group by user_id
   ),
   cohort as (
-    select fp.user_id, fp.started, p.years_experience,
+    select fp.user_id, fp.started,
+      -- years_experience lives in professional_details; students count as 0
+      coalesce(pd.years_experience, case when p.user_type = 'student' then 0 end) as years_experience,
       (select min(a.applied_at)
          from public.job_applications a
         where a.user_id = fp.user_id
@@ -31,6 +33,7 @@ as $$
           and a.status in ('interview','hr_round','offer','joined','hired')) as first_call
     from first_paid fp
     join public.profiles p on p.id = fp.user_id
+    left join public.professional_details pd on pd.id = fp.user_id
     where exists (
       select 1 from public.job_applications a
       where a.user_id = fp.user_id and a.applied_at >= fp.started
@@ -49,7 +52,7 @@ as $$
   ),
   exp as (
     select
-      case when c.years_experience < 1 then 'Fresher (under 1 year)'
+      case when c.years_experience < 1 then 'Student / fresher (under 1 year)'
            when c.years_experience < 3 then '1–2 years'
            when c.years_experience < 6 then '3–5 years'
            else '6+ years' end as bucket,
