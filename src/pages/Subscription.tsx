@@ -347,16 +347,6 @@ export default function Subscription() {
  return (
  <div style={{ minHeight: '100vh', background: '#fafafa', fontFamily: "'Inter',sans-serif" }}>
 
- {/* Diwali coupon banner (shown once the site-wide countdown promo is over) */}
- {!countdown && Date.now() < COUPON_END.applymate10.getTime() && (
-   <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '10px 20px', textAlign: 'center' }}>
-     <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0 }}>
-       <strong style={{ color: '#fff', fontWeight: 700 }}>Diwali offer: 10% off</strong> all plans. Use code{' '}
-       <strong style={{ color: '#fff', fontWeight: 700 }}>APPLYMATE10</strong>. First 300 members only.
-     </p>
-   </div>
- )}
-
  {/* Promo banner */}
  {countdown && (
  <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '10px 20px',
