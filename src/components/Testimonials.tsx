@@ -12,11 +12,15 @@ export default function Testimonials() {
       <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', maxWidth: 520, margin: '0 auto 40px', lineHeight: 1.6 }}>
         In their own words, shared with their permission.
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(280px,1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: TESTIMONIALS.length === 1 ? 'minmax(0,640px)' : 'repeat(auto-fit,minmax(280px,1fr))', justifyContent: 'center', gap: 16 }}>
         {TESTIMONIALS.map(t => (
           <figure key={t.name + t.role} style={{ margin: 0, border: '1px solid #e5e5e5', borderRadius: 16, padding: 24, background: '#fff' }}>
             <blockquote style={{ margin: '0 0 18px', fontSize: 15, lineHeight: 1.65, color: '#3b3b3b' }}>
-              “{t.quote}”
+              {t.quote.split('\n\n').map((para, i, all) => (
+                <p key={i} style={{ margin: '0 0 12px' }}>
+                  {i === 0 ? '“' : ''}{para}{i === all.length - 1 ? '”' : ''}
+                </p>
+              ))}
             </blockquote>
             <figcaption style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
               {t.photo && <img src={t.photo} alt={t.name} width={40} height={40} loading="lazy"
