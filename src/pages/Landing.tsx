@@ -186,11 +186,6 @@ export default function Landing() {
  {/* ── HERO ──────────────────────────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '40px 24px 56px', textAlign: 'center' }}>
 
- <p style={{ display: 'inline-block', fontSize: 13, fontWeight: 600, color: '#4a4a4a', background: '#f4f4f4',
- borderRadius: 999, padding: '7px 16px', margin: '0 0 22px', letterSpacing: '-0.005em' }}>
- Job application service · for freshers and working professionals
- </p>
-
  <h1 style={{
  fontFamily: "'Instrument Serif',Georgia,serif",
  fontSize: 'clamp(48px, 9vw, 84px)',
@@ -231,14 +226,6 @@ export default function Landing() {
  </span>
  ))}
  </div>
- <ol style={{ listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
- flexWrap: 'wrap', padding: 0, margin: '14px 0 0', fontSize: 13, color: '#6b6b6b' }}>
- <li><strong style={{ color: '#0f0f0f' }}>1.</strong> Fill your profile (4 min)</li>
- <li aria-hidden="true">→</li>
- <li><strong style={{ color: '#0f0f0f' }}>2.</strong> Pick a plan</li>
- <li aria-hidden="true">→</li>
- <li><strong style={{ color: '#0f0f0f' }}>3.</strong> We apply daily</li>
- </ol>
  <button onClick={() => document.getElementById('inbox-proof')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
  textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 6,
