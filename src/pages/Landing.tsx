@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { recruiterHome } from '../lib/routing'
-import CallbackStats from '../components/CallbackStats'
+import CallbackHighlights from '../components/CallbackHighlights'
 import Testimonials from '../components/Testimonials'
 
 import { getCountry, planPrice, formatMoney, type PaidPlanId } from '../lib/pricing'
@@ -537,7 +537,7 @@ export default function Landing() {
       </section>
 
       {/* ── CALLBACK STATS (live, aggregate-only) ───────────── */}
- <CallbackStats />
+ <CallbackHighlights />
 
  {/* ── PRICING (visible before sign-up: price is the top objection) ───────── */}
  <section id="pricing" style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 96px', scrollMarginTop: 72 }}>
