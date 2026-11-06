@@ -166,7 +166,7 @@ export default function Landing() {
           <div style={{ background: 'linear-gradient(90deg, #4a2e08, #6b3f0a)', padding: '9px 16px', textAlign: 'center' }}>
             <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5 }}>
               <strong style={{ color: '#fff', fontWeight: 700 }}>Diwali offer: 10% off</strong> all plans. Code{' '}
-              <strong style={{ color: '#fff', fontWeight: 700, letterSpacing: '0.04em' }}>APPLYMATE10</strong>
+              <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong>
               . First 300 members only. Ends 9 Nov.{' '}
               <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
                 style={{ color: '#fff', fontWeight: 600, textDecoration: 'underline', whiteSpace: 'nowrap' }}>Claim it →</a>

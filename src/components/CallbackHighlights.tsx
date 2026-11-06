@@ -59,10 +59,6 @@ export default function CallbackHighlights() {
           </div>
         ))}
       </div>
-
-      <p style={{ fontSize: 12, color: '#9b9b9b', textAlign: 'center', margin: '28px auto 0', maxWidth: 600, lineHeight: 1.6 }}>
-        Results vary and are not a guarantee of interviews or offers.
-      </p>
     </section>
   )
 }
