@@ -256,11 +256,11 @@ export default function Landing() {
  </span>
  ))}
  </div>
- <button onClick={() => document.getElementById('inbox-proof')?.scrollIntoView({ behavior: 'smooth' })} style={{
+ <button onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
  textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 6,
  }}>
- See real interview invites from members ↓
+ See how it works ↓
  </button>
  <button onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
@@ -340,6 +340,105 @@ export default function Landing() {
  </div>
  </section>
 
+ {/* ── HOW IT WORKS ──────────────────────────────────────── */}
+      <section id="how-it-works" aria-labelledby="how-title" style={{ margin: '0 0 96px', scrollMarginTop: 72 }}>
+        <div style={{ background: '#0f0f0f', padding: '64px 24px 56px', textAlign: 'center' }}>
+          <h2 id="how-title" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 'clamp(38px,8vw,60px)',
+            fontWeight: 400, letterSpacing: '-0.02em', color: '#22c55e', textTransform: 'uppercase', margin: '0 0 18px' }}>
+            How it works?
+          </h2>
+          <p style={{ fontSize: 17, lineHeight: 1.65, color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
+            4 minutes setup. Applications for months. You set up once, we do the grind,
+            and you focus on being ready when they call.
+          </p>
+        </div>
+
+        <div style={{ maxWidth: 580, margin: '0 auto', padding: '40px 20px 0' }}>
+          <div ref={howItWorksRef} style={{ background: '#0f0f0f', borderRadius: 28, overflow: 'hidden',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.14)' }}>
+            {[
+              { step: '1', title: 'Fill your profile', time: '4 min',
+                desc: 'Skills, resume, preferred roles, location. One time. Never repeat.' },
+              { step: '2', title: 'Pick a plan', time: '2 min',
+                desc: 'Free to start. No hidden charges. Cancel any time instantly.' },
+              { step: '3', title: 'We apply daily', time: 'Ongoing',
+                desc: 'Our team finds matches and applies with tailored cover letters. You get notified of every single one.' },
+            ].map((s, i, arr) => (
+              <div key={s.step} style={{
+                position: 'relative', display: 'flex', gap: 20, alignItems: 'flex-start', padding: '32px 24px',
+                borderTop: i ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                opacity: howItWorksInView ? 1 : 0,
+                transform: howItWorksInView ? 'translateY(0)' : 'translateY(14px)',
+                transition: `opacity 0.5s ease ${i * 0.15}s, transform 0.5s ease ${i * 0.15}s`,
+              }}>
+                {i < arr.length - 1 && (
+                  <span aria-hidden="true" style={{ position: 'absolute', left: 49, top: 86, bottom: 0, width: 4,
+                    background: 'rgba(255,255,255,0.85)', borderRadius: 2 }} />
+                )}
+                {i > 0 && (
+                  <span aria-hidden="true" style={{ position: 'absolute', left: 49, top: 0, height: 32, width: 4,
+                    background: 'rgba(255,255,255,0.85)', borderRadius: 2 }} />
+                )}
+                <span style={{ position: 'relative', zIndex: 1, flexShrink: 0, width: 54, height: 54, borderRadius: '50%',
+                  background: '#fff', color: '#0f0f0f', fontSize: 22, fontWeight: 700,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.step}</span>
+                <div>
+                  <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 28, lineHeight: 1.15,
+                    color: '#fff', margin: '4px 0 8px' }}>{s.title}</p>
+                  <p style={{ fontSize: 15, lineHeight: 1.65, color: 'rgba(255,255,255,0.7)', margin: '0 0 10px' }}>{s.desc}</p>
+                  <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 999,
+                    background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)' }}>{s.time}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 32 }}>
+            <button onClick={goSignUp} style={{
+              background: '#0f0f0f', color: '#fff', border: 'none',
+              padding: '14px 36px', borderRadius: 10, fontSize: 15, fontWeight: 600,
+              cursor: 'pointer', fontFamily: "'Inter',sans-serif",
+            }}>
+              Start today →
+            </button>
+          </div>
+        </div>
+      </section>
+
+ {/* ── TRUST / PROOF ─────────────────────────────────────── */}
+ <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 96px' }}>
+ <div style={{ background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 16,
+ padding: '40px 32px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
+ <div>
+ <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
+ Who applies
+ </p>
+ <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
+ Basic: you apply. Pro & Max Pro: a real admin applies for you.
+ </p>
+ </div>
+ <div>
+ <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
+ How matches are chosen
+ </p>
+ <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
+ We apply only when skills and experience match exactly.
+ </p>
+ </div>
+ <div>
+ <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
+ What you get
+ </p>
+ <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
+ Target of 8–10 tailored applications a day. WhatsApp update for each one.
+ </p>
+ </div>
+ </div>
+ </section>
+
+      {/* ── CALLBACK STATS (live, aggregate-only) ───────────── */}
+ <CallbackHighlights />
+
  {/* ── STRAIGHT FROM THEIR INBOXES ──────────────────────── */}
  <section id="inbox-proof" style={{ background: '#0f0f0f', padding: '88px 0', overflow: 'hidden', scrollMarginTop: 72 }}>
  <div style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 48px', textAlign: 'center' }}>
@@ -385,6 +484,9 @@ export default function Landing() {
  </button>
  </div>
  </section>
+
+ {/* ── TESTIMONIALS (hidden until real ones are added) ─── */}
+ <Testimonials />
 
  {/* ── WHY APPLYMATE (comparison table) ─────────────────── */}
  <section style={{ background: '#fff', borderTop: '1px solid #f0f0f0', padding: '88px 0' }}>
@@ -471,74 +573,6 @@ export default function Landing() {
  </div>
  </section>
 
- {/* ── HOW IT WORKS ──────────────────────────────────────── */}
-      <section aria-labelledby="how-title" style={{ margin: '0 0 96px' }}>
-        <div style={{ background: '#0f0f0f', padding: '64px 24px 56px', textAlign: 'center' }}>
-          <h2 id="how-title" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 'clamp(38px,8vw,60px)',
-            fontWeight: 400, letterSpacing: '-0.02em', color: '#22c55e', textTransform: 'uppercase', margin: '0 0 18px' }}>
-            How it works?
-          </h2>
-          <p style={{ fontSize: 17, lineHeight: 1.65, color: 'rgba(255,255,255,0.6)', maxWidth: 520, margin: '0 auto' }}>
-            4 minutes setup. Applications for months. You set up once, we do the grind,
-            and you focus on being ready when they call.
-          </p>
-        </div>
-
-        <div style={{ maxWidth: 580, margin: '0 auto', padding: '40px 20px 0' }}>
-          <div ref={howItWorksRef} style={{ background: '#0f0f0f', borderRadius: 28, overflow: 'hidden',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.14)' }}>
-            {[
-              { step: '1', title: 'Fill your profile', time: '4 min',
-                desc: 'Skills, resume, preferred roles, location. One time. Never repeat.' },
-              { step: '2', title: 'Pick a plan', time: '2 min',
-                desc: 'Free to start. No hidden charges. Cancel any time instantly.' },
-              { step: '3', title: 'We apply daily', time: 'Ongoing',
-                desc: 'Our team finds matches and applies with tailored cover letters. You get notified of every single one.' },
-            ].map((s, i, arr) => (
-              <div key={s.step} style={{
-                position: 'relative', display: 'flex', gap: 20, alignItems: 'flex-start', padding: '32px 24px',
-                borderTop: i ? '1px solid rgba(255,255,255,0.1)' : 'none',
-                opacity: howItWorksInView ? 1 : 0,
-                transform: howItWorksInView ? 'translateY(0)' : 'translateY(14px)',
-                transition: `opacity 0.5s ease ${i * 0.15}s, transform 0.5s ease ${i * 0.15}s`,
-              }}>
-                {i < arr.length - 1 && (
-                  <span aria-hidden="true" style={{ position: 'absolute', left: 49, top: 86, bottom: 0, width: 4,
-                    background: 'rgba(255,255,255,0.85)', borderRadius: 2 }} />
-                )}
-                {i > 0 && (
-                  <span aria-hidden="true" style={{ position: 'absolute', left: 49, top: 0, height: 32, width: 4,
-                    background: 'rgba(255,255,255,0.85)', borderRadius: 2 }} />
-                )}
-                <span style={{ position: 'relative', zIndex: 1, flexShrink: 0, width: 54, height: 54, borderRadius: '50%',
-                  background: '#fff', color: '#0f0f0f', fontSize: 22, fontWeight: 700,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{s.step}</span>
-                <div>
-                  <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 28, lineHeight: 1.15,
-                    color: '#fff', margin: '4px 0 8px' }}>{s.title}</p>
-                  <p style={{ fontSize: 15, lineHeight: 1.65, color: 'rgba(255,255,255,0.7)', margin: '0 0 10px' }}>{s.desc}</p>
-                  <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 999,
-                    background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)' }}>{s.time}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: 32 }}>
-            <button onClick={goSignUp} style={{
-              background: '#0f0f0f', color: '#fff', border: 'none',
-              padding: '14px 36px', borderRadius: 10, fontSize: 15, fontWeight: 600,
-              cursor: 'pointer', fontFamily: "'Inter',sans-serif",
-            }}>
-              Start today →
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ── CALLBACK STATS (live, aggregate-only) ───────────── */}
- <CallbackHighlights />
-
  {/* ── PRICING (visible before sign-up: price is the top objection) ───────── */}
  <section id="pricing" style={{ maxWidth: 1000, margin: '0 auto', padding: '0 24px 96px', scrollMarginTop: 72 }}>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40, fontWeight: 400,
@@ -593,40 +627,6 @@ export default function Landing() {
  <a href="/pricing.html" style={{ color: '#4a4a4a' }}>Full pricing and countries</a>
  </p>
  </section>
-
- {/* ── TRUST / PROOF ─────────────────────────────────────── */}
- <section style={{ maxWidth: 900, margin: '0 auto', padding: '0 24px 96px' }}>
- <div style={{ background: '#fafafa', border: '1px solid #f0f0f0', borderRadius: 16,
- padding: '40px 32px', display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
- <div>
- <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
- Who applies
- </p>
- <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
- Basic: you apply. Pro & Max Pro: a real admin applies for you.
- </p>
- </div>
- <div>
- <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
- How matches are chosen
- </p>
- <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
- We apply only when skills and experience match exactly.
- </p>
- </div>
- <div>
- <p className="trust-heading" style={{ fontSize: 13, fontWeight: 700, color: '#0f0f0f', marginBottom: 6 }}>
- What you get
- </p>
- <p className="trust-body" style={{ fontSize: 13, color: '#7a7a7a', lineHeight: 1.6 }}>
- Target of 8–10 tailored applications a day. WhatsApp update for each one.
- </p>
- </div>
- </div>
- </section>
-
- {/* ── TESTIMONIALS (hidden until real ones are added) ─── */}
- <Testimonials />
 
  {/* ── 100% MONEY BACK PROGRAM ──────────────────────────── */}
  <section style={{ maxWidth: 780, margin: '0 auto', padding: '0 24px 96px' }}>
