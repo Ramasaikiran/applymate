@@ -10,7 +10,7 @@ const BY_EXPERIENCE = [
   { bucket: 'Freshers (0 yrs)', pct: 40 },
   { bucket: '0-2 years', pct: 50 },
   { bucket: '5-9 years', pct: 60 },
-  { bucket: '20-22 years', pct: 15 },
+  { bucket: '20-22 years', pct: 40 },
 ]
 
 const serif = "'Instrument Serif',Georgia,serif"
