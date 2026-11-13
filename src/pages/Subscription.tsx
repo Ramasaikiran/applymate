@@ -12,10 +12,15 @@ const PROMO_END = new Date('2026-10-21T00:00:00+05:30')
 
 function usePromoCountdown() {
  const [msLeft, setMsLeft] = useState(() => PROMO_END.getTime() - Date.now())
- useEffect(() => {
- const id = setInterval(() => setMsLeft(PROMO_END.getTime() - Date.now()), 1000)
- return () => clearInterval(id)
- }, [])
+useEffect(() => {
+    if (PROMO_END.getTime() - Date.now() <= 0) return
+    const id = setInterval(() => {
+      const left = PROMO_END.getTime() - Date.now()
+      setMsLeft(left)
+      if (left <= 0) clearInterval(id)
+    }, 1000)
+    return () => clearInterval(id)
+  }, [])
  if (msLeft <= 0) return null
  const totalSeconds = Math.floor(msLeft / 1000)
  return {

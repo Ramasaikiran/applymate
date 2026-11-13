@@ -13,6 +13,28 @@ interface UserRow extends Profile {
 
 type SubFilter = 'all' | 'active' | 'expired' | 'none'
 
+async function loadBatch(batch: Profile[], pendingIds: Set<string>): Promise<UserRow[]> {
+return Promise.all(batch.map(async (p) => {
+ const [subRes, appRes, sdRes, pdRes] = await Promise.all([
+ supabase.from('subscriptions').select('plan,status,ends_at')
+ .eq('user_id', p.id).order('ends_at', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
+ supabase.from('job_applications').select('id', { count: 'exact', head: true }).eq('user_id', p.id),
+ supabase.from('student_details').select('technical_skills').eq('id', p.id).maybeSingle(),
+ supabase.from('professional_details').select('technical_skills').eq('id', p.id).maybeSingle(),
+ ])
+ const active = !!subRes.data && subRes.data.status === 'active'
+ && subRes.data.ends_at && new Date(subRes.data.ends_at) > new Date()
+ return {
+ ...p,
+ sub_plan: subRes.data?.plan ?? null,
+ sub_active: active,
+ apps_count: appRes.count ?? 0,
+ skills: sdRes.data?.technical_skills ?? pdRes.data?.technical_skills ?? [],
+ deletion_pending: pendingIds.has(p.id),
+ }
+ }))
+}
+
 export default function AdminUsers() {
  const [users, setUsers] = useState<UserRow[]>([])
  const [loading, setLoading] = useState(true)
@@ -36,25 +58,32 @@ export default function AdminUsers() {
  .from('profile_deletion_requests').select('user_id').eq('status', 'pending')
  const pendingIds = new Set((pendingReqs ?? []).map(r => r.user_id))
 
- const enriched: UserRow[] = await Promise.all(profiles.map(async (p) => {
- const [subRes, appRes, sdRes, pdRes] = await Promise.all([
- supabase.from('subscriptions').select('plan,status,ends_at')
- .eq('user_id', p.id).order('ends_at', { ascending: false, nullsFirst: false }).limit(1).maybeSingle(),
- supabase.from('job_applications').select('id', { count: 'exact', head: true }).eq('user_id', p.id),
- supabase.from('student_details').select('technical_skills').eq('id', p.id).maybeSingle(),
- supabase.from('professional_details').select('technical_skills').eq('id', p.id).maybeSingle(),
- ])
- const active = !!subRes.data && subRes.data.status === 'active'
- && subRes.data.ends_at && new Date(subRes.data.ends_at) > new Date()
+ // Fast path: one call for every user (needs supabase/migrations/20261112000000_performance.sql).
+ const { data: overview, error: ovErr } = await supabase.rpc('admin_user_overview')
+ let enriched: UserRow[]
+ if (!ovErr && Array.isArray(overview)) {
+ type Ov = { p_id: string; sub_plan: string | null; sub_status: string | null; sub_ends_at: string | null; apps_count: number | string; skills: string[] | null }
+ const byId = new Map<string, Ov>((overview as Ov[]).map(o => [o.p_id, o]))
+ enriched = profiles.map(p => {
+ const o = byId.get(p.id)
+ const active = !!o && o.sub_status === 'active' && !!o.sub_ends_at && new Date(o.sub_ends_at) > new Date()
  return {
  ...p,
- sub_plan: subRes.data?.plan ?? null,
+ sub_plan: o?.sub_plan ?? null,
  sub_active: active,
- apps_count: appRes.count ?? 0,
- skills: sdRes.data?.technical_skills ?? pdRes.data?.technical_skills ?? [],
+ apps_count: Number(o?.apps_count ?? 0),
+ skills: o?.skills ?? [],
  deletion_pending: pendingIds.has(p.id),
  }
- }))
+ })
+ } else {
+ // Fallback if the SQL hasn't been run yet: old per-user queries, in batches of 10
+ // so hundreds of requests never fire at once.
+ enriched = []
+ for (let i = 0; i < profiles.length; i += 10) {
+ enriched.push(...await loadBatch(profiles.slice(i, i + 10), pendingIds))
+ }
+ }
  setUsers(enriched)
  setLoading(false)
  }

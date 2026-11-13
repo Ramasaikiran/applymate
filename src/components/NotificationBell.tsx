@@ -26,7 +26,7 @@ export default function NotificationBell() {
 
   useEffect(() => {
     load()
-    const t = setInterval(load, POLL_MS)
+    const t = setInterval(() => { if (document.visibilityState === 'visible') load() }, POLL_MS)
     return () => clearInterval(t)
   }, [load])
 

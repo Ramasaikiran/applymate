@@ -41,6 +41,13 @@ function safeErrorMessage(message: string | undefined, fallback: string) {
   return message
 }
 
+// Re-fetches return fresh objects every time. Pages key effects on `profile` /
+// `subscription`, so a new-but-identical object re-ran ~10 queries (incl. heavy
+// matching RPCs) on every tab refocus. Keep the old reference when nothing changed.
+function keepIfSame<T>(prev: T, next: T): T {
+  return JSON.stringify(prev) === JSON.stringify(next) ? prev : next
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session,       setSession]       = useState<Session | null>(null)
   const [profile,       setProfile]       = useState<Profile | null>(null)
@@ -52,13 +59,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function fetchProfile(userId: string) {
     const { data } = await supabase.from('profiles').select('*').eq('id', userId).single()
-    setProfile(data ?? null)
+    setProfile(prev => keepIfSame(prev, (data ?? null) as Profile | null))
 
     // Recruiters have no user_type. Only look up the recruiters row for them,
     // so candidates never pay for the extra query.
     if (data && !data.user_type && !data.is_admin) {
       const { data: rec } = await supabase.from('recruiters').select('*').eq('id', userId).maybeSingle()
-      setRecruiter((rec as Recruiter | null) ?? null)
+      setRecruiter(prev => keepIfSame(prev, (rec as Recruiter | null) ?? null))
     } else {
       setRecruiter(null)
     }
@@ -79,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSubscription(null)
         setProfile(prev => prev ? { ...prev, account_status: 'suspended' } : null)
       } else if (sub.status === 'active') {
-        setSubscription(sub)
+        setSubscription(prev => keepIfSame(prev, sub as Subscription))
       } else {
         setSubscription(null)
       }
