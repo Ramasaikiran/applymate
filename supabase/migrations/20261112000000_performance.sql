@@ -8,9 +8,14 @@ create index if not exists idx_notifications_user_created
 create index if not exists idx_job_apps_user_applied
   on public.job_applications (user_id, applied_at desc);
 
--- Dashboard: latest skipped jobs
-create index if not exists idx_job_screening_user_created
-  on public.job_screening_log (user_id, created_at desc);
+-- Dashboard: latest skipped jobs (only if the screening log table exists)
+do $$
+begin
+  if to_regclass('public.job_screening_log') is not null then
+    create index if not exists idx_job_screening_user_created
+      on public.job_screening_log (user_id, created_at desc);
+  end if;
+end $$;
 
 -- Admin > Users used to fire 4 queries PER USER (400+ requests at 100 users).
 -- This returns everything in one call. Non-admins get zero rows.
