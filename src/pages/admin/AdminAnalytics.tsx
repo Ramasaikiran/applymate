@@ -9,14 +9,24 @@ export default function AdminAnalytics() {
   const [apps,    setApps]    = useState<JobApplication[]>([])
   const [loading, setLoading] = useState(true)
   const [loadErr, setLoadErr] = useState<string | null>(null)
+  const [period,  setPeriod]  = useState<'7' | '30' | 'all'>('30')
 
   useEffect(() => { load() }, [])
 
   async function load() {
     setLoading(true); setLoadErr(null)
-    const { data, error } = await supabase.from('job_applications').select('*')
-    if (error) { console.error('Analytics load error:', error); setLoadErr(error.message) }
-    setApps((data as JobApplication[]) ?? [])
+    const PAGE = 1000
+    const all: JobApplication[] = []
+    for (let from = 0; ; from += PAGE) {
+      const { data, error } = await supabase.from('job_applications')
+        .select('id, applied_at, status, company, job_title')
+        .order('applied_at', { ascending: false }).order('id')
+        .range(from, from + PAGE - 1)
+      if (error) { console.error('Analytics load error:', error); setLoadErr(error.message); break }
+      all.push(...((data as unknown as JobApplication[]) ?? []))
+      if (!data || data.length < PAGE) break
+    }
+    setApps(all)
     setLoading(false)
   }
 
@@ -73,14 +83,24 @@ export default function AdminAnalytics() {
   const maxMonth = Math.max(1, ...months.map(m => m.count))
 
   // Top companies / roles
-  const companyCounts = new Map<string, number>()
-  const roleCounts = new Map<string, number>()
-  apps.forEach(a => {
-    if (a.company) companyCounts.set(a.company, (companyCounts.get(a.company) ?? 0) + 1)
-    if (a.job_title) roleCounts.set(a.job_title, (roleCounts.get(a.job_title) ?? 0) + 1)
-  })
-  const topCompanies = [...companyCounts.entries()].sort((a,b) => b[1]-a[1]).slice(0, 8)
-  const topRoles      = [...roleCounts.entries()].sort((a,b) => b[1]-a[1]).slice(0, 8)
+  // "Ey" / "EY" / " ey " are the same company: group case-insensitively, show the first spelling seen.
+  // Filtered by period so the lists move as new applications come in (all-time barely changes).
+  const cutoff = period === 'all' ? 0 : Date.now() - Number(period) * 86_400_000
+  const inPeriod = apps.filter(a => new Date(a.applied_at).getTime() >= cutoff)
+  const IGNORE = new Set(['multiple roles', 'n/a', 'na', '-', ''])
+  const tally = (values: (string | null | undefined)[]) => {
+    const m = new Map<string, { label: string; n: number }>()
+    for (const raw of values) {
+      const label = (raw ?? '').replace(/\s+/g, ' ').trim()
+      const key = label.toLowerCase()
+      if (IGNORE.has(key)) continue
+      const cur = m.get(key)
+      if (cur) cur.n++; else m.set(key, { label, n: 1 })
+    }
+    return [...m.values()].sort((a, b) => b.n - a.n).slice(0, 8).map(v => [v.label, v.n] as [string, number])
+  }
+  const topCompanies = tally(inPeriod.map(a => a.company))
+  const topRoles      = tally(inPeriod.map(a => a.job_title))
 
   const Bar = ({ data, max }: { data: { label: string; count: number }[]; max: number }) => (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 6, height: 100, padding: '0 4px' }}>
@@ -97,10 +117,26 @@ export default function AdminAnalytics() {
     </div>
   )
 
-  const Card = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  const Card = ({ title, children, right }: { title: string; children: React.ReactNode; right?: React.ReactNode }) => (
     <div style={{ background: '#fff', border: '1.5px solid #f0f0f0', borderRadius: 16, padding: '20px 22px' }}>
-      <p style={{ fontSize: 13, fontWeight: 600, color: '#6b6b6b', marginBottom: 14 }}>{title}</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, gap: 8 }}>
+        <p style={{ fontSize: 13, fontWeight: 600, color: '#6b6b6b', margin: 0 }}>{title}</p>
+        {right}
+      </div>
       {children}
+    </div>
+  )
+
+  const periodPills = (
+    <div role="group" aria-label="Time period" style={{ display: 'flex', gap: 4 }}>
+      {([['7', '7d'], ['30', '30d'], ['all', 'All']] as const).map(([v, l]) => (
+        <button key={v} onClick={() => setPeriod(v)} aria-pressed={period === v} style={{
+          fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 999, cursor: 'pointer',
+          border: '1px solid ' + (period === v ? '#0f0f0f' : '#e5e5e5'),
+          background: period === v ? '#0f0f0f' : '#fff', color: period === v ? '#fff' : '#6b6b6b',
+          fontFamily: "'Inter',sans-serif",
+        }}>{l}</button>
+      ))}
     </div>
   )
 
@@ -140,7 +176,7 @@ export default function AdminAnalytics() {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <Card title="Most applied companies">
+          <Card title="Most applied companies" right={periodPills}>
             {topCompanies.length === 0 ? <p style={{ fontSize: 13, color: '#b5b5b5' }}>No data yet.</p> :
               topCompanies.map(([name, count]) => (
                 <div key={name} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0',
@@ -150,7 +186,7 @@ export default function AdminAnalytics() {
                 </div>
               ))}
           </Card>
-          <Card title="Most popular roles">
+          <Card title="Most popular roles" right={periodPills}>
             {topRoles.length === 0 ? <p style={{ fontSize: 13, color: '#b5b5b5' }}>No data yet.</p> :
               topRoles.map(([name, count]) => (
                 <div key={name} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0',
