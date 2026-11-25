@@ -5,6 +5,7 @@ import { supabase } from '../lib/supabase'
 import { recruiterHome } from '../lib/routing'
 import CallbackHighlights from '../components/CallbackHighlights'
 import Testimonials from '../components/Testimonials'
+import BlackFridayLogo from '../components/BlackFridayLogo'
 
 import { getCountry, planPrice, formatMoney, type PaidPlanId } from '../lib/pricing'
 import inboxProof1 from '../assets/inbox-proof/proof-1.webp'
@@ -177,11 +178,13 @@ export default function Landing() {
 
  {/* ── NAV ────── */}
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
-        {/* Black Friday banner: applymate10, 10% off all plans, until 28 Nov 2026 12:00 AM IST */}
+        {/* Black Friday Sale banner: applymate10, 10% off all plans, until 28 Nov 2026 12:00 AM IST */}
         {bfLeft > 0 && (
-          <div style={{ background: 'linear-gradient(90deg, #0f0f0f, #2a2a2a)', padding: '9px 16px', textAlign: 'center' }}>
-            <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5 }}>
-              <strong style={{ color: '#fff', fontWeight: 700 }}>Black Friday: 10% off</strong> all plans. Code{' '}
+          <div style={{ background: 'linear-gradient(90deg, #0f0f0f, #2a2a2a)', padding: '9px 16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', columnGap: 12, rowGap: 4 }}>
+            <BlackFridayLogo size={15} />
+            <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5, textAlign: 'center' }}>
+              <strong style={{ color: '#fff', fontWeight: 700 }}>10% off</strong> all plans. Code{' '}
               <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong>
               . Ends in{' '}
               <strong style={{ color: '#fff', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
@@ -861,34 +864,96 @@ export default function Landing() {
  </div>
  </section>
 
- {/* ── FOOTER ────────────────────────────────────────────── */}
- <footer style={{ background: '#0f0f0f', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '32px 24px' }}>
- <div style={{ maxWidth: 900, margin: '0 auto',
- display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+{/* ── FOOTER ────────────────────────────────────────────── */}
+ <footer style={{ background: '#0f0f0f', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '56px 24px 24px', position: 'relative', overflow: 'hidden' }}>
+ <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
+ {/* CTA */}
+ <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 24, flexWrap: 'wrap',
+ paddingBottom: 40, borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+ <div style={{ minWidth: 260 }}>
+ {bfLeft > 0 ? (
+ <>
+ <BlackFridayLogo size={26} />
+ <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 15, margin: '14px 0 0', lineHeight: 1.6 }}>
+ 10% off all plans. Use code{' '}
+ <strong style={{ color: '#0f0f0f', background: '#e8b96b', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>applymate10</strong>
+ . Ends in {bfDays}d {String(bfHours).padStart(2, '0')}h {String(bfMins).padStart(2, '0')}m.
+ </p>
+ </>
+ ) : (
+ <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", color: '#fff', fontSize: 28, margin: 0 }}>
+ We apply. You get interviews.
+ </p>
+ )}
+ </div>
+ <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+ <button onClick={goSignUp} style={{ background: '#fff', color: '#0f0f0f', border: 'none', borderRadius: 10,
+ padding: '12px 22px', fontSize: 14, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif" }}>
+ Start for free
+ </button>
+ <a href="/pricing.html" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', borderRadius: 10,
+ padding: '12px 22px', fontSize: 14, fontWeight: 600, textDecoration: 'none', fontFamily: "'Inter',sans-serif" }}>
+ View plans
+ </a>
+ </div>
+ </div>
+
+ {/* LINK COLUMNS */}
+ <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 32, padding: '40px 0 32px' }}>
+ {[
+ { title: 'Product', links: [['Pricing', '/pricing.html'], ['How it works', '/how-it-works.html'], ['FAQ', '/faq.html'], ['Compare', '/compare-ways-to-apply.html']] },
+ { title: 'Explore', links: [['India', '/job-application-service-india.html'], ['Countries', '/countries.html'], ['Status', '/status']] },
+ { title: 'Company', links: [['About', '/about'], ['Contact', '/contact']] },
+ { title: 'Legal', links: [['Terms', '/terms'], ['Privacy', '/privacy'], ['Refund policy', '/refund-policy']] },
+ ].map(col => (
+ <div key={col.title}>
+ <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: '0 0 14px', fontWeight: 500 }}>{col.title}</p>
+ <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+ {col.links.map(([label, href]) => (
+ <a key={href} href={href} className="footer-link"
+ style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{label}</a>
+ ))}
+ </div>
+ </div>
+ ))}
+ <div>
+ <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.4)', margin: '0 0 14px', fontWeight: 500 }}>Community</p>
+ <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+ <a href="https://www.linkedin.com/company/applym-ate/" target="_blank" rel="noopener noreferrer" aria-label="ApplyMate on LinkedIn">
+ <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#0a66c2"/><text x="16" y="21.5" textAnchor="middle" fontSize="15" fontWeight="700" fill="#fff" fontFamily="Inter,Arial,sans-serif">in</text></svg>
+ </a>
+ <a href="https://whatsapp.com/channel/0029VbA37aS0AgWJ2nQNYT2D" target="_blank" rel="noopener noreferrer" aria-label="ApplyMate WhatsApp channel">
+ <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#25d366"/><path d="M16 7.5a8.5 8.5 0 0 0-7.3 12.9L7.5 24.5l4.2-1.1A8.5 8.5 0 1 0 16 7.5z" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round"/><path d="M13 12.6c.6 2.4 2.9 4.7 5.8 5.8l1.2-1.4-2-1.2-.9.8c-.9-.5-1.9-1.4-2.4-2.4l.8-.9-1.2-2z" fill="#fff"/></svg>
+ </a>
+ <a href="https://www.instagram.com/applymate.in" target="_blank" rel="noopener noreferrer" aria-label="ApplyMate on Instagram">
+ <svg width="32" height="32" viewBox="0 0 32 32"><defs><linearGradient id="amIg" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stopColor="#feda75"/><stop offset=".35" stopColor="#fa7e1e"/><stop offset=".65" stopColor="#d62976"/><stop offset="1" stopColor="#4f5bd5"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#amIg)"/><rect x="9" y="9" width="14" height="14" rx="4" fill="none" stroke="#fff" strokeWidth="1.8"/><circle cx="16" cy="16" r="3.3" fill="none" stroke="#fff" strokeWidth="1.8"/><circle cx="20.2" cy="11.8" r="1" fill="#fff"/></svg>
+ </a>
+ <a href="https://t.me/+NB5jne1iHO4yZjdl" target="_blank" rel="noopener noreferrer" aria-label="ApplyMate Telegram channel">
+ <svg width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="16" fill="#229ed9"/><path d="M8 15.6l15-5.8c.7-.3 1.3.2 1.1 1.2l-2.6 12c-.2.9-.7 1.1-1.4.7l-4-2.9-1.9 1.9c-.2.2-.4.4-.8.4l.3-4.1 7.4-6.7c.3-.3-.1-.4-.5-.2l-9.2 5.8-4-1.2c-.9-.3-.9-.9.2-1.3z" fill="#fff"/></svg>
+ </a>
+ </div>
+ </div>
+ </div>
+
+ {/* BOTTOM */}
+ <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+ paddingTop: 20, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
- <div style={{ width: 30, height: 30, borderRadius: 8, background: 'rgba(255,255,255,0.08)',
+ <div style={{ width: 26, height: 26, borderRadius: 7, background: 'rgba(255,255,255,0.08)',
  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
- <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+ <img src="/logo-mark.png" alt="ApplyMate" style={{ width: 18, height: 18, objectFit: 'contain' }} />
  </div>
- <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>
- ApplyMate
- </span>
+ <span style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.6)' }}>ApplyMate</span>
  </div>
- <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
- <a href="/about" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>About</a>
- <a href="/contact" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Contact</a>
- <a href="/terms" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Terms</a>
- <a href="/privacy" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Privacy</a>
- <a href="/refund-policy" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Refund</a>
- <a href="/pricing.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Pricing</a>
- <a href="/how-it-works.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>How it works</a>
- <a href="/faq.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>FAQ</a>
- <a href="/compare-ways-to-apply.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Compare</a>
- <a href="/job-application-service-india.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>India</a>
- <a href="/countries.html" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Countries</a>
- <a href="/status" className="footer-link" style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>Status</a>
- <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>© 2026 All rights reserved</p>
+ <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)', margin: 0 }}>© 2026 ApplyMate. All rights reserved.</p>
  </div>
+ </div>
+
+ {/* watermark */}
+ <div aria-hidden="true" style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 'clamp(64px, 16vw, 200px)',
+ lineHeight: 0.8, textAlign: 'center', color: 'rgba(255,255,255,0.04)', marginTop: 24, userSelect: 'none', letterSpacing: '-0.03em' }}>
+ applymate
  </div>
  </footer>
 
