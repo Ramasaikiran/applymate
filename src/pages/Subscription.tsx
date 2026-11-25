@@ -157,9 +157,9 @@ export default function Subscription() {
  const COUPON_DISCOUNTS: Record<string, number> = {
  applymate10: 10,
  }
- // applymate10: Diwali offer, first 300 members, through 9-11-2026 (cap enforced on server).
+ // applymate10: Black Friday offer, 10% off all plans, through 30-11-2026.
  const COUPON_END: Record<string, Date> = {
- applymate10: new Date('2026-11-10T00:00:00+05:30'),
+ applymate10: new Date('2026-12-01T00:00:00+05:30'),
  }
  function applyCoupon() {
  const code = couponInput.trim().toLowerCase()

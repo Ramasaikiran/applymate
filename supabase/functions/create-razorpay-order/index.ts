@@ -40,9 +40,9 @@ const TRIAL_PLANS_INTL: Record<string, { amount: number; days: number }> = {
 // sent from the client, since that's editable in the browser before
 // the request is sent.
 // `end` is exclusive. `cap` = max paid redemptions, counted server-side.
-// applymate10: Diwali offer, first 300 paid members, valid through 9-11-2026 (IST).
+// applymate10: Black Friday offer, 10% off all plans, valid through 30-11-2026 (IST). No redemption cap.
 const COUPONS: Record<string, { pct: number; end: Date; cap?: number }> = {
-  applymate10: { pct: 10, end: new Date('2026-11-10T00:00:00+05:30'), cap: 300 },
+  applymate10: { pct: 10, end: new Date('2026-12-01T00:00:00+05:30') },
 }
 function couponActive(code: string) {
   const c = COUPONS[code]
