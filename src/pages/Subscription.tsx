@@ -339,12 +339,13 @@ export default function Subscription() {
  /* ── Main ────────────────────────────────────────────────────── */
  const selectedPlan = plans.find(p => p.id === selected)!
  const isTrialActive = trialSelected && !!selectedPlan.trialPrice
- const couponLive = !!couponApplied && selectedPlan.id !== 'free' && !isTrialActive
+ const couponLive = !!couponApplied && selectedPlan.id !== 'free'
+ const basePrice = isTrialActive ? selectedPlan.trialPrice! : selectedPlan.price
  const promoLive = !!countdown && selectedPlan.id !== 'free' && !isTrialActive && !couponLive
- const effectivePrice = isTrialActive
+ const effectivePrice = couponLive
+ ? Math.round(basePrice * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100) * 100) / 100
+ : isTrialActive
  ? selectedPlan.trialPrice!
- : couponLive
- ? Math.round(selectedPlan.price * (1 - (COUPON_DISCOUNTS[couponApplied ?? ''] ?? 0) / 100) * 100) / 100
  : promoLive
  ? Math.round(selectedPlan.price * (1 - PROMO_PCT / 100) * 100) / 100
  : selectedPlan.price
@@ -560,7 +561,7 @@ export default function Subscription() {
  {selectedPlan.label}{isTrialActive ? ' (7-day trial)' : ''}: {couponLive ? (
  <>
  <span style={{ textDecoration: 'line-through', color: '#b5b5b5', marginRight: 6 }}>
- {money(selectedPlan.price)}
+ {money(basePrice)}
  </span>
  {money(effectivePrice)}
  </>
@@ -584,7 +585,7 @@ export default function Subscription() {
  </div>
 
  {/* Coupon code */}
- {selectedPlan.id !== 'free' && !isTrialActive && (
+ {selectedPlan.id !== 'free' && (
  <div style={{ marginBottom: 16 }}>
  {couponApplied ? (
  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between',

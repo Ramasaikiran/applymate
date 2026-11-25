@@ -130,9 +130,8 @@ serve(async (req) => {
       ? (isIndia ? TRIAL_PLANS_INDIA : TRIAL_PLANS_INTL)[plan]
       : (isIndia ? PLANS_INDIA : PLANS_INTL)[plan]
     const normalizedCoupon = typeof coupon === 'string' ? coupon.trim().toLowerCase() : ''
-    // Coupons don't stack with trial pricing — trial is already a
-    // steep discount off the real plan price.
-    const matchedCoupon = !wantsTrial && normalizedCoupon && couponActive(normalizedCoupon) ? normalizedCoupon : null
+    // Coupons also apply on top of 7-day trial pricing.
+    const matchedCoupon = normalizedCoupon && couponActive(normalizedCoupon) ? normalizedCoupon : null
     // Site-wide promo also doesn't stack with trial or a manual coupon
     // — whichever discount applies, only one wins, promo takes the
     // lower priority since a manual coupon is a more deliberate choice.
