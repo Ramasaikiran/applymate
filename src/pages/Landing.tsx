@@ -61,6 +61,22 @@ export default function Landing() {
  const [jobRefundTotal, setJobRefundTotal] = useState(10)
  const [jobRefundBarFilled, setJobRefundBarFilled] = useState(false)
 
+ /* Black Friday countdown: ends 28 Nov 2026 12:00 AM IST */
+ const BF_END = new Date('2026-11-28T00:00:00+05:30').getTime()
+ const [bfLeft, setBfLeft] = useState(() => BF_END - Date.now())
+ useEffect(() => {
+   if (BF_END - Date.now() <= 0) { setBfLeft(0); return }
+   const id = setInterval(() => {
+     const left = BF_END - Date.now()
+     setBfLeft(left > 0 ? left : 0)
+     if (left <= 0) clearInterval(id)
+   }, 1000)
+   return () => clearInterval(id)
+ }, [BF_END])
+ const bfDays = Math.floor(bfLeft / 86400000)
+ const bfHours = Math.floor((bfLeft % 86400000) / 3600000)
+ const bfMins = Math.floor((bfLeft % 3600000) / 60000)
+
  /* job-refund promo counter */
  useEffect(() => {
  let cancelled = false
@@ -162,12 +178,15 @@ export default function Landing() {
  {/* ── NAV ────── */}
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
         {/* Black Friday banner: applymate10, 10% off all plans, until 28 Nov 2026 12:00 AM IST */}
-        {Date.now() < new Date('2026-11-28T00:00:00+05:30').getTime() && (
+        {bfLeft > 0 && (
           <div style={{ background: 'linear-gradient(90deg, #0f0f0f, #2a2a2a)', padding: '9px 16px', textAlign: 'center' }}>
             <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5 }}>
               <strong style={{ color: '#fff', fontWeight: 700 }}>Black Friday: 10% off</strong> all plans. Code{' '}
               <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong>
-              . Ends 28 Nov, 12:00 AM.{' '}
+              . Ends in{' '}
+              <strong style={{ color: '#fff', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+                {bfDays}d {String(bfHours).padStart(2, '0')}h {String(bfMins).padStart(2, '0')}m
+              </strong>.{' '}
               <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
                 style={{ color: '#fff', fontWeight: 600, textDecoration: 'underline', whiteSpace: 'nowrap' }}>Claim it →</a>
             </p>
