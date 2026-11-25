@@ -76,6 +76,10 @@ export default function Landing() {
    return () => clearInterval(id)
  }, [BF_END])
 
+ const bfSale = bfLeft > 0
+ const bfShort = `${Math.floor(bfLeft / 86400000)}d ${Math.floor((bfLeft % 86400000) / 3600000)}h`
+ const scrollToId = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+
  /* job-refund promo counter */
  useEffect(() => {
  let cancelled = false
@@ -206,6 +210,12 @@ export default function Landing() {
  </div>
  <span style={{ fontSize: 15, fontWeight: 700, letterSpacing: '-0.02em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>ApplyMate</span>
  </div>
+ <div className="nav-links" style={{ display: 'flex', alignItems: 'center', gap: 22 }}>
+ {[['How it works', 'how-it-works'], ['Pricing', 'pricing'], ['For recruiters', 'recruiters']].map(([label, id]) => (
+ <button key={id} onClick={() => scrollToId(id)} style={{ background: 'none', border: 'none', fontSize: 14,
+ color: '#4a4a4a', cursor: 'pointer', fontFamily: "'Inter',sans-serif", fontWeight: 500, padding: '8px 0' }}>{label}</button>
+ ))}
+ </div>
  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
  <button onClick={goSignUp} className="nav-free-pill" style={{
  fontSize: 13, color: '#22c55e', fontWeight: 600,
@@ -273,6 +283,12 @@ export default function Landing() {
  </span>
  ))}
  </div>
+ {bfSale && (
+ <button onClick={() => scrollToId('pricing')} style={{ marginTop: 6, background: '#0f0f0f', color: '#fff', border: 'none',
+ borderRadius: 999, padding: '9px 18px', fontSize: 13.5, fontWeight: 600, cursor: 'pointer', fontFamily: "'Inter',sans-serif" }}>
+ Black Friday Sale: <span style={{ color: '#e8b96b' }}>10% off paid plans</span> · code applymate10 · {bfShort} left →
+ </button>
+ )}
  <button onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })} style={{
  background: 'none', border: 'none', color: '#4a4a4a', fontSize: 14, fontWeight: 600, cursor: 'pointer',
  textDecoration: 'underline', textUnderlineOffset: 3, fontFamily: "'Inter',sans-serif", marginTop: 6,
@@ -599,15 +615,22 @@ export default function Landing() {
  <p style={{ fontSize: 16, color: '#6b6b6b', textAlign: 'center', maxWidth: 520, margin: '0 auto 40px', lineHeight: 1.6 }}>
  Start free and apply yourself, or let our team apply for you.
  </p>
+ {bfSale && (
+ <p style={{ textAlign: 'center', margin: '-20px 0 28px' }}>
+ <span style={{ display: 'inline-block', background: '#0f0f0f', color: '#fff', borderRadius: 999, padding: '8px 18px', fontSize: 13.5, fontWeight: 600 }}>
+ Black Friday Sale: 10% off every paid plan. Code <span style={{ color: '#e8b96b' }}>applymate10</span> at checkout
+ </span>
+ </p>
+ )}
  <div className="pricing-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 16 }}>
  {(() => {
  const IN = getCountry('IN')!
- const cards: { name: string; price: string; per: string; tag?: string; points: string[]; cta: string; dark?: boolean }[] = [
+ const cards: { name: string; price: string; sale?: string; per: string; tag?: string; points: string[]; cta: string; dark?: boolean }[] = [
  { name: 'Free', price: formatMoney(0, IN), per: 'always free', points: ['Daily matched job feed', 'You apply yourself', 'Up to 30 applications a month'], cta: 'Start free' },
  ...([['Basic', 'basic', ['Daily matched job feed', 'You apply yourself', 'Save and track jobs']],
  ['Pro', 'pro', ['Our team applies for you', 'Tailored cover letter per job', 'Live application tracker']],
  ['Max Pro', 'maxpro', ['Everything in Pro', 'Interview support']]] as [string, PaidPlanId, string[]][]).map(([name, id, points]) => ({
- name, price: formatMoney(planPrice(IN, id).price, IN), per: 'for 30 days', points,
+ name, price: formatMoney(planPrice(IN, id).price, IN), sale: bfSale ? formatMoney(Math.round(planPrice(IN, id).price * 90) / 100, IN) : undefined, per: 'for 30 days', points,
  tag: id === 'basic' ? undefined : 'We apply for you', cta: 'Get started', dark: id === 'pro',
  })),
  ]
@@ -620,8 +643,10 @@ export default function Landing() {
  </div>
  <p style={{ fontSize: 15, fontWeight: 700, color: '#0f0f0f', margin: '0 0 4px' }}>{c.name}</p>
  <p style={{ margin: '0 0 16px' }}>
- <span style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 38, color: '#0f0f0f', letterSpacing: '-0.02em' }}>{c.price}</span>
+ {c.sale && <span style={{ fontSize: 16, color: '#b5b5b5', textDecoration: 'line-through', marginRight: 8 }}>{c.price}</span>}
+ <span style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 38, color: '#0f0f0f', letterSpacing: '-0.02em' }}>{c.sale ?? c.price}</span>
  <span style={{ fontSize: 13, color: '#9b9b9b' }}> {c.per}</span>
+ {c.sale && <span style={{ display: 'block', fontSize: 11.5, fontWeight: 700, color: '#b45309', marginTop: 2 }}>10% OFF · code applymate10</span>}
  </p>
  <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 20px', flex: 1 }}>
  {c.points.map(pt => (
@@ -812,7 +837,7 @@ export default function Landing() {
  gets the role you wanted.
  </h2>
  <p style={{ fontSize: 18, color: 'rgba(255,255,255,0.55)', marginBottom: 48, maxWidth: 480, margin: '0 auto 48px' }}>
- Free to start. Paid plans apply for you.
+ {bfSale ? <>Black Friday Sale: <strong style={{ color: '#e8b96b' }}>10% off</strong> paid plans with code <strong style={{ color: '#fff' }}>applymate10</strong>.</> : 'Free to start. Paid plans apply for you.'}
  </p>
  <button onClick={goSignUp} style={{
  background: '#fff', color: '#0f0f0f', border: 'none',
@@ -828,9 +853,10 @@ export default function Landing() {
  </section>
 
  {/* ── FOR RECRUITERS ────────────────────────────────────── */}
- <section id="recruiters" style={{ background: '#fafafa', borderTop: '1px solid #f0f0f0', maxWidth: '100%', margin: 0, padding: '96px 24px' }}>
- <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
- <p className="eyebrow-label" style={{ marginBottom: 12 }}>FOR RECRUITERS</p>
+ <section id="recruiters" style={{ background: '#f3f3f1', borderTop: '1px solid #e8e8e8', maxWidth: '100%', margin: 0, padding: '72px 24px', scrollMarginTop: 72 }}>
+ <div style={{ maxWidth: 760, margin: '0 auto', textAlign: 'center', background: '#fff', border: '1px solid #e5e5e5',
+ borderRadius: 20, padding: '48px 28px', boxShadow: '0 8px 32px rgba(0,0,0,0.06)' }}>
+ <p className="eyebrow-label" style={{ marginBottom: 12, color: '#6b6b6b' }}>FOR RECRUITERS</p>
  <h2 style={{ fontFamily: "'Instrument Serif',Georgia,serif", fontSize: 40,
  fontWeight: 400, letterSpacing: '-0.025em', color: '#0f0f0f', marginBottom: 12 }}>
  Hiring? Meet candidates who are ready to interview.
@@ -860,7 +886,7 @@ export default function Landing() {
  </section>
 
 {/* ── FOOTER ────────────────────────────────────────────── */}
- <footer style={{ background: '#0f0f0f', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '56px 24px 24px', position: 'relative', overflow: 'hidden' }}>
+ <footer style={{ background: '#0f0f0f', borderTop: '1px solid rgba(255,255,255,0.08)', padding: '56px 24px 88px', position: 'relative', overflow: 'hidden' }}>
  <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
  {/* CTA */}
@@ -900,7 +926,7 @@ export default function Landing() {
  {[
  { title: 'Product', links: [['Pricing', '/pricing.html'], ['How it works', '/how-it-works.html'], ['FAQ', '/faq.html'], ['Compare', '/compare-ways-to-apply.html']] },
  { title: 'Explore', links: [['India', '/job-application-service-india.html'], ['Countries', '/countries.html'], ['Status', '/status']] },
- { title: 'Company', links: [['About', '/about'], ['Contact', '/contact']] },
+ { title: 'Company', links: [['About', '/about'], ['Contact', '/contact'], ['For recruiters', '/#recruiters']] },
  { title: 'Legal', links: [['Terms', '/terms'], ['Privacy', '/privacy'], ['Refund policy', '/refund-policy']] },
  ].map(col => (
  <div key={col.title}>
@@ -967,7 +993,7 @@ export default function Landing() {
  <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#22c55e',
  display: 'block', boxShadow: '0 0 0 3px rgba(34,197,94,0.25)' }} />
  <span className="sticky-bar-text" style={{ fontSize: 14, color: '#fff', fontWeight: 500 }}>
- <><strong>Free to start.</strong> Paid plans apply for you.</>
+ bfSale ? <><strong>Black Friday: 10% off</strong> · code applymate10 · {bfShort} left</> : <><strong>Free to start.</strong> Paid plans apply for you.</>
  </span>
  </div>
  <button onClick={goSignUp} style={{
@@ -1003,6 +1029,7 @@ export default function Landing() {
  @media (max-width: 1024px) and (min-width: 769px) {
  .pricing-grid { grid-template-columns: repeat(2,1fr) !important; }
  }
+ @media (max-width: 900px) { .nav-links { display: none !important; } }
  @media (max-width: 600px) {
  .nav-free-pill { display: none !important; }
  .nav-signin { display: none !important; }
