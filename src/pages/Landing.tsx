@@ -6,6 +6,7 @@ import { recruiterHome } from '../lib/routing'
 import CallbackHighlights from '../components/CallbackHighlights'
 import Testimonials from '../components/Testimonials'
 import BlackFridayLogo from '../components/BlackFridayLogo'
+import BlackFridayCountdown from '../components/BlackFridayCountdown'
 
 import { getCountry, planPrice, formatMoney, type PaidPlanId } from '../lib/pricing'
 import inboxProof1 from '../assets/inbox-proof/proof-1.webp'
@@ -74,9 +75,6 @@ export default function Landing() {
    }, 1000)
    return () => clearInterval(id)
  }, [BF_END])
- const bfDays = Math.floor(bfLeft / 86400000)
- const bfHours = Math.floor((bfLeft % 86400000) / 3600000)
- const bfMins = Math.floor((bfLeft % 3600000) / 60000)
 
  /* job-refund promo counter */
  useEffect(() => {
@@ -180,19 +178,16 @@ export default function Landing() {
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
         {/* Black Friday Sale banner: applymate10, 10% off all plans, until 28 Nov 2026 12:00 AM IST */}
         {bfLeft > 0 && (
-          <div style={{ background: 'linear-gradient(90deg, #0f0f0f, #2a2a2a)', padding: '9px 16px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', columnGap: 12, rowGap: 4 }}>
+          <div style={{ background: 'linear-gradient(90deg, #0f0f0f, #2a2a2a)', padding: '8px 16px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', columnGap: 14, rowGap: 6 }}>
             <BlackFridayLogo size={15} />
             <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5, textAlign: 'center' }}>
               <strong style={{ color: '#fff', fontWeight: 700 }}>10% off</strong> all plans. Code{' '}
               <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong>
-              . Ends in{' '}
-              <strong style={{ color: '#fff', fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
-                {bfDays}d {String(bfHours).padStart(2, '0')}h {String(bfMins).padStart(2, '0')}m
-              </strong>.{' '}
-              <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
-                style={{ color: '#fff', fontWeight: 600, textDecoration: 'underline', whiteSpace: 'nowrap' }}>Claim it →</a>
             </p>
+            <BlackFridayCountdown ms={bfLeft} />
+            <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
+              style={{ color: '#fff', fontSize: 13, fontWeight: 600, textDecoration: 'underline', whiteSpace: 'nowrap' }}>Claim it →</a>
           </div>
         )}
 
@@ -878,8 +873,9 @@ export default function Landing() {
  <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 15, margin: '14px 0 0', lineHeight: 1.6 }}>
  10% off all plans. Use code{' '}
  <strong style={{ color: '#0f0f0f', background: '#e8b96b', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>applymate10</strong>
- . Ends in {bfDays}d {String(bfHours).padStart(2, '0')}h {String(bfMins).padStart(2, '0')}m.
+.
  </p>
+ <div style={{ marginTop: 18 }}><BlackFridayCountdown ms={bfLeft} size="lg" /></div>
  </>
  ) : (
  <p style={{ fontFamily: "'Instrument Serif',Georgia,serif", color: '#fff', fontSize: 28, margin: 0 }}>
