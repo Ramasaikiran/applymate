@@ -161,13 +161,13 @@ export default function Landing() {
 
  {/* ── NAV ────── */}
  <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
-        {/* Black Friday banner: applymate10, 10% off all plans, through 30 Nov 2026 IST */}
-        {Date.now() < new Date('2026-12-01T00:00:00+05:30').getTime() && (
+        {/* Black Friday banner: applymate10, 10% off all plans, until 28 Nov 2026 12:00 AM IST */}
+        {Date.now() < new Date('2026-11-28T00:00:00+05:30').getTime() && (
           <div style={{ background: 'linear-gradient(90deg, #0f0f0f, #2a2a2a)', padding: '9px 16px', textAlign: 'center' }}>
             <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5 }}>
               <strong style={{ color: '#fff', fontWeight: 700 }}>Black Friday: 10% off</strong> all plans. Code{' '}
               <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong>
-              . Ends 30 Nov.{' '}
+              . Ends 28 Nov, 12:00 AM.{' '}
               <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
                 style={{ color: '#fff', fontWeight: 600, textDecoration: 'underline', whiteSpace: 'nowrap' }}>Claim it →</a>
             </p>
