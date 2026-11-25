@@ -186,8 +186,8 @@ export default function Landing() {
             display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', columnGap: 14, rowGap: 6 }}>
             <BlackFridayLogo size={15} />
             <p style={{ color: '#e8b96b', fontSize: 13, fontWeight: 500, margin: 0, lineHeight: 1.5, textAlign: 'center' }}>
-              <strong style={{ color: '#fff', fontWeight: 700 }}>10% off</strong> all plans. Code{' '}
-              <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong>
+              <strong style={{ color: '#fff', fontWeight: 700 }}>10% off</strong> across all plans. Code{' '}
+              <strong style={{ color: '#fff', fontWeight: 700 }}>applymate10</strong> ends in
             </p>
             <BlackFridayCountdown ms={bfLeft} />
             <a href="/sign-up" onClick={(e) => { e.preventDefault(); goSignUp() }}
@@ -897,9 +897,9 @@ export default function Landing() {
  <>
  <BlackFridayLogo size={26} />
  <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 15, margin: '14px 0 0', lineHeight: 1.6 }}>
- 10% off all plans. Use code{' '}
- <strong style={{ color: '#0f0f0f', background: '#e8b96b', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>applymate10</strong>
-.
+ 10% off across all plans. Code{' '}
+ <strong style={{ color: '#0f0f0f', background: '#e8b96b', borderRadius: 6, padding: '2px 8px', fontWeight: 700 }}>applymate10</strong>{' '}
+ ends in
  </p>
  <div style={{ marginTop: 18 }}><BlackFridayCountdown ms={bfLeft} size="lg" /></div>
  </>
