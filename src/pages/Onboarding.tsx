@@ -1,3 +1,4 @@
+import { COUNTRIES as PRICING_COUNTRIES } from '../lib/pricing'
 import { useState, useRef, useEffect, type FormEvent, type ChangeEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
@@ -87,7 +88,8 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
 const ROLES = ['SDE / Software Engineer','Frontend Engineer','Backend Engineer','Full Stack Engineer',
  'ML / AI Engineer','Data Scientist','Data Analyst','Other']
 
-const COUNTRIES = ['India','United States','United Kingdom','Canada','Australia','Singapore','UAE','Germany','Other']
+// All countries we price for, plus UAE (kept so existing profiles still match) and Other.
+const COUNTRIES = [...PRICING_COUNTRIES.map(c => c.name), 'UAE', 'Other']
 // ── Draft persistence ───────────────────────────────────────────
 // Mobile browsers can fully reload a backgrounded tab (e.g. after the OS
 // file picker opens for resume upload), wiping all React state. Persisting
